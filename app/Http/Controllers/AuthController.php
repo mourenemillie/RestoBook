@@ -47,9 +47,12 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'name' => 'required',
+            'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
-            'password' => 'required|min:6|confirmed',
+            'phone' => 'required|string|max:25',
+            'role' => 'required|in:customer,owner',
+            'password' => 'required|min:8|confirmed',
+            'terms' => 'accepted',
         ]);
 
         User::create([
@@ -57,7 +60,7 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'phone' => $request->phone,
-            'role' => 'customer', // default register = customer
+            'role' => $request->role,
         ]);
 
         return redirect('/login')->with('success', 'Registrasi berhasil, silakan login!');
