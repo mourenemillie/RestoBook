@@ -7,5 +7,9 @@ use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
-    //
+    public function index()
+{
+    $restaurants = \App\Models\Restaurant::where('status', 'active')->take(3)->get();
+    return view('customer.home', compact('restaurants'));
+}
 }
