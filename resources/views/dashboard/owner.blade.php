@@ -3,191 +3,187 @@
 
 @section('extra-css')
 <style>
-   .topbar {
-    position: relative; /* penting */
-    margin-bottom: 32px;
-}
+    /* TOPBAR */
+    .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+    }
+    .topbar-left h1 {
+        font-size: 24px; font-weight: 800; color: var(--text);
+    }
+    .topbar-left p { font-size: 13px; color: var(--muted); margin-top: 3px; }
+    .topbar-actions { display: flex; align-items: center; gap: 12px; }
+    .btn-bell {
+        width: 36px; height: 36px; border-radius: 50%;
+        background: var(--white); border: 1px solid var(--border);
+        display: flex; align-items: center; justify-content: center;
+        color: var(--muted); font-size: 16px; cursor: pointer;
+    }
+    .btn-new {
+        background: var(--primary); color: #fff;
+        border: none; border-radius: 8px;
+        padding: 9px 16px; font-size: 13px; font-weight: 700;
+        cursor: pointer; display: flex; align-items: center; gap: 6px;
+        font-family: inherit;
+    }
+    .btn-new:hover { background: #cf6040; }
 
-/* LEFT */
-.topbar-left {
-    max-width: 520px;
-}
-
-.topbar-left h1 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 32px;
-    font-weight: 400;
-    color: var(--text);
-    line-height: 1.15;
-}
-
-.topbar-left p {
-    font-size: 13px;
-    color: var(--muted);
-    margin-top: 6px;
-}
-
-
-.topbar-right {
-    position: absolute;   
-    top: 0;               
-    right: 0;             
-
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    background: var(--white);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 10px 16px;
-}
-/* TEXT */
-.topbar-right .resto-name {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--text);
-    text-align: right;
-}
-
-.topbar-right .resto-role {
-    font-size: 11px;
-    color: var(--muted);
-    text-align: right;
-}
-
-/* AVATAR */
-.topbar-avatar {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    background: var(--primary);
-    color: #fff;
-    font-size: 13px;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-    /* STATS ROW */
-    .stats-row {
+    /* STAT CARDS */
+    .stat-grid {
         display: grid;
-        grid-template-columns: 1fr 1fr 1.3fr;
-        gap: 16px;
-        margin-bottom: 28px;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+        margin-bottom: 22px;
     }
     .stat-card {
         background: var(--white);
         border: 1px solid var(--border);
         border-radius: 14px;
-        padding: 20px 22px;
+        padding: 18px 20px;
     }
-    .stat-card.prime {
-        background: var(--primary);
-        border-color: var(--primary);
-        color: #fff;
-        display: flex; align-items: flex-start; justify-content: space-between;
+    .stat-top {
+        display: flex; justify-content: space-between; align-items: flex-start;
+        margin-bottom: 10px;
     }
-    .stat-label { font-size: 11px; color: var(--muted); font-weight: 600; letter-spacing: .5px; text-transform: uppercase; }
-    .stat-value { font-size: 34px; font-weight: 800; color: var(--text); line-height: 1.1; margin: 6px 0 4px; }
-    .stat-sub   { font-size: 12px; color: var(--muted); }
-    .stat-trend { font-size: 12px; font-weight: 600; margin-top: 6px; }
-    .stat-trend.up   { color: var(--success); }
-    .stat-trend.down { color: var(--danger); }
-
-    .prime-icon {
-        width: 44px; height: 44px; border-radius: 12px;
-        background: rgba(255,255,255,.2);
+    .stat-icon-wrap {
+        width: 38px; height: 38px; border-radius: 10px;
         display: flex; align-items: center; justify-content: center;
-        font-size: 22px; color: #fff;
-        flex-shrink: 0;
+        font-size: 18px;
     }
-    .prime h3 { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 6px; }
-    .prime p  { font-size: 12px; color: rgba(255,255,255,.8); line-height: 1.5; }
+    .ic-blue   { background: #EAF1FF; color: #4285F4; }
+    .ic-orange { background: #FFF0E8; color: var(--primary); }
+    .ic-green  { background: #EAFFF3; color: #2ECC71; }
+    .ic-red    { background: #FFF0EE; color: #E74C3C; }
 
-    /* FLOOR STATUS */
-    .section-title-row {
-        display: flex; justify-content: space-between; align-items: center;
-        margin-bottom: 14px;
+    .stat-badge {
+        font-size: 11px; font-weight: 700;
+        padding: 3px 8px; border-radius: 20px;
+        display: flex; align-items: center; gap: 3px;
     }
-    .section-h { font-size: 16px; font-weight: 700; color: var(--text); }
-    .section-sub { font-size: 12px; color: var(--muted); margin-top: 1px; }
-    .legend { display: flex; gap: 14px; align-items: center; }
-    .legend-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 4px; }
-    .legend span { font-size: 12px; color: var(--muted); display: flex; align-items: center; }
+    .badge-up   { background: #EAFFF3; color: #2ECC71; }
+    .badge-down { background: #FFF0EE; color: #E74C3C; }
+    .badge-neu  { background: #F0F0F0; color: var(--muted); }
 
-    .floor-grid {
+    .stat-value { font-size: 28px; font-weight: 800; color: var(--text); line-height: 1.1; }
+    .stat-value span { font-size: 14px; font-weight: 500; color: var(--muted); }
+    .stat-label { font-size: 12px; color: var(--muted); font-weight: 500; margin-top: 4px; }
+
+    /* MIDDLE ROW */
+    .mid-row {
         display: grid;
-        grid-template-columns: repeat(6, 1fr);
-        gap: 12px;
-        margin-bottom: 28px;
+        grid-template-columns: 1fr 280px;
+        gap: 16px;
+        margin-bottom: 20px;
     }
-    .table-card {
+
+    /* SECTION CARD */
+    .sec-card {
         background: var(--white);
         border: 1px solid var(--border);
-        border-radius: 12px;
-        padding: 16px 10px 12px;
-        text-align: center;
-        transition: box-shadow .2s;
+        border-radius: 14px;
+        overflow: hidden;
     }
-    .table-card:hover { box-shadow: 0 4px 14px rgba(0,0,0,.06); }
-    .table-icon {
-        width: 42px; height: 42px; border-radius: 10px;
-        display: flex; align-items: center; justify-content: center;
-        font-size: 20px; margin: 0 auto 8px;
-    }
-    .icon-available { background: #F0F7FF; color: #4285F4; }
-    .icon-reserved  { background: #FFF8E8; color: #D4800A; }
-    .icon-occupied  { background: #FFF0EE; color: var(--danger); }
-    .table-name  { font-size: 13px; font-weight: 700; color: var(--text); }
-    .table-badge { font-size: 10px; font-weight: 700; margin-top: 4px; display: inline-block; }
-    .badge-available { color: #4285F4; }
-    .badge-reserved  { color: var(--warning); }
-    .badge-occupied  { color: var(--danger); }
-
-    /* RESERVATIONS TABLE */
-    .res-section { background: var(--white); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; margin-bottom: 28px; }
-    .res-header {
+    .sec-header {
         display: flex; justify-content: space-between; align-items: center;
-        padding: 16px 22px; border-bottom: 1px solid var(--border);
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--border);
     }
-    .view-all { font-size: 13px; font-weight: 600; color: var(--primary); text-decoration: none; display: flex; align-items: center; gap: 4px; }
-    .view-all:hover { text-decoration: underline; }
+    .sec-title { font-size: 15px; font-weight: 700; color: var(--text); }
+    .sec-link  { font-size: 13px; color: var(--primary); font-weight: 600; text-decoration: none; }
+    .sec-link:hover { text-decoration: underline; }
 
+    /* RESERVASI TABLE */
     table { width: 100%; border-collapse: collapse; }
     thead th {
-        font-size: 11.5px; color: var(--muted); font-weight: 600; letter-spacing: .4px;
-        padding: 11px 22px; text-align: left; text-transform: uppercase;
-        border-bottom: 1px solid var(--border); background: #FAFAF8;
+        font-size: 11.5px; color: var(--muted); font-weight: 600;
+        padding: 10px 20px; text-align: left;
+        background: #FAFAF8; border-bottom: 1px solid var(--border);
     }
-    tbody td { padding: 14px 22px; font-size: 13.5px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    tbody td { padding: 13px 20px; font-size: 13px; border-bottom: 1px solid var(--border); vertical-align: middle; }
     tbody tr:last-child td { border-bottom: none; }
     tbody tr:hover { background: #FAFAF8; }
 
-    .cust-avatar {
-        width: 32px; height: 32px; border-radius: 50%;
-        font-size: 12px; font-weight: 700; color: #fff;
+    .cust-av {
+        width: 30px; height: 30px; border-radius: 50%;
+        color: #fff; font-size: 12px; font-weight: 700;
         display: inline-flex; align-items: center; justify-content: center;
-        margin-right: 10px; vertical-align: middle; flex-shrink: 0;
+        margin-right: 8px; vertical-align: middle;
     }
     .cust-name { font-weight: 600; }
 
-    .status-pill { display: inline-block; border-radius: 20px; padding: 4px 12px; font-size: 11px; font-weight: 700; }
-    .pill-confirmed { background: #EDFAF3; color: var(--success); }
-    .pill-pending   { background: #EAF3FF; color: #2563EB; }
-    .pill-cancelled { background: #FFF0EE; color: var(--danger); }
+    .pill { display: inline-block; border-radius: 20px; padding: 4px 11px; font-size: 11px; font-weight: 700; }
+    .pill-menunggu    { background: #FFF8E8; color: #D4800A; }
+    .pill-dikonfirmasi{ background: #EAFFF3; color: #2ECC71; }
+    .pill-selesai     { background: #EAF1FF; color: #4285F4; }
+    .pill-dibatalkan  { background: #FFF0EE; color: #E74C3C; }
 
-    /* FOOTER */
-    .site-footer {
-        border-top: 1px solid var(--border);
-        padding: 20px 0;
-        margin-top: 10px;
-        display: flex; justify-content: space-between; align-items: flex-start;
+    .btn-dots { background: none; border: none; font-size: 18px; color: var(--muted); cursor: pointer; padding: 2px 6px; }
+
+    /* STATUS MEJA */
+    .meja-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        padding: 16px 20px;
+    }
+    .meja-item {
+        border-radius: 10px;
+        padding: 10px;
+        text-align: center;
+        border: 1px solid var(--border);
+    }
+    .meja-item.kosong  { background: #F7FAF7; border-color: #D0EBD0; }
+    .meja-item.terisi  { background: #FFF8F0; border-color: #FFD6B0; }
+    .meja-item.dipesan { background: #FFF0EE; border-color: #FFBFB8; }
+
+    .meja-id   { font-size: 13px; font-weight: 800; color: var(--text); }
+    .meja-stat { font-size: 10px; font-weight: 600; margin-top: 2px; }
+    .meja-item.kosong  .meja-stat { color: #2ECC71; }
+    .meja-item.terisi  .meja-stat { color: #D4800A; }
+    .meja-item.dipesan .meja-stat { color: #E74C3C; }
+
+    .meja-legend {
+        display: flex; gap: 14px; padding: 0 20px 14px;
         font-size: 12px; color: var(--muted);
     }
-    .footer-brand { font-weight: 700; color: var(--text); font-size: 14px; margin-bottom: 4px; }
-    .footer-links { display: flex; gap: 20px; }
-    .footer-links a { color: var(--muted); text-decoration: none; }
-    .footer-links a:hover { color: var(--primary); }
+    .meja-legend span { display: flex; align-items: center; gap: 5px; }
+    .leg-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+    .sec-refresh {
+        background: none; border: none; color: var(--muted);
+        font-size: 16px; cursor: pointer;
+        display: flex; align-items: center;
+    }
+
+    /* BAR CHART */
+    .chart-section {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 20px 24px 16px;
+        margin-bottom: 24px;
+    }
+    .chart-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 20px; }
+    .chart-wrap  { display: flex; align-items: flex-end; gap: 14px; height: 140px; }
+    .bar-col     { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; }
+    .bar {
+        width: 100%; border-radius: 6px 6px 0 0;
+        transition: opacity .2s;
+        min-height: 8px;
+    }
+    .bar:hover { opacity: .8; }
+    .bar-label { font-size: 11.5px; color: var(--muted); font-weight: 500; }
+
+    /* warna bar sesuai screenshot (coklat muda-tua) */
+    .bar-0 { background: #E8C4A8; }
+    .bar-1 { background: #D4A882; }
+    .bar-2 { background: #C8916A; }
+    .bar-3 { background: #B87A50; }
+    .bar-4 { background: #A05C30; } /* tertinggi = paling gelap */
+    .bar-5 { background: #C8916A; }
+    .bar-6 { background: #D4A882; }
 </style>
 @endsection
 
@@ -196,158 +192,159 @@
 {{-- TOPBAR --}}
 <div class="topbar">
     <div class="topbar-left">
-        <h1>Welcome back, Chef.</h1>
-        <p>Your culinary empire is humming. Here's a look at today's flow and reservations across your floor.</p>
+        <h1>Selamat Datang, Owner!</h1>
+        <p>Berikut adalah ringkasan aktivitas restoran Anda hari ini.</p>
     </div>
-    <div class="topbar-right">
-        <div>
-            <div class="resto-name">The Culinary Canvas</div>
-            <div class="resto-role">Admin Profile</div>
-        </div>
-        <div class="topbar-avatar">TC</div>
+    <div class="topbar-actions">
+        <button class="btn-bell"><i class="bi bi-bell"></i></button>
+        <button class="btn-new"><i class="bi bi-plus"></i> Reservasi Baru</button>
     </div>
 </div>
 
 {{-- STAT CARDS --}}
-<div class="stats-row">
+<div class="stat-grid">
     <div class="stat-card">
-        <div class="stat-label">Daily Volume</div>
-        <div class="stat-value">{{ $dailyVolume ?? 42 }}</div>
-        <div class="stat-sub">Total Reservasi Hari Ini</div>
-        <div class="stat-trend up">↑ +13% vs yesterday</div>
+        <div class="stat-top">
+            <div class="stat-icon-wrap ic-blue"><i class="bi bi-people-fill"></i></div>
+            <span class="stat-badge badge-up">↑ 12%</span>
+        </div>
+        <div class="stat-value">{{ $totalTamu ?? 142 }}</div>
+        <div class="stat-label">Total Tamu Hari Ini</div>
     </div>
     <div class="stat-card">
-        <div class="stat-label">Monthly Revenue</div>
-        <div class="stat-value" style="font-size:26px;">Rp {{ number_format($monthlyRevenue ?? 142500000, 0, ',', '.') }}</div>
-        <div class="stat-sub">Pendapatan Bulan Ini</div>
-        <div class="stat-trend down">↓ -4% vs last month</div>
-    </div>
-    <div class="stat-card prime">
-        <div>
-            <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px;">Prime Service Hours</div>
-            <h3>Your peak performance<br>starts in 45 minutes.</h3>
-            <p>Kitchen is prepped.</p>
+        <div class="stat-top">
+            <div class="stat-icon-wrap ic-orange"><i class="bi bi-calendar-check-fill"></i></div>
+            <span class="stat-badge badge-up">↑ 5%</span>
         </div>
-        <div class="prime-icon"><i class="bi bi-star-fill"></i></div>
+        <div class="stat-value">{{ $reservasiAktif ?? 28 }}</div>
+        <div class="stat-label">Reservasi Aktif</div>
     </div>
-</div>
-
-{{-- LIVE FLOOR STATUS --}}
-<div class="section-title-row">
-    <div>
-        <div class="section-h">Live Floor Status</div>
-        <div class="section-sub">Real-time table occupancy overview.</div>
-    </div>
-    <div class="legend">
-        <span><span class="legend-dot" style="background:#4285F4;"></span> Available</span>
-        <span><span class="legend-dot" style="background:var(--warning);"></span> Reserved</span>
-        <span><span class="legend-dot" style="background:var(--danger);"></span> Occupied</span>
-    </div>
-</div>
-
-<div class="floor-grid">
-    @php
-    $tables = $tables ?? [
-        ['name' => 'Meja 1', 'status' => 'available', 'icon' => 'bi-person'],
-        ['name' => 'Meja 2', 'status' => 'reserved',  'icon' => 'bi-people'],
-        ['name' => 'Meja 3', 'status' => 'occupied',  'icon' => 'bi-people-fill'],
-        ['name' => 'Meja 4', 'status' => 'available', 'icon' => 'bi-person'],
-        ['name' => 'Meja 5', 'status' => 'occupied',  'icon' => 'bi-people-fill'],
-        ['name' => 'Meja 6', 'status' => 'available', 'icon' => 'bi-person'],
-    ];
-    @endphp
-
-    @foreach($tables as $t)
-    @php
-        $st = is_array($t) ? $t['status'] : $t->status;
-        $nm = is_array($t) ? $t['name']   : $t->nama;
-        $ic = is_array($t) ? $t['icon']   : 'bi-person';
-        $iconClass  = $st === 'available' ? 'icon-available' : ($st === 'reserved' ? 'icon-reserved' : 'icon-occupied');
-        $badgeClass = $st === 'available' ? 'badge-available' : ($st === 'reserved' ? 'badge-reserved' : 'badge-occupied');
-        $badgeText  = strtoupper($st);
-    @endphp
-    <div class="table-card">
-        <div class="table-icon {{ $iconClass }}"><i class="bi {{ $ic }}"></i></div>
-        <div class="table-name">{{ $nm }}</div>
-        <div class="table-badge {{ $badgeClass }}">{{ $badgeText }}</div>
-    </div>
-    @endforeach
-</div>
-
-{{-- RECENT RESERVATIONS --}}
-<div class="res-section">
-    <div class="res-header">
-        <div>
-            <div class="section-h">Recent Reservations</div>
+    <div class="stat-card">
+        <div class="stat-top">
+            <div class="stat-icon-wrap ic-green"><i class="bi bi-diagram-3-fill"></i></div>
+            <span class="stat-badge badge-neu">Stabil</span>
         </div>
-        <a href="#" class="view-all">View Full Schedule →</a>
+        <div class="stat-value">
+            {{ $mejaTersedia ?? 15 }}<span>/{{ $totalMeja ?? 40 }}</span>
+        </div>
+        <div class="stat-label">Meja Tersedia</div>
     </div>
-    <table>
+    <div class="stat-card">
+        <div class="stat-top">
+            <div class="stat-icon-wrap ic-red"><i class="bi bi-x-circle-fill"></i></div>
+            <span class="stat-badge badge-down">↓ 2%</span>
+        </div>
+        <div class="stat-value">{{ $batalHariIni ?? 3 }}</div>
+        <div class="stat-label">Batal Hari Ini</div>
+    </div>
+</div>
+
+{{-- MIDDLE ROW: RESERVASI + STATUS MEJA --}}
+<div class="mid-row">
+
+    {{-- RESERVASI TERBARU --}}
+    <div class="card">
+    <div class="card-header" style="display:flex; justify-content:space-between; align-items:center;">
+        <h3>Reservasi Terbaru</h3>
+
+        <div style="display:flex; gap:10px;">
+            
+
+            <a href="#" style="color:#C8541A; font-weight:600;">Lihat Semua</a>
+        </div>
+    </div>
+
+    <table style="width:100%; border-collapse:collapse; margin-top:16px;">
         <thead>
-            <tr>
-                <th>Customer Name</th>
-                <th>Time</th>
-                <th>Party Size</th>
+            <tr style="text-align:left; font-size:12px; color:#999;">
+                <th>Nama Pelanggan</th>
+                <th>Waktu</th>
+                <th>Tamu</th>
                 <th>Status</th>
-                <th>Action</th>
+                <th>Aksi</th>
             </tr>
         </thead>
-        <tbody>
-        @php
-        $avatarColors = ['#E8714A','#2A8C55','#4285F4','#9B59B6','#D4800A','#C0392B'];
-        $reservations = $reservations ?? [
-            ['initials'=>'AP','name'=>'Aditya Pratama', 'time'=>'19:30 PM','party'=>'4 People','status'=>'confirmed','color'=>'#E8714A'],
-            ['initials'=>'SR','name'=>'Siti Rahma',     'time'=>'20:00 PM','party'=>'2 People','status'=>'pending',  'color'=>'#2A8C55'],
-            ['initials'=>'BK','name'=>'Budi Kusuma',    'time'=>'18:15 PM','party'=>'6 People','status'=>'cancelled','color'=>'#4285F4'],
-            ['initials'=>'DW','name'=>'Dewi Wijaya',    'time'=>'21:00 PM','party'=>'4 People','status'=>'confirmed','color'=>'#9B59B6'],
-        ];
-        @endphp
 
-        @foreach($reservations as $r)
-        @php
-            $isArr = is_array($r);
-            $status   = $isArr ? $r['status']   : $r->status;
-            $name     = $isArr ? $r['name']      : $r->customer->name;
-            $initials = $isArr ? $r['initials']  : strtoupper(substr($name, 0, 2));
-            $time     = $isArr ? $r['time']      : \Carbon\Carbon::parse($r->waktu)->format('H:i') . ' PM';
-            $party    = $isArr ? $r['party']     : $r->jumlah_orang . ' People';
-            $color    = $isArr ? $r['color']     : $avatarColors[array_rand($avatarColors)];
-            $pillClass = match($status) {
-                'confirmed' => 'pill-confirmed',
-                'pending'   => 'pill-pending',
-                'cancelled' => 'pill-cancelled',
-                default     => 'pill-pending'
-            };
-        @endphp
-        <tr>
-            <td style="display:flex;align-items:center;">
-                <span class="cust-avatar" style="background:{{ $color }}">{{ $initials }}</span>
-                <span class="cust-name">{{ $name }}</span>
-            </td>
-            <td>{{ $time }}</td>
-            <td>{{ $party }}</td>
-            <td><span class="status-pill {{ $pillClass }}">{{ strtoupper($status) }}</span></td>
-            <td>
-                <a href="#" style="color:var(--primary);font-size:13px;font-weight:600;text-decoration:none;">Detail</a>
-            </td>
-        </tr>
-        @endforeach
+        <tbody>
+            @foreach ($reservations as $r)
+<tr>
+    <td>{{ $r['name'] }}</td>
+    <td>{{ $r['time'] }}</td>
+    <td>{{ $r['guest'] }}</td>
+    <td>{{ $r['status'] }}</td>
+    <td>⋮</td>
+</tr>
+@endforeach
         </tbody>
     </table>
+
+    <div style="margin-top:12px; font-size:12px; color:#999;">
+        Menampilkan 1–3 dari 48 reservasi
+    </div>
 </div>
 
-{{-- FOOTER --}}
-<footer class="site-footer">
-    <div>
-        <div class="footer-brand">RestoBook</div>
-        <div>©2024 RestoBook. Cultivating culinary excellence for MSMEs.</div>
+    {{-- STATUS MEJA --}}
+    <div style="
+    background:#fff;
+    border-radius:16px;
+    padding:20px;
+    box-shadow:0 8px 24px rgba(0,0,0,0.05);
+">
+
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h3 style="margin:0;">Status Meja</h3>
+        <span style="color:#999;">⟳</span>
     </div>
-    <div class="footer-links">
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms of Service</a>
-        <a href="#">Partner With Us</a>
-        <a href="#">Contact Support</a>
+
+    <div style="display:flex; flex-wrap:wrap; gap:12px; margin-top:16px;">
+
+        <div style="width:50px; height:50px; border-radius:50%; background:#F5F5F5; display:flex; align-items:center; justify-content:center;">M1</div>
+
+        <div style="width:50px; height:50px; border-radius:50%; background:#E6F7EC; color:#2A8C55; display:flex; align-items:center; justify-content:center;">M2</div>
+
+        <div style="width:50px; height:50px; border-radius:50%; background:#FFE8D6; color:#C8541A; display:flex; align-items:center; justify-content:center;">M3</div>
+
+        <div style="width:50px; height:50px; border-radius:50%; background:#F5F5F5; display:flex; align-items:center; justify-content:center;">M4</div>
+
+        <div style="width:50px; height:50px; border-radius:50%; background:#F5F5F5; display:flex; align-items:center; justify-content:center;">M5</div>
+
+        <div style="width:50px; height:50px; border-radius:50%; background:#E6F7EC; color:#2A8C55; display:flex; align-items:center; justify-content:center;">M6</div>
+
     </div>
-</footer>
+
+    <div style="margin-top:16px; font-size:12px; color:#999;">
+        <span style="color:#aaa;">●</span> Kosong &nbsp;&nbsp;
+        <span style="color:#2A8C55;">●</span> Terisi &nbsp;&nbsp;
+        <span style="color:#C8541A;">●</span> Dipesan
+    </div>
+
+</div>
+{{-- BAR CHART MINGGUAN --}}
+<div class="chart-section">
+    <div class="chart-title">Tren Reservasi Mingguan</div>
+    @php
+    $chartData = $chartData ?? [
+        ['label'=>'Sen','val'=>35],
+        ['label'=>'Sel','val'=>55],
+        ['label'=>'Rab','val'=>70],
+        ['label'=>'Kam','val'=>90],
+        ['label'=>'Jum','val'=>120],
+        ['label'=>'Sab','val'=>100],
+        ['label'=>'Min','val'=>65],
+    ];
+    $maxVal = max(array_column($chartData, 'val'));
+    $colors = ['bar-0','bar-1','bar-2','bar-3','bar-4','bar-5','bar-6'];
+    @endphp
+    <div class="chart-wrap">
+        @foreach($chartData as $i => $d)
+        <div class="bar-col">
+            <div class="bar {{ $colors[$i] }}"
+                 style="height: {{ ($d['val'] / $maxVal) * 130 }}px;"
+                 title="{{ $d['val'] }} reservasi"></div>
+            <div class="bar-label">{{ $d['label'] }}</div>
+        </div>
+        @endforeach
+    </div>
+</div>
 
 @endsection

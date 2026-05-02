@@ -9,18 +9,14 @@
     <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-        --primary:       #C8541A;
-        --primary-light: #FFF4EE;
-        --dark:          #7A3B0A;
-        --bg:            #F6F5F2;
-        --white:         #FFFFFF;
-        --border:        #E8E6E1;
-        --text:          #1A1A18;
-        --muted:         #9A9690;
-        --success:       #2A8C55;
-        --warning:       #D4800A;
-        --danger:        #C0392B;
-    }
+    --primary:  #E8714A;
+    --primary-light: #FFF4EE;
+    --bg:       #F6F5F2;
+    --white:    #FFFFFF;
+    --border:   #E8E6E1;
+    --text:     #1A1A18;
+    --muted:    #9A9690;
+}
 
     body {
         font-family: 'DM Sans', sans-serif;
