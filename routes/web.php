@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
 use App\Http\Controllers\Owner\DashboardController as OwnerDashboard;
+use App\Http\Controllers\Owner\ReservationController; // Tambahan dari Zulfa
 use App\Http\Controllers\Customer\HomeController;
 
 /*
@@ -29,9 +30,6 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 
-// ==========================================
-// RUTE BERDASARKAN ROLE
-// ==========================================
 
 // 3. Super Admin Routes
 Route::middleware(['auth', 'role:superadmin'])->prefix('admin')->group(function () {
@@ -40,9 +38,13 @@ Route::middleware(['auth', 'role:superadmin'])->prefix('admin')->group(function 
 
 // 4. Owner Routes
 Route::middleware(['auth', 'role:owner'])->prefix('owner')->group(function () {
+    // Dashboard Owner
     Route::get('/dashboard', [OwnerDashboard::class, 'index'])->name('owner.dashboard');
     
-    // Rute Settings Owner yang baru kita buat
+    // Halaman Reservasi 
+    Route::get('/reservasi', [ReservationController::class, 'index'])->name('owner.reservasi');
+
+    // Rute Settings Owner
     Route::get('/settings', function () {
         return view('owner.settings');
     })->name('owner.settings');
@@ -55,11 +57,7 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
 });
 
 
-// ==========================================
-// RUTE UMUM (Semua User yang sudah Login)
-// ==========================================
-
-// 6. Rute Profile (Bawaan Ilham)
+// 6. Rute Profile
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
