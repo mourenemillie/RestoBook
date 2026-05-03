@@ -2,6 +2,7 @@
 
 @section('content')
 <div class="bg-white">
+    {{-- HERO SECTION --}}
     <section class="container mx-auto px-6 py-12 md:py-20 flex flex-col md:flex-row items-center gap-12">
         <div class="md:w-1/2">
             <div class="inline-block px-4 py-2 bg-orange-50 border border-orange-100 rounded-full text-orange-600 text-sm font-bold mb-6">
@@ -14,17 +15,18 @@
                 Temukan restoran terbaik di Bandar Lampung dan lakukan reservasi instan tanpa perlu mengantri.
             </p>
             
-            <div class="mt-10 bg-white p-3 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] flex flex-col md:flex-row gap-3 border border-gray-100 max-w-xl">
+            {{-- FORM PENCARIAN --}}
+            <form action="{{ route('restaurant.show') }}" method="GET" class="mt-10 bg-white p-3 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] flex flex-col md:flex-row gap-3 border border-gray-100 max-w-xl">
                 <div class="flex flex-1 items-center px-4 gap-3">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
-                    <input type="text" placeholder="Cari Bakso Sony, Wood Stairs..." class="w-full py-3 outline-none text-slate-700 font-medium">
+                    <input type="text" name="search" placeholder="Cari Bakso Sony, Wood Stairs..." class="w-full py-3 outline-none text-slate-700 font-medium">
                 </div>
-                <button class="bg-orange-600 text-white px-10 py-4 rounded-2xl font-bold hover:bg-orange-700 transition shadow-lg shadow-orange-200">
+                <button type="submit" class="bg-orange-600 text-white px-10 py-4 rounded-2xl font-bold hover:bg-orange-700 transition shadow-lg shadow-orange-200">
                     Cari Sekarang
                 </button>
-            </div>
+            </form>
         </div>
         
         <div class="md:w-1/2 relative">
@@ -39,6 +41,7 @@
         </div>
     </section>
 
+    {{-- RESTORAN TERPOPULER SECTION --}}
     <section class="container mx-auto px-6 py-16">
         <div class="flex justify-between items-end mb-16">
             <div>
@@ -56,13 +59,14 @@
                     [
                         'name' => 'Bakso Sony', 
                         'loc' => 'Jl. Wolter Monginsidi', 
-                        'img' => 'https://images.pexels.com/photos/2233729/pexels-photo-2233729.jpeg?auto=compress&cs=tinysrgb&w=600', 
+                        'img' => asset('img/bakso_super.jpg'), 
                         'tag' => 'Favorit Lokal'
                     ],
                     [
                         'name' => 'Pindang Riu', 
                         'loc' => 'Way Halim', 
-                        'img' => 'https://images.pexels.com/photos/2098085/pexels-photo-2098085.jpeg?auto=compress&cs=tinysrgb&w=600', 
+                        // DISESUAIKAN MENJADI .jpeg
+                        'img' => asset('img/pindang_riu.jpeg'), 
                         'tag' => 'Khas Lampung'
                     ],
                     [
@@ -89,7 +93,7 @@
                     </p>
                     <div class="flex justify-between items-center mt-auto pt-10 border-t border-gray-50">
                         <div class="text-orange-400 flex gap-1">★★★★★</div>
-                        <a href="#" class="bg-slate-900 text-white hover:bg-orange-600 px-10 py-4 rounded-2xl text-sm font-black uppercase tracking-widest transition-all transform group-hover:-translate-y-1 shadow-xl">
+                        <a href="{{ route('restaurant.show') }}" class="bg-slate-900 text-white hover:bg-orange-600 px-10 py-4 rounded-2xl text-sm font-black uppercase tracking-widest transition-all transform group-hover:-translate-y-1 shadow-xl">
                             Pesan
                         </a>
                     </div>
@@ -99,6 +103,7 @@
         </div>
     </section>
 
+    {{-- UMKM SECTION --}}
     <section class="container mx-auto px-6 py-10 mb-24">
         <div class="bg-orange-600 rounded-[4rem] p-10 md:p-20 flex flex-col md:flex-row items-center justify-between gap-12 shadow-[0_40px_80px_rgba(249,115,22,0.25)] relative overflow-hidden">
             
