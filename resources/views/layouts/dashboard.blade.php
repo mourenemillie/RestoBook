@@ -55,7 +55,12 @@
         </nav>
 
         <div class="logout">
-            <a href="#"><i data-lucide="log-out"></i> Logout</a>
+            <form action="{{ route('logout') }}" method="POST" id="logout-form-owner">
+                @csrf
+                <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form-owner').submit();">
+                    <i data-lucide="log-out"></i> Logout
+                </a>
+            </form>
         </div>
     </aside>
 

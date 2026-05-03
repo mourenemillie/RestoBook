@@ -107,9 +107,9 @@
                 <p class="text-orange-50 text-xl leading-relaxed opacity-90 mb-10">
                     Setiap reservasi membantu pengusaha lokal berkembang dan menyajikan hidangan terbaik bagi masyarakat.
                 </p>
-                <button class="bg-white text-orange-600 px-12 py-5 rounded-[2rem] font-black hover:bg-orange-50 transition-all shadow-2xl uppercase tracking-widest text-lg">
+                <a href="{{ route('register') }}" class="inline-block bg-white text-orange-600 px-12 py-5 rounded-[2rem] font-black hover:bg-orange-50 transition-all shadow-2xl uppercase tracking-widest text-lg">
                     Gabung Mitra
-                </button>
+                </a>
             </div>
 
             <div class="md:w-1/2 relative h-80 flex items-center justify-center">
