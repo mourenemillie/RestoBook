@@ -25,7 +25,7 @@ class AuthController extends Controller
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $user = Auth::user();
             
-            if ($user->role === 'superadmin') {
+            if ($user->role === 'admin') {
                 return redirect('/admin/dashboard');
             } elseif ($user->role === 'owner') {
                 return redirect('/owner/dashboard');
@@ -67,9 +67,11 @@ class AuthController extends Controller
     }
 
     // Logout
-    public function logout()
+    public function logout(Request $request)
     {
         Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
         return redirect('/login');
     }
 }
