@@ -12,7 +12,7 @@ use App\Http\Controllers\Customer\ReservationController as CustomerReservationCo
 Route::get('/', function () {
     if (auth()->check()) {
         return match (auth()->user()->role) {
-            'superadmin' => redirect()->route('admin.dashboard'),
+            'admin' => redirect()->route('admin.dashboard'),
             'owner'      => redirect()->route('owner.dashboard'),
             default      => redirect()->route('home'),
         };
@@ -30,7 +30,7 @@ Route::middleware('guest')->group(function () {
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
-Route::middleware(['auth', 'role:superadmin'])->prefix('admin')->group(function () {
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminDashboard::class, 'index'])->name('admin.dashboard');
 });
 
