@@ -7,6 +7,10 @@
     <h1>Selamat Datang!</h1>
     <p class="sub">Login untuk melanjutkan reservasi kamu.</p>
 
+    @if(session('success'))
+        <div class="success">{{ session('success') }}</div>
+    @endif
+
     @if($errors->any())
         <div class="error">{{ $errors->first() }}</div>
     @endif
