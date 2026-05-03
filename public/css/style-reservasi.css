@@ -1,0 +1,226 @@
+:root {
+    --primary: #E8714A;
+    --primary-light: #FBEAE9;
+    --bg-light: #FBF7F4;
+    --white: #FFFFFF;
+    --text-dark: #1A1A1A;
+    --text-muted: #717171;
+    --border: #F0F0F0;
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+}
+
+.container {
+    display: flex;
+    min-height: 100vh;
+}
+
+
+.sidebar {
+    width: 260px;
+    background: var(--white);
+    padding: 30px 0;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--border);
+    position: fixed;
+    height: 100vh;
+}
+
+.logo {
+    color: var(--primary);
+}
+
+.logo span {
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.logo i {
+    color: var(--primary);
+}
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 25px;
+    margin-bottom: 30px;
+}
+
+.user-profile img { border-radius: 50%; }
+.user-info h4 { font-size: 14px; }
+.user-info p { font-size: 12px; color: var(--text-muted); }
+
+.menu { flex-grow: 1; }
+.menu a {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px 25px;
+    text-decoration: none;
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+.menu a.active {
+    background-color: #FFF2EB;
+    color: var(--primary);
+    border-right: 4px solid var(--primary);
+}
+
+.logout { padding: 30px 25px; }
+.logout a {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* Main Content */
+.main-content {
+    flex-grow: 1;
+    margin-left: 260px;
+    padding: 50px 80px;
+}
+
+.arrivals-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 50px;
+}
+
+.arrivals-header h1 {
+    font-size: 42px;
+    font-weight: 700;
+}
+
+.arrivals-header p {
+    color: var(--text-muted);
+    font-size: 18px;
+}
+
+/* Filter Tabs */
+.filter-tabs {
+    background: #F2E9E4; /* Warna krem sesuai desain */
+    padding: 6px;
+    border-radius: 30px;
+    display: flex;
+    gap: 5px;
+}
+
+.tab {
+    padding: 10px 25px;
+    border: none;
+    background: transparent;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--text-dark);
+    transition: 0.3s;
+}
+
+.tab.active {
+    background: var(--primary);
+    color: white;
+}
+
+/* Arrivals List */
+.arrivals-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.arrival-card {
+    background: white;
+    border-radius: 40px; /* Radius besar sesuai gambar */
+    padding: 25px 40px;
+    display: flex;
+    align-items: center;
+    box-shadow: var(--shadow);
+}
+
+.arrival-time {
+    background: var(--primary-light);
+    color: var(--text-dark);
+    font-size: 24px;
+    font-weight: 700;
+    padding: 20px 30px;
+    border-radius: 30px;
+    margin-right: 30px;
+}
+
+.arrival-info {
+    flex-grow: 1;
+}
+
+.arrival-info h3 {
+    font-size: 22px;
+    margin-bottom: 8px;
+}
+
+.arrival-tags {
+    display: flex;
+    gap: 10px;
+}
+
+.tag-item {
+    background: #FDEBDD;
+    color: #A35C2B;
+    padding: 5px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.tag-item i {
+    width: 14px;
+    height: 14px;
+}
+
+/* Actions */
+.arrival-actions {
+    display: flex;
+    gap: 15px;
+}
+
+.btn-outline {
+    border: 1.5px solid var(--primary);
+    background: transparent;
+    color: var(--primary);
+    padding: 12px 25px;
+    border-radius: 25px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-filled {
+    background: var(--primary);
+    border: none;
+    color: white;
+    padding: 12px 35px;
+    border-radius: 25px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-outline:hover, .btn-filled:hover {
+    opacity: 0.9;
+}

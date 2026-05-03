@@ -11,20 +11,21 @@
     <!-- ICON -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
 
-    <!-- CSS -->
+    <!-- GLOBAL CSS -->
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+
+    <!-- PAGE CSS (opsional dari tiap halaman) -->
+    @yield('extra-css')
 
     <!-- LUCIDE -->
     <script src="https://unpkg.com/lucide@latest"></script>
-
-    @yield('extra-css')
 </head>
 
 <body>
 
 <div class="container">
 
-    <!-- SIDEBAR (INI HARUS SAMA PERSIS DENGAN HTML ASLI) -->
+    <!-- SIDEBAR -->
     <aside class="sidebar">
         <div class="logo">
             <i data-lucide="utensils-crossed"></i>

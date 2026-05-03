@@ -1,5 +1,5 @@
 :root {
-    --primary: #BC4B09;
+    --primary: #E8714A;
     --bg-light: #FBF7F4;
     --white: #FFFFFF;
     --text-dark: #1A1A1A;
@@ -15,7 +15,9 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    * {
+    font-family: 'DM Sans', sans-serif;
+}
 }
 
 body {
@@ -43,10 +45,21 @@ body {
     align-items: center;
     gap: 10px;
     padding: 0 25px;
-    color: var(--primary);
-    font-weight: bold;
-    font-size: 22px;
     margin-bottom: 40px;
+
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.logo span {
+    font-weight: 700;
+}
+
+.logo i {
+    color: var(--primary);
+    width: 22px;
+    height: 22px;
 }
 
 .user-profile {
