@@ -38,6 +38,7 @@
         .register-link, .bottom-text { text-align: center; margin-top: 24px; font-size: 14px; color: #5d5f5d; }
         .register-link a, .bottom-text a { color: #c9460b; font-weight: 700; text-decoration: none; }
         .register-link a:hover, .bottom-text a:hover { text-decoration: underline; }
+        .success { background: #ecfdf5; color: #166534; font-size: 13px; padding: 12px 14px; border-radius: 12px; margin-bottom: 18px; }
         .error { background: #fff1f0; color: #dc2626; font-size: 13px; padding: 12px 14px; border-radius: 12px; margin-bottom: 18px; }
         @media (max-width: 640px) {
             body { padding: 16px; }

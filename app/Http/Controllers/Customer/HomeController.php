@@ -9,7 +9,7 @@ class HomeController extends Controller
 {
     public function index()
 {
-    $restaurants = \App\Models\Restaurant::where('status', 'active')->take(3)->get();
+    $restaurants = \App\Models\Restaurant::take(3)->get();
     return view('customer.home', compact('restaurants'));
 }
 }

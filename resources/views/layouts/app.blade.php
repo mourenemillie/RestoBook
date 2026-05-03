@@ -1,34 +1,54 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RestoBook Lampung - @yield('title', 'Booking Restoran')</title>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     
-    <!-- Menggunakan Tailwind dari branch Ilham -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
     
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#a33900',
+                        'surface-warm': '#fff8f6',
+                        'on-surface': '#261813',
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        poppins: ['Poppins', 'sans-serif'],
+                    },
+                    borderRadius: {
+                        'DEFAULT': '1rem',
+                        'lg': '2rem',
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        body { font-family: 'Poppins', sans-serif; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .soft-shadow { box-shadow: 0 25px 50px -12px rgba(0,0,0,0.08); }
     </style>
     
-    <!-- Menggunakan yield styles dari branch kamu -->
     @yield('extra_styles')
 </head>
-<body class="bg-gray-50 text-slate-900 flex flex-col min-h-screen">
+<body class="bg-gray-50 text-slate-900 flex flex-col min-h-screen antialiased">
     
-    {{-- NAVBAR --}}
     <nav class="bg-white sticky top-0 z-50 shadow-sm py-4">
         <div class="container mx-auto px-6 flex justify-between items-center">
             
-            {{-- Logo --}}
             <a href="{{ route('home') }}" class="flex items-center gap-2">
                 <div class="w-10 h-10 bg-orange-600 rounded-lg flex items-center justify-center text-white font-bold text-xl">R</div>
                 <span class="text-2xl font-bold text-slate-800">Resto<span class="text-orange-600">Book</span></span>
             </a>
 
-            {{-- Menu Links (Gabungan UI Ilham & Logika Route Kamu) --}}
             <div class="hidden md:flex space-x-8 font-medium">
                 <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'text-orange-600 border-b-2 border-orange-600' : 'hover:text-orange-600 transition' }}">Explore</a>
                 
@@ -40,7 +60,6 @@
                 <a href="#" class="hover:text-orange-600 transition">Bantuan</a>
             </div>
 
-            {{-- Auth Buttons (Logika Auth/Guest Kamu diterapkan ke UI Ilham) --}}
             <div class="flex gap-4 items-center">
                 @guest
                     <a href="{{ route('login') }}" class="font-semibold text-slate-700 hover:text-orange-600 transition">Sign In</a>
@@ -69,12 +88,10 @@
         </div>
     </nav>
 
-    {{-- KONTEN HALAMAN --}}
-    <main class="flex-grow">
+    <main class="flex-grow w-full max-w-7xl mx-auto px-4 md:px-12 py-8">
         @yield('content')
     </main>
 
-    {{-- FOOTER (Gabungan struktur Ilham dan teks UMKM Lampung milikmu) --}}
     <footer class="bg-slate-900 text-white py-12 mt-auto">
         <div class="container mx-auto px-6 grid md:grid-cols-3 gap-8 text-center md:text-left">
             <div>
@@ -99,7 +116,6 @@
             </div>
         </div>
         
-        {{-- Footer Bottom --}}
         <div class="container mx-auto px-6 mt-12 pt-6 border-t border-slate-800 text-center text-slate-500 text-sm">
             © {{ date('Y') }} RestoBook Lampung. All rights reserved.
         </div>
