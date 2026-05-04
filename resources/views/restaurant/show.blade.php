@@ -55,13 +55,13 @@
     }
     .menu-img-wrapper {
         width: 100%;
-        aspect-ratio: 16/10; /* Menjaga proporsi kotak gambar */
+        aspect-ratio: 16/10; 
         overflow: hidden;
     }
     .menu-img-wrapper img {
         width: 100%;
         height: 100%;
-        object-fit: cover; /* Gambar terpotong rapi, tidak gepeng */
+        object-fit: cover;
     }
     .menu-info { padding: 20px; }
     .menu-price { font-weight: 800; color: #d97706; font-size: 18px; margin-top: 10px; display: block; }
@@ -107,8 +107,11 @@
         border: none;
         cursor: pointer;
         transition: 0.3s;
+        display: block; /* Agar link memenuhi lebar container */
+        text-align: center; /* Mengetengahkan teks link */
+        text-decoration: none; /* Menghilangkan garis bawah link */
     }
-    .btn-reserve:hover { background: #b45309; }
+    .btn-reserve:hover { background: #b45309; color: white; }
 
     /* Responsive */
     @media (max-width: 768px) {
@@ -138,7 +141,6 @@
             <div class="menu-list">
                 <div class="menu-card">
                     <div class="menu-img-wrapper">
-                        {{-- Mengambil dari public/img/bakso_super.jpg --}}
                         <img src="{{ asset('img/bakso_super.jpg') }}" alt="Bakso Sony">
                     </div>
                     <div class="menu-info">
@@ -150,7 +152,6 @@
 
                 <div class="menu-card">
                     <div class="menu-img-wrapper">
-                        {{-- Mengambil dari public/img/mie_ayam.jpg --}}
                         <img src="{{ asset('img/mie_ayam.jpg') }}" alt="Mie Ayam">
                     </div>
                     <div class="menu-info">
@@ -161,7 +162,6 @@
                 </div>
 
                 <div class="menu-card-wide">
-                    {{-- Kamu bisa pakai placeholder atau ganti dengan gambar es jeruk jika sudah ada di folder img --}}
                     <img src="https://images.unsplash.com/photo-1613478223719-2ab802602423?q=80&w=400" alt="Minuman">
                     <div class="menu-info">
                         <h3 style="margin:0">Es Jeruk Peras</h3>
@@ -186,7 +186,10 @@
                     <option>6+ Orang</option>
                 </select>
 
-                <button class="btn-reserve">Booking Sekarang</button>
+                {{-- UPDATE DISINI: Menggunakan tag <a> untuk pindah halaman --}}
+                <a href="{{ route('restaurant.booking') }}" class="btn-reserve">
+                    Booking Sekarang
+                </a>
                 
                 <p style="font-size: 12px; color: #aaa; text-align: center; margin-top: 15px;">
                     Konfirmasi via WhatsApp setelah klik booking.

@@ -41,7 +41,7 @@
     <nav class="bg-white sticky top-0 z-50 py-4 px-8 shadow-sm">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             
-            <a href="{{ url('/') }}" class="flex items-center gap-2">
+            <a href="{{ url('/') }}" class="flex items-center gap-2"
                 <span class="text-primary text-2xl font-bold material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">restaurant</span>
                 <span class="text-2xl font-extrabold text-[#963700] tracking-tight">Resto<span class="text-primary">Book</span></span>
             </a>
