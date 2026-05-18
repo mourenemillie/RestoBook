@@ -40,14 +40,13 @@
     
     <nav class="bg-white sticky top-0 z-50 py-4 px-8 shadow-sm">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
-            
-            <a href="{{ route('home') }}" class="flex items-center gap-2">
+            <a href="{{ url('/') }}" class="flex items-center gap-2">
                 <span class="text-primary text-2xl font-bold material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">restaurant</span>
                 <span class="text-2xl font-extrabold text-[#963700] tracking-tight">Resto<span class="text-primary">Book</span></span>
             </a>
 
             <div class="hidden md:flex space-x-10 font-medium text-slate-500 text-sm">
-                <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'text-primary font-bold' : 'hover:text-primary transition' }}">Explore</a>
+                <a href="{{ url('/') }}" class="{{ request()->is('/') ? 'text-primary font-bold' : 'hover:text-primary transition' }}">Explore</a>
                 
                 @auth
                     <a href="{{ route('customer.reservations') ?? '#' }}" class="{{ request()->routeIs('customer.reservations') ? 'text-primary font-bold' : 'hover:text-primary transition' }}">Reservations</a>
@@ -61,13 +60,13 @@
 
             <div class="flex gap-6 items-center text-sm">
                 @guest
-                    <a href="{{ route('login') }}" class="font-bold text-primary hover:text-[#C44005] transition">Sign In</a>
-                    <a href="{{ route('register') }}" class="bg-primary text-white px-8 py-2.5 rounded-full font-bold hover:bg-[#C44005] transition shadow-md shadow-orange-200">Login</a>
+                    <a href="{{ route('register') }}" class="font-bold text-primary hover:text-[#C44005] transition">Register</a>
+                    <a href="{{ route('login') }}" class="bg-primary text-white px-8 py-2.5 rounded-full font-bold hover:bg-[#C44005] transition shadow-md shadow-orange-200">Login</a>
                 @endguest
 
                 @auth
-                    <div class="flex items-center gap-4">
-                        @if(auth()->user()->role === 'superadmin')
+                        <div class="flex items-center gap-4">
+                        @if(auth()->user()->role === 'admin')
                             <a href="{{ route('admin.dashboard') }}" class="font-bold text-primary hover:text-[#C44005] transition">Dashboard</a>
                         @elseif(auth()->user()->role === 'owner')
                             <a href="{{ route('owner.dashboard') ?? '#' }}" class="font-bold text-primary hover:text-[#C44005] transition">Dashboard</a>
@@ -97,7 +96,7 @@
     <footer class="bg-white text-slate-800 py-16 mt-auto border-t border-gray-100">
         <div class="max-w-7xl mx-auto px-8 grid md:grid-cols-4 gap-8">
             <div class="md:col-span-2">
-                <a href="{{ route('home') }}" class="flex items-center gap-2 mb-6">
+                <a href="{{ url('/') }}" class="flex items-center gap-2 mb-6">
                     <span class="text-primary text-2xl font-bold material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">restaurant</span>
                     <span class="text-2xl font-extrabold text-[#963700] tracking-tight">Resto<span class="text-primary">Book</span></span>
                 </a>

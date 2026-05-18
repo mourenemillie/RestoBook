@@ -1,36 +1,793 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - RestoBook</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-orange: #e25c23;
+            --primary-brown: #a63b0a;
+            --bg-body: #fffaf8;
+            --bg-sidebar: #ffffff;
+            --text-main: #271f1d;
+            --text-muted: #807773;
+            --border-color: #f2ebe8;
+            --card-shadow: 0 4px 24px rgba(0, 0, 0, 0.02);
+            
+            --trend-green-bg: #e6f7ed;
+            --trend-green-text: #219653;
+            --trend-red-bg: #feeceb;
+            --trend-red-text: #eb5757;
+            --trend-neutral-bg: #faeaea;
+            --trend-neutral-text: #c0776b;
 
-@section('title', 'Owner Dashboard - RestoBook Lampung')
+            --font-family: 'Plus Jakarta Sans', sans-serif;
+        }
 
-@section('content')
-<section style="padding: 96px 48px; max-width: 1100px; margin: 0 auto;">
-    <header style="display:flex; align-items:flex-end; justify-content:space-between; gap:16px; margin-bottom:40px;">
-        <div>
-            <h1 style="font-size:38px; font-weight:800; margin-bottom:8px;">Owner Dashboard</h1>
-            <p style="color:#595c5a;">Pantau restoran dan reservasi Anda dalam satu tempat.</p>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: var(--bg-sidebar);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: 32px 0;
+            flex-shrink: 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 28px;
+            margin-bottom: 40px;
+            color: var(--primary-orange);
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 28px;
+            margin-bottom: 32px;
+        }
+
+        .user-profile img {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-info h4 {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        .user-info p {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .nav-menu {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 16px 28px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            border-left: 4px solid transparent;
+        }
+
+        .nav-item svg {
+            width: 20px;
+            height: 20px;
+            stroke-width: 2.5;
+        }
+
+        .nav-item.active {
+            color: var(--primary-orange);
+            background-color: #fff6f3;
+            border-left-color: var(--primary-orange);
+        }
+
+        .logout {
+            margin-top: auto;
+            color: #d1302b;
+            padding: 16px 28px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-weight: 600;
+            font-size: 14px;
+            text-decoration: none;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 40px 48px;
+            overflow-y: auto;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 32px;
+        }
+
+        .header-title h1 {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .header-title p {
+            color: var(--text-muted);
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background-color: #ffffff;
+            border: 1px solid var(--border-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            color: var(--text-main);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-brown);
+            color: #ffffff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background-color: #ffffff;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 24px;
+        }
+
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .icon-orange { background-color: #fcece7; color: var(--primary-orange); }
+        .icon-yellow { background-color: #fbf0df; color: #d97706; }
+        .icon-brown { background-color: #f3e9e3; color: #854d0e; }
+        .icon-red { background-color: #fbecec; color: #dc2626; }
+
+        .stat-trend {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .trend-up { background-color: var(--trend-green-bg); color: var(--trend-green-text); }
+        .trend-down { background-color: var(--trend-red-bg); color: var(--trend-red-text); }
+        .trend-neutral { background-color: var(--trend-neutral-bg); color: var(--trend-neutral-text); }
+
+        .stat-title {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--text-main);
+            letter-spacing: -1px;
+        }
+
+        .stat-value span {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-muted);
+            letter-spacing: 0;
+        }
+
+        /* Middle Section */
+        .middle-section {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .card {
+            background-color: #ffffff;
+            border-radius: 24px;
+            padding: 28px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .card-link {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--primary-brown);
+            text-decoration: none;
+        }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        td {
+            padding: 16px 0;
+            font-size: 14px;
+            font-weight: 600;
+            vertical-align: middle;
+        }
+
+        .customer-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar-initial {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 700;
+            font-size: 14px;
+            color: #ffffff;
+        }
+
+        .bg-avatar-1 { background-color: #d95a1a; }
+        .bg-avatar-2 { background-color: #8a6a4b; }
+        .bg-avatar-3 { background-color: #ecc9c0; color: #a63b0a; }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            display: inline-block;
+        }
+
+        .status-waiting { background-color: #fbdeb4; color: #b45309; }
+        .status-confirmed { background-color: #d1f4e0; color: #15803d; }
+        .status-done { background-color: #fce3dd; color: #9f1239; }
+
+        .btn-more {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-muted);
+            padding: 4px;
+        }
+
+        /* Table Status */
+        .table-status-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .table-circle {
+            aspect-ratio: 1;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .table-circle h5 {
+            font-size: 16px;
+            font-weight: 800;
+            margin-bottom: 2px;
+            color: var(--text-main);
+        }
+
+        .table-circle span {
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .t-empty { background-color: #fdede8; }
+        .t-empty span { color: #885c54; }
+        
+        .t-filled { background-color: #def6e9; }
+        .t-filled span { color: #2e7a51; }
+        
+        .t-booked { background-color: #f8cf9c; }
+        .t-booked span { color: #8b4e05; }
+
+        .table-legend {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .dot-empty { background-color: #f7d2c6; }
+        .dot-filled { background-color: #85d9a9; }
+        .dot-booked { background-color: #f5b767; }
+
+        /* Chart Section */
+        .chart-container {
+            height: 220px;
+            display: flex;
+            align-items: flex-end;
+            gap: 2%;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 16px;
+        }
+
+        .bar-wrapper {
+            flex: 1;
+            height: 100%;
+            display: flex;
+            align-items: flex-end;
+            position: relative;
+        }
+
+        .bar {
+            width: 100%;
+            border-radius: 4px 4px 0 0;
+        }
+
+        .chart-labels {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 2%;
+        }
+
+        .chart-labels span {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+            width: calc(100% / 7);
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="logo">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
+                <path d="M7 2v20"></path>
+                <path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"></path>
+            </svg>
+            RestoBook
         </div>
-    </header>
 
-    <div style="display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:24px; margin-bottom:40px;">
-        <div style="background:#fff; padding:28px; border-radius:32px; box-shadow:0 20px 50px rgba(0,0,0,0.05);">
-            <div style="font-size:14px; font-weight:700; color:#8c4a00; text-transform:uppercase; letter-spacing:1px; margin-bottom:12px;">Restoran Anda</div>
-            <div style="font-size:34px; font-weight:800; color:#2c2f2e;">6</div>
-            <p style="color:#595c5a; margin-top:12px;">Restoran aktif yang terhubung ke RestoBook.</p>
+        <div class="user-profile">
+            <img src="https://i.pravatar.cc/150?img=11" alt="Resto Owner">
+            <div class="user-info">
+                <h4>Resto Owner</h4>
+                <p>Manage your tabl</p>
+            </div>
         </div>
-        <div style="background:#fff; padding:28px; border-radius:32px; box-shadow:0 20px 50px rgba(0,0,0,0.05);">
-            <div style="font-size:14px; font-weight:700; color:#8c4a00; text-transform:uppercase; letter-spacing:1px; margin-bottom:12px;">Reservasi Hari Ini</div>
-            <div style="font-size:34px; font-weight:800; color:#2c2f2e;">18</div>
-            <p style="color:#595c5a; margin-top:12px;">Klien yang akan datang ke restoran Anda hari ini.</p>
-        </div>
-    </div>
 
-    <div style="background:#fff; padding:32px; border-radius:32px; box-shadow:0 20px 50px rgba(0,0,0,0.05);">
-        <h2 style="font-size:24px; font-weight:800; margin-bottom:16px;">Reservasi Terbaru</h2>
-        <ul style="display:grid; gap:14px; list-style:none; padding:0; margin:0;">
-            <li style="padding:18px 22px; border-radius:24px; background:#f8faf6; color:#2c2f2e;">20:00 - 4 orang - Restoran Lampung Delight - Status: Dikonfirmasi</li>
-            <li style="padding:18px 22px; border-radius:24px; background:#f8faf6; color:#2c2f2e;">19:30 - 2 orang - Kopi Nusantara - Status: Menunggu</li>
-            <li style="padding:18px 22px; border-radius:24px; background:#f8faf6; color:#2c2f2e;">18:00 - 6 orang - Warung Mak Nyak - Status: Dibatalkan</li>
-        </ul>
-    </div>
-</section>
-@endsection
+        <nav class="nav-menu">
+            <a href="#" class="nav-item active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="14" width="7" height="7"></rect>
+                    <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+                Dashboard
+            </a>
+            <a href="#" class="nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                Reservasi
+            </a>
+            <a href="#" class="nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
+                    <path d="M7 2v20"></path>
+                    <path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"></path>
+                </svg>
+                Kelola Menu dan Meja
+            </a>
+            <a href="#" class="nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                </svg>
+                Pengaturan
+            </a>
+            
+            <a href="#" class="logout">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                    <polyline points="16 17 21 12 16 7"></polyline>
+                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                </svg>
+                Logout
+            </a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="header">
+            <div>
+                <div class="header-title">
+                    <h1>Selamat Datang, Owner!</h1>
+                    <p>Berikut adalah ringkasan aktivitas restoran Anda hari ini.</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="btn-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                    </svg>
+                </button>
+                <button class="btn-primary">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    Reservasi Baru
+                </button>
+            </div>
+        </header>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon icon-orange">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                    </div>
+                    <div class="stat-trend trend-up">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
+                            <polyline points="16 7 22 7 22 13"></polyline>
+                        </svg>
+                        12%
+                    </div>
+                </div>
+                <div class="stat-title">Total Tamu Hari Ini</div>
+                <div class="stat-value">142</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon icon-yellow">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                    </div>
+                    <div class="stat-trend trend-up">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
+                            <polyline points="16 7 22 7 22 13"></polyline>
+                        </svg>
+                        5%
+                    </div>
+                </div>
+                <div class="stat-title">Reservasi Aktif</div>
+                <div class="stat-value">28</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon icon-brown">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 6h16"></path><path d="M4 6v12"></path><path d="M20 6v12"></path><path d="M4 10h16"></path>
+                        </svg>
+                    </div>
+                    <div class="stat-trend trend-neutral">
+                        Stabil
+                    </div>
+                </div>
+                <div class="stat-title">Meja Tersedia</div>
+                <div class="stat-value">15<span>/40</span></div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon icon-red">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="15" y1="9" x2="9" y2="15"></line>
+                            <line x1="9" y1="9" x2="15" y2="15"></line>
+                        </svg>
+                    </div>
+                    <div class="stat-trend trend-down">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="22 17 13.5 8.5 8.5 13.5 2 7"></polyline>
+                            <polyline points="16 17 22 17 22 11"></polyline>
+                        </svg>
+                        2%
+                    </div>
+                </div>
+                <div class="stat-title">Batal Hari Ini</div>
+                <div class="stat-value">3</div>
+            </div>
+        </div>
+
+        <div class="middle-section">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Reservasi Terbaru</h2>
+                    <a href="#" class="card-link">Lihat Semua</a>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nama Pelanggan</th>
+                            <th>Waktu</th>
+                            <th>Tamu</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="customer-cell">
+                                    <div class="avatar-initial bg-avatar-1">A</div>
+                                    Ahmad Fauzi
+                                </div>
+                            </td>
+                            <td>19:00 WIB</td>
+                            <td>4 Orang</td>
+                            <td><span class="status-badge status-waiting">Menunggu</span></td>
+                            <td>
+                                <button class="btn-more">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="1"></circle>
+                                        <circle cx="12" cy="5" r="1"></circle>
+                                        <circle cx="12" cy="19" r="1"></circle>
+                                    </svg>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="customer-cell">
+                                    <div class="avatar-initial bg-avatar-2">B</div>
+                                    Budi Santoso
+                                </div>
+                            </td>
+                            <td>20:30 WIB</td>
+                            <td>2 Orang</td>
+                            <td><span class="status-badge status-confirmed">Dikonfirmasi</span></td>
+                            <td>
+                                <button class="btn-more">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="1"></circle>
+                                        <circle cx="12" cy="5" r="1"></circle>
+                                        <circle cx="12" cy="19" r="1"></circle>
+                                    </svg>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="customer-cell">
+                                    <div class="avatar-initial bg-avatar-3">C</div>
+                                    Citra Kirana
+                                </div>
+                            </td>
+                            <td>18:15 WIB</td>
+                            <td>6 Orang</td>
+                            <td><span class="status-badge status-done">Selesai</span></td>
+                            <td>
+                                <button class="btn-more">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="1"></circle>
+                                        <circle cx="12" cy="5" r="1"></circle>
+                                        <circle cx="12" cy="19" r="1"></circle>
+                                    </svg>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Status Meja</h2>
+                    <button class="btn-icon" style="width: 32px; height: 32px; border:none; background:transparent;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="1 4 1 10 7 10"></polyline>
+                            <polyline points="23 20 23 14 17 14"></polyline>
+                            <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <div class="table-status-grid">
+                    <div class="table-circle t-empty">
+                        <h5>M1</h5>
+                        <span>Kosong</span>
+                    </div>
+                    <div class="table-circle t-filled">
+                        <h5>M2</h5>
+                        <span>Terisi</span>
+                    </div>
+                    <div class="table-circle t-booked">
+                        <h5>M3</h5>
+                        <span>Dipesan</span>
+                    </div>
+                    <div class="table-circle t-empty">
+                        <h5>M4</h5>
+                        <span>Kosong</span>
+                    </div>
+                    <div class="table-circle t-empty">
+                        <h5>M5</h5>
+                        <span>Kosong</span>
+                    </div>
+                    <div class="table-circle t-filled">
+                        <h5>M6</h5>
+                        <span>Terisi</span>
+                    </div>
+                </div>
+
+                <div class="table-legend">
+                    <div class="legend-item"><div class="legend-dot dot-empty"></div> Kosong</div>
+                    <div class="legend-item"><div class="legend-dot dot-filled"></div> Terisi</div>
+                    <div class="legend-item"><div class="legend-dot dot-booked"></div> Dipesan</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title" style="margin-bottom: 30px;">Tren Reservasi Mingguan</h2>
+            
+            <div class="chart-container">
+                <div class="bar-wrapper"><div class="bar" style="height: 28%; background-color: #f1dfd5;"></div></div>
+                <div class="bar-wrapper"><div class="bar" style="height: 42%; background-color: #dfbfae;"></div></div>
+                <div class="bar-wrapper"><div class="bar" style="height: 35%; background-color: #e5cdbf;"></div></div>
+                <div class="bar-wrapper"><div class="bar" style="height: 55%; background-color: #c19175;"></div></div>
+                <div class="bar-wrapper"><div class="bar" style="height: 85%; background-color: #9e3d09;"></div></div>
+                <div class="bar-wrapper"><div class="bar" style="height: 60%; background-color: #bc774f;"></div></div>
+                <div class="bar-wrapper"><div class="bar" style="height: 48%; background-color: #ceaa94;"></div></div>
+            </div>
+            
+            <div class="chart-labels">
+                <span>Sen</span>
+                <span>Sel</span>
+                <span>Rab</span>
+                <span>Kam</span>
+                <span>Jum</span>
+                <span>Sab</span>
+                <span>Min</span>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
