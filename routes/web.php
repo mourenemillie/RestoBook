@@ -8,6 +8,11 @@ use App\Http\Controllers\Owner\DashboardController as OwnerDashboard;
 use App\Http\Controllers\Owner\ReservationController as OwnerReservationController;
 use App\Http\Controllers\Customer\HomeController;
 use App\Http\Controllers\Customer\ReservationController as CustomerReservationController;
+use App\Http\Controllers\RestaurantController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\Admin\RestaurantController as AdminRestaurantController;
+use App\Http\Controllers\Owner\SettingController as OwnerSettingController;
+use App\Http\Controllers\Owner\TableController as OwnerTableController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,7 +20,7 @@ use App\Http\Controllers\Customer\ReservationController as CustomerReservationCo
 |--------------------------------------------------------------------------
 */
 
-// --- PUBLIC ROUTES (Landing Page) ---
+// Route Landing Page (Sekarang mengarah ke folder restaurant/index)
 Route::get('/', function () {
     if (auth()->check()) {
         return match (auth()->user()->role) {
@@ -24,26 +29,15 @@ Route::get('/', function () {
             default => redirect()->route('home'),
         };
     }
+
+    // Mengubah dari view('landing') menjadi view('restaurant.index')
     return view('restaurant.index'); 
 });
 
-// --- RESTAURANT FLOW ROUTES (Akses Publik/Tamu) ---
-Route::prefix('restaurant')->name('restaurant.')->group(function () {
-    // Halaman Detail Restoran
-    Route::get('/detail', function () {
-        return view('restaurant.show');
-    })->name('show');
-
-    // Halaman Pemesanan Meja (Figma: Booking)
-    Route::get('/booking', function () {
-        return view('restaurant.booking');
-    })->name('booking');
-
-    // Halaman Pembayaran (Figma: Payment)
-    Route::get('/payment', function () {
-        return view('restaurant.payment');
-    })->name('payment');
-});
+// Route Detail Restoran (Baru ditambahkan)
+Route::get('/restaurant/detail', function () {
+    return view('restaurant.show');
+})->name('restaurant.show');
 
 // --- AUTH ROUTES ---
 Route::middleware('guest')->group(function () {
@@ -56,20 +50,20 @@ Route::middleware('guest')->group(function () {
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
 // --- ADMIN ROUTES ---
-Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', [AdminDashboard::class, 'index'])->name('dashboard');
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
+    Route::get('/dashboard', [AdminDashboard::class, 'index'])->name('admin.dashboard');
     Route::get('/users', function () {
         return view('admin.users');
-    })->name('users');
+    })->name('admin.users');
 });
 
 // --- OWNER ROUTES ---
-Route::middleware(['auth', 'role:owner'])->prefix('owner')->name('owner.')->group(function () {
-    Route::get('/dashboard', [OwnerDashboard::class, 'index'])->name('dashboard');
-    Route::get('/reservasi', [OwnerReservationController::class, 'index'])->name('reservasi');
+Route::middleware(['auth', 'role:owner'])->prefix('owner')->group(function () {
+    Route::get('/dashboard', [OwnerDashboard::class, 'index'])->name('owner.dashboard');
+    Route::get('/reservasi', [OwnerReservationController::class, 'index'])->name('owner.reservasi');
     Route::get('/settings', function () {
         return view('owner.settings');
-    })->name('settings');
+    })->name('owner.settings');
 });
 
 // --- CUSTOMER ROUTES ---

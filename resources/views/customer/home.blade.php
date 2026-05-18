@@ -99,7 +99,7 @@
         <div class="hero-grid">
             {{-- KIRI: Text --}}
             <div>
-                <span class="hero-badge">MSME EMPOWERMENT</span>
+                <span class="hero-badge">PEMBERDAYAAN UMKM</span>
                 <h1 class="hero-title">
                     Booking Meja Kini<br>
                     <span>Lebih Mudah</span>
@@ -162,7 +162,7 @@
                     <div class="resto-location">{{ $resto->address }}</div>
                     <div class="resto-footer">
                         <span class="badge-available">TERSEDIA</span>
-                        <a href="#" class="btn-booking">Booking</a>
+                        <a href="#" class="btn-booking">Pesan</a>
                     </div>
                 </div>
             </div>
@@ -184,7 +184,7 @@
                     <div class="resto-footer">
                         @if($dummy['status'] === 'available')
                             <span class="badge-available">TERSEDIA</span>
-                            <a href="#" class="btn-booking">Booking</a>
+                            <a href="#" class="btn-booking">Pesan</a>
                         @else
                             <span class="badge-full">PENUH</span>
                             <a href="#" class="btn-antri">Antre</a>
@@ -206,7 +206,7 @@
                 <h2 class="section-title">Pilih Meja</h2>
                 <p class="section-sub">Bagian ini dibuat dengan background transparan. Nanti tinggal pasang gambar denah meja di area sebelah kiri.</p>
             </div>
-            <a href="#" class="table-action">View Floorplan</a>
+            <a href="#" class="table-action">Lihat Denah</a>
         </div>
         <div class="table-card-inner">
             <div class="table-preview">
@@ -216,15 +216,15 @@
                 <p>Gunakan area ini untuk menampilkan layout meja, pilihan area, atau foto floorplan restoran. Background transparan memudahkan tampilan gambar tetap terlihat elegan.</p>
                 <div class="table-meta">
                     <div class="table-meta-item">
-                        <strong>Area meja</strong>
-                        <span>Window, Booth, Main, Bar</span>
+                        <strong>Area Meja</strong>
+                        <span>Jendela, Bilik, Utama, Bar</span>
                     </div>
                     <div class="table-meta-item">
-                        <strong>Slot tersedia</strong>
+                        <strong>Slot Tersedia</strong>
                         <span>18:00, 18:30, 19:00, 19:30, 20:00</span>
                     </div>
                     <div class="table-meta-item">
-                        <strong>Kapastias tamu</strong>
+                        <strong>Kapasitas Tamu</strong>
                         <span>1-12 orang per meja</span>
                     </div>
                 </div>

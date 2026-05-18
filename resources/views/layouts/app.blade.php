@@ -46,22 +46,22 @@
             </a>
 
             <div class="hidden md:flex space-x-10 font-medium text-slate-500 text-sm">
-                <a href="{{ url('/') }}" class="{{ request()->is('/') ? 'text-primary font-bold' : 'hover:text-primary transition' }}">Explore</a>
+                <a href="{{ url('/') }}" class="{{ request()->is('/') ? 'text-primary font-bold' : 'hover:text-primary transition' }}">Jelajahi</a>
                 
                 @auth
-                    <a href="{{ route('customer.reservations') ?? '#' }}" class="{{ request()->routeIs('customer.reservations') ? 'text-primary font-bold' : 'hover:text-primary transition' }}">Reservations</a>
+                    <a href="{{ route('customer.reservations') ?? '#' }}" class="{{ request()->routeIs('customer.reservations') ? 'text-primary font-bold' : 'hover:text-primary transition' }}">Reservasi</a>
                 @else
-                    <a href="#" class="hover:text-primary transition">Reservations</a>
+                    <a href="#" class="hover:text-primary transition">Reservasi</a>
                 @endauth
                 
-                <a href="#" class="hover:text-primary transition">About Us</a>
-                <a href="#" class="hover:text-primary transition">Support</a>
+                <a href="#" class="hover:text-primary transition">Tentang Kami</a>
+                <a href="#" class="hover:text-primary transition">Bantuan</a>
             </div>
 
             <div class="flex gap-6 items-center text-sm">
                 @guest
-                    <a href="{{ route('register') }}" class="font-bold text-primary hover:text-[#C44005] transition">Register</a>
-                    <a href="{{ route('login') }}" class="bg-primary text-white px-8 py-2.5 rounded-full font-bold hover:bg-[#C44005] transition shadow-md shadow-orange-200">Login</a>
+                    <a href="{{ route('register') }}" class="font-bold text-primary hover:text-[#C44005] transition">Daftar</a>
+                    <a href="{{ route('login') }}" class="bg-primary text-white px-8 py-2.5 rounded-full font-bold hover:bg-[#C44005] transition shadow-md shadow-orange-200">Masuk</a>
                 @endguest
 
                 @auth
@@ -79,7 +79,7 @@
                             <form action="{{ route('logout') }}" method="POST" class="inline">
                                 @csrf
                                 <button type="submit" class="text-xs font-bold text-slate-500 hover:text-red-600 transition">
-                                    Logout
+                                    Keluar
                                 </button>
                             </form>
                         </div>

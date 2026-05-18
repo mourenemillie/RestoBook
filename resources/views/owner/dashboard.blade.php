@@ -480,12 +480,12 @@
             <img src="https://i.pravatar.cc/150?img=11" alt="Resto Owner">
             <div class="user-info">
                 <h4>Resto Owner</h4>
-                <p>Manage your tabl</p>
+                <p>Manage your resto</p>
             </div>
         </div>
 
         <nav class="nav-menu">
-            <a href="#" class="nav-item active">
+            <a href="{{ route('owner.dashboard') }}" class="nav-item active">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="3" y="3" width="7" height="7"></rect>
                     <rect x="14" y="3" width="7" height="7"></rect>
@@ -494,7 +494,7 @@
                 </svg>
                 Dashboard
             </a>
-            <a href="#" class="nav-item">
+            <a href="{{ route('owner.reservasi') }}" class="nav-item">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
                     <line x1="16" y1="2" x2="16" y2="6"></line>
@@ -503,7 +503,7 @@
                 </svg>
                 Reservasi
             </a>
-            <a href="#" class="nav-item">
+            <a href="{{ route('owner.kelola-meja') }}" class="nav-item">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
                     <path d="M7 2v20"></path>
@@ -511,7 +511,7 @@
                 </svg>
                 Kelola Menu dan Meja
             </a>
-            <a href="#" class="nav-item">
+            <a href="{{ route('owner.settings') }}" class="nav-item">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="12" cy="12" r="3"></circle>
                     <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
@@ -519,14 +519,17 @@
                 Pengaturan
             </a>
             
-            <a href="#" class="logout">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                    <polyline points="16 17 21 12 16 7"></polyline>
-                    <line x1="21" y1="12" x2="9" y2="12"></line>
-                </svg>
-                Logout
-            </a>
+            <form action="{{ route('logout') }}" method="POST" id="logout-form-owner-dashboard">
+                @csrf
+                <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form-owner-dashboard').submit();" class="logout">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                    Logout
+                </a>
+            </form>
         </nav>
     </aside>
 
@@ -612,7 +615,7 @@
                     </div>
                 </div>
                 <div class="stat-title">Meja Tersedia</div>
-                <div class="stat-value">15<span>/40</span></div>
+                <div class="stat-value">12<span>/24</span></div>
             </div>
 
             <div class="stat-card">
@@ -729,38 +732,18 @@
                         </svg>
                     </button>
                 </div>
-                
-                <div class="table-status-grid">
-                    <div class="table-circle t-empty">
-                        <h5>M1</h5>
-                        <span>Kosong</span>
+                <div style="padding: 10px 0;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 13px; font-weight: 600;">
+                        <span style="color: #2e7a51;">Tersedia (50%)</span>
+                        <span style="color: #9f1239;">Terisi (33%)</span>
+                        <span style="color: #b45309;">Dipesan (17%)</span>
                     </div>
-                    <div class="table-circle t-filled">
-                        <h5>M2</h5>
-                        <span>Terisi</span>
+                    <div style="width: 100%; height: 12px; background: #f2ebe8; border-radius: 6px; display: flex; overflow: hidden; margin-bottom: 20px;">
+                        <div style="width: 50%; background: #85d9a9;" title="12 Meja Tersedia"></div>
+                        <div style="width: 33%; background: #fca5a5;" title="8 Meja Terisi"></div>
+                        <div style="width: 17%; background: #fcd34d;" title="4 Meja Dipesan"></div>
                     </div>
-                    <div class="table-circle t-booked">
-                        <h5>M3</h5>
-                        <span>Dipesan</span>
-                    </div>
-                    <div class="table-circle t-empty">
-                        <h5>M4</h5>
-                        <span>Kosong</span>
-                    </div>
-                    <div class="table-circle t-empty">
-                        <h5>M5</h5>
-                        <span>Kosong</span>
-                    </div>
-                    <div class="table-circle t-filled">
-                        <h5>M6</h5>
-                        <span>Terisi</span>
-                    </div>
-                </div>
-
-                <div class="table-legend">
-                    <div class="legend-item"><div class="legend-dot dot-empty"></div> Kosong</div>
-                    <div class="legend-item"><div class="legend-dot dot-filled"></div> Terisi</div>
-                    <div class="legend-item"><div class="legend-dot dot-booked"></div> Dipesan</div>
+                    <p style="font-size: 12px; color: var(--text-muted); text-align: center;">Total 24 Meja (12 Tersedia, 8 Terisi, 4 Dipesan)</p>
                 </div>
             </div>
         </div>

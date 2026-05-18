@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arrivals - RestoBook</title>
+    <title>Kedatangan - RestoBook</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
@@ -199,8 +199,8 @@
 
         .reservation-card {
             background: #ffffff;
-            border-radius: 32px;
-            padding: 24px 32px;
+            border-radius: 24px;
+            padding: 16px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -217,9 +217,9 @@
         .time-badge {
             background-color: var(--time-bg);
             color: #2b160d;
-            font-size: 26px;
+            font-size: 22px;
             font-weight: 700;
-            padding: 20px 24px;
+            padding: 12px 16px;
             border-radius: 24px;
             min-width: 110px;
             text-align: center;
@@ -308,12 +308,12 @@
             <img src="https://i.pravatar.cc/150?img=11" alt="Resto Owner">
             <div class="user-info">
                 <h4>Resto Owner</h4>
-                <p>Manage your tabl</p>
+                <p>Manage your resto</p>
             </div>
         </div>
 
         <nav class="nav-menu">
-            <a href="#" class="nav-item">
+            <a href="{{ route('owner.dashboard') }}" class="nav-item">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="3" y="3" width="7" height="7"></rect>
                     <rect x="14" y="3" width="7" height="7"></rect>
@@ -322,7 +322,7 @@
                 </svg>
                 Dashboard
             </a>
-            <a href="#" class="nav-item active">
+            <a href="{{ route('owner.reservasi') }}" class="nav-item active">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
                     <line x1="16" y1="2" x2="16" y2="6"></line>
@@ -331,7 +331,7 @@
                 </svg>
                 Reservasi
             </a>
-            <a href="#" class="nav-item">
+            <a href="{{ route('owner.kelola-meja') }}" class="nav-item">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
                     <path d="M7 2v20"></path>
@@ -339,7 +339,7 @@
                 </svg>
                 Kelola Menu dan Meja
             </a>
-            <a href="#" class="nav-item">
+            <a href="{{ route('owner.settings') }}" class="nav-item">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="12" cy="12" r="3"></circle>
                     <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
@@ -365,14 +365,14 @@
     <main class="main-content">
         <header class="header">
             <div class="header-title">
-                <h1>Arrivals</h1>
-                <p>Manage today's reservations and check-ins.</p>
+                <h1>Kedatangan</h1>
+                <p>Kelola reservasi dan kedatangan tamu hari ini.</p>
             </div>
             <div class="filter-pills">
-                <button class="filter-btn active">All</button>
-                <button class="filter-btn">Waiting</button>
-                <button class="filter-btn">Arrived</button>
-                <button class="filter-btn">No-Show</button>
+                <button class="filter-btn active">Semua</button>
+                <button class="filter-btn">Menunggu</button>
+                <button class="filter-btn">Hadir</button>
+                <button class="filter-btn">Tidak Hadir</button>
             </div>
         </header>
 
@@ -388,20 +388,20 @@
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M4 6h16"></path><path d="M4 6v12"></path><path d="M20 6v12"></path><path d="M4 10h16"></path>
                                 </svg>
-                                Table 04
+                                Meja 04
                             </span>
                             <span class="tag guest">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                                 </svg>
-                                4 Guests
+                                4 Tamu
                             </span>
                         </div>
                     </div>
                 </div>
                 <div class="card-actions">
-                    <button class="btn-outline">Mark No-Show</button>
-                    <button class="btn-filled">Check-In</button>
+                    <button class="btn-outline">Tidak Hadir</button>
+                    <button class="btn-filled">Hadir</button>
                 </div>
             </div>
 
@@ -416,20 +416,20 @@
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M4 6h16"></path><path d="M4 6v12"></path><path d="M20 6v12"></path><path d="M4 10h16"></path>
                                 </svg>
-                                Table 12
+                                Meja 12
                             </span>
                             <span class="tag guest">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                                 </svg>
-                                2 Guests
+                                2 Tamu
                             </span>
                         </div>
                     </div>
                 </div>
                 <div class="card-actions">
-                    <button class="btn-outline">Mark No-Show</button>
-                    <button class="btn-filled">Check-In</button>
+                    <button class="btn-outline">Tidak Hadir</button>
+                    <button class="btn-filled">Hadir</button>
                 </div>
             </div>
         </div>
