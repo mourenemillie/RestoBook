@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kelola Semua User - RestoBook Admin</title>
+    <title>Kelola Semua Restoran - RestoBook Admin</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
@@ -295,15 +295,15 @@
         }
 
         .user-cell img {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
             object-fit: cover;
         }
 
         .phone-cell {
             color: var(--text-gray);
-            font-size: 11px;
+            font-size: 12px;
             line-height: 1.4;
         }
 
@@ -348,10 +348,25 @@
             color: #94a3b8;
         }
 
+        .actions button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #94a3b8;
+            transition: color 0.2s;
+        }
+
+        .actions button.btn-suspend:hover {
+            color: var(--status-suspended);
+        }
+
+        .actions button.btn-delete:hover {
+            color: #b91c1c;
+        }
+        
         .actions svg {
             width: 18px;
             height: 18px;
-            cursor: pointer;
         }
 
     </style>
@@ -380,11 +395,11 @@
                 <svg viewBox="0 0 24 24"><path d="M4 13h6c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v8c0 .55.45 1 1 1zm0 8h6c.55 0 1-.45 1-1v-4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1zm10 0h6c.55 0 1-.45 1-1v-8c0-.55-.45-1-1-1h-6c-.55 0-1 .45-1 1v8c0 .55.45 1 1 1zM13 4v4c0 .55.45 1 1 1h6c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1h-6c-.55 0-1 .45-1 1z"/></svg>
                 Dashboard
             </a>
-            <a href="{{ route('admin.restaurants') }}" class="nav-item">
+            <a href="{{ route('admin.restaurants') }}" class="nav-item active">
                 <svg viewBox="0 0 24 24"><path d="M11 9H9V2H7v7H5V2H3v7c0 2.12 1.66 3.84 3.75 3.97V22h2.5v-9.03C11.34 12.84 13 11.12 13 9V2h-2v7zm5-3v8h2.5v8H21V2c-2.76 0-5 2.24-5 4z"/></svg>
                 Kelola Restoran
             </a>
-            <a href="{{ route('admin.users') }}" class="nav-item active">
+            <a href="{{ route('admin.users') }}" class="nav-item">
                 <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
                 Kelola User
             </a>
@@ -393,9 +408,9 @@
                 Pengaturan
             </a>
             
-            <form action="{{ route('logout') }}" method="POST" id="logout-form-admin-users">
+            <form action="{{ route('logout') }}" method="POST" id="logout-form-admin-restaurants">
                 @csrf
-                <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form-admin-users').submit();" class="nav-item logout">
+                <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form-admin-restaurants').submit();" class="nav-item logout">
                     <svg viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
                     Logout
                 </a>
@@ -406,30 +421,27 @@
     <main class="main-content">
         <header class="header">
             <div class="header-title">
-                <h1>Kelola Semua User</h1>
-                <p>Pantau dan kelola akses pengguna platform RestoBook.</p>
+                <h1>Kelola Semua Restoran</h1>
+                <p>Pantau dan kelola akun restoran serta status kelaikan di platform RestoBook.</p>
             </div>
-            <button class="btn-add">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                Tambah User Baru
-            </button>
         </header>
 
         <section class="filter-section">
             <div class="search-box">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                <input type="text" placeholder="Cari nama, email, atau no telepon...">
+                <input type="text" placeholder="Cari nama restoran atau lokasi...">
             </div>
             <div class="filter-buttons">
-                <button class="filter-btn">Semua Peran</button>
-                <button class="filter-btn">Customer</button>
-                <button class="filter-btn">Pemilik</button>
+                <button class="filter-btn">Semua Kategori</button>
+                <button class="filter-btn">UMKM Mikro</button>
+                <button class="filter-btn">Cafe</button>
+                <button class="filter-btn">Resto Keluarga</button>
             </div>
         </section>
 
         <section class="table-card">
             <div class="table-top">
-                <span class="table-info">Menampilkan 1-3 dari 124 user</span>
+                <span class="table-info">Menampilkan 1-3 dari 56 restoran</span>
                 <div class="pagination">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
@@ -438,10 +450,10 @@
             <table>
                 <thead>
                     <tr>
-                        <th>NAMA USER</th>
-                        <th>EMAIL</th>
-                        <th>NO. TELEPON</th>
-                        <th>PERAN</th>
+                        <th>NAMA RESTORAN</th>
+                        <th>PEMILIK</th>
+                        <th>LOKASI</th>
+                        <th>KATEGORI</th>
                         <th>STATUS</th>
                         <th>AKSI</th>
                     </tr>
@@ -450,13 +462,13 @@
                     <tr>
                         <td>
                             <div class="user-cell">
-                                <img src="https://i.pravatar.cc/150?img=12" alt="Ahmad Pratama">
-                                Ahmad Pratama
+                                <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=100&h=100&fit=crop" alt="Sate Padang">
+                                Sate Padang Begadang
                             </div>
                         </td>
-                        <td>ahmad.pratama@email.com</td>
-                        <td class="phone-cell">0812-3456-7<br>890</td>
-                        <td><span class="badge">PEMILIK</span></td>
+                        <td>Ahmad Pratama</td>
+                        <td class="phone-cell">Jl. Diponegoro,<br>Bandar Lampung</td>
+                        <td><span class="badge">UMKM MIKRO</span></td>
                         <td>
                             <div class="status active">
                                 <div class="dot"></div> Aktif
@@ -464,21 +476,25 @@
                         </td>
                         <td>
                             <div class="actions">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                <button class="btn-suspend" title="Suspend Restoran">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg>
+                                </button>
+                                <button class="btn-delete" title="Hapus Restoran">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                </button>
                             </div>
                         </td>
                     </tr>
                     <tr>
                         <td>
                             <div class="user-cell">
-                                <img src="https://i.pravatar.cc/150?img=5" alt="Siti Rahma">
-                                Siti Rahma
+                                <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=100&h=100&fit=crop" alt="Kopi Kenangan">
+                                Kopi Kenangan Kedaton
                             </div>
                         </td>
-                        <td>siti.rahma@email.com</td>
-                        <td class="phone-cell">0821-9876-5432</td>
-                        <td><span class="badge">CUSTOMER</span></td>
+                        <td>Budi Santoso</td>
+                        <td class="phone-cell">Kedaton,<br>Bandar Lampung</td>
+                        <td><span class="badge" style="background:#e0f2fe;color:#0369a1;">CAFE</span></td>
                         <td>
                             <div class="status active">
                                 <div class="dot"></div> Aktif
@@ -486,21 +502,25 @@
                         </td>
                         <td>
                             <div class="actions">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                <button class="btn-suspend" title="Suspend Restoran">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg>
+                                </button>
+                                <button class="btn-delete" title="Hapus Restoran">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                </button>
                             </div>
                         </td>
                     </tr>
                     <tr>
                         <td>
                             <div class="user-cell">
-                                <img src="https://i.pravatar.cc/150?img=13" alt="Budi Santoso">
-                                Budi Santoso
+                                <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=100&h=100&fit=crop" alt="Taichan">
+                                Sate Taichan Senayan
                             </div>
                         </td>
-                        <td>budi.san@email.com</td>
-                        <td class="phone-cell">0852-1122-3<br>344</td>
-                        <td><span class="badge">PEMILIK</span></td>
+                        <td>Dimas Anggara</td>
+                        <td class="phone-cell">Jl. ZA. Pagar Alam,<br>Rajabasa</td>
+                        <td><span class="badge">UMKM MIKRO</span></td>
                         <td>
                             <div class="status suspended">
                                 <div class="dot"></div> Suspended
@@ -508,30 +528,12 @@
                         </td>
                         <td>
                             <div class="actions">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="user-cell">
-                                <img src="https://i.pravatar.cc/150?img=9" alt="Diana Lestari">
-                                Diana Lestari
-                            </div>
-                        </td>
-                        <td>diana.l@email.com</td>
-                        <td class="phone-cell">0813-5566-7<br>788</td>
-                        <td><span class="badge">CUSTOMER</span></td>
-                        <td>
-                            <div class="status active">
-                                <div class="dot"></div> Aktif
-                            </div>
-                        </td>
-                        <td>
-                            <div class="actions">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                <button class="btn-suspend" style="color:var(--status-suspended)" title="Aktifkan Kembali">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                </button>
+                                <button class="btn-delete" title="Hapus Restoran">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                </button>
                             </div>
                         </td>
                     </tr>

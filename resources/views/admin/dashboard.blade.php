@@ -613,7 +613,6 @@
             <img src="https://i.pravatar.cc/150?img=11" alt="Admin Sistem">
             <div class="user-info">
                 <h4>Admin Sistem</h4>
-                <p>Manage your table</p>
             </div>
         </div>
 
@@ -622,7 +621,7 @@
                 <svg viewBox="0 0 24 24"><path d="M4 13h6c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v8c0 .55.45 1 1 1zm0 8h6c.55 0 1-.45 1-1v-4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1zm10 0h6c.55 0 1-.45 1-1v-8c0-.55-.45-1-1-1h-6c-.55 0-1 .45-1 1v8c0 .55.45 1 1 1zM13 4v4c0 .55.45 1 1 1h6c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1h-6c-.55 0-1 .45-1 1z"/></svg>
                 Dashboard
             </a>
-            <a href="#" class="nav-item">
+            <a href="{{ route('admin.restaurants') }}" class="nav-item">
                 <svg viewBox="0 0 24 24"><path d="M11 9H9V2H7v7H5V2H3v7c0 2.12 1.66 3.84 3.75 3.97V22h2.5v-9.03C11.34 12.84 13 11.12 13 9V2h-2v7zm5-3v8h2.5v8H21V2c-2.76 0-5 2.24-5 4z"/></svg>
                 Kelola Restoran
             </a>
@@ -672,7 +671,7 @@
                     <div class="stat-value">248</div>
                     <div class="stat-trend positive">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
-                        +12 bulan ini
+                        +12 pendaftar bulan ini
                     </div>
                 </div>
             </div>
@@ -686,7 +685,7 @@
                     <div class="stat-value">12,450</div>
                     <div class="stat-trend positive">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
-                        +840 bulan ini
+                        +840 pengguna baru bulan ini
                     </div>
                 </div>
             </div>
@@ -700,7 +699,7 @@
                     <div class="stat-value">892</div>
                     <div class="stat-trend neutral">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                        Hari ini
+                        15 masuk hari ini
                     </div>
                 </div>
             </div>
@@ -714,7 +713,7 @@
                     <div class="stat-value">Rp 42.5M</div>
                     <div class="stat-trend positive">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
-                        +5.2% vs bulan lalu
+                        +5.2% dibanding bulan lalu
                     </div>
                 </div>
             </div>
@@ -812,9 +811,9 @@
                         <td>
                             <div class="rest-cell">
                                 <div class="rest-avatar">W</div>
-                                <div class="rest-info-text">
-                                    <h4>Waroeng Steak & Shake</h4>
-                                    <p>ID: RST-001</p>
+                                <div class="rest-info-text" style="display: flex; align-items: center; gap: 8px;">
+                                    <h4 style="margin-bottom: 0;">Waroeng Steak & Shake</h4>
+                                    <span style="font-size: 10px; color: var(--text-gray); background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-weight: 600;">ID: RST-001</span>
                                 </div>
                             </div>
                         </td>
@@ -833,9 +832,9 @@
                         <td>
                             <div class="rest-cell">
                                 <div class="rest-avatar">W</div>
-                                <div class="rest-info-text">
-                                    <h4>Waroeng Djontor Kedaton</h4>
-                                    <p>ID: RST-001</p>
+                                <div class="rest-info-text" style="display: flex; align-items: center; gap: 8px;">
+                                    <h4 style="margin-bottom: 0;">Waroeng Djontor Kedaton</h4>
+                                    <span style="font-size: 10px; color: var(--text-gray); background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-weight: 600;">ID: RST-002</span>
                                 </div>
                             </div>
                         </td>

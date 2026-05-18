@@ -11,31 +11,42 @@
         </div>
     </div>
 
-    <div style="background:#fff; border-radius:32px; padding:32px; box-shadow:0 20px 50px rgba(0,0,0,0.05);">
+    <div style="background:#fff; border-radius:24px; padding:24px; box-shadow:0 4px 20px rgba(0,0,0,0.03);">
         @if(count($reservations) === 0)
             <p style="color:#52525b; font-size:16px;">Belum ada reservasi. Jelajahi restoran dan buat reservasi sekarang.</p>
         @else
             <table style="width:100%; border-collapse:collapse;">
                 <thead>
                     <tr style="background:#f7f5f1; text-align:left; color:#2c2f2e;">
-                        <th style="padding:18px 16px; border-bottom:1px solid #e5e7eb;">Restoran</th>
-                        <th style="padding:18px 16px; border-bottom:1px solid #e5e7eb;">Tanggal</th>
-                        <th style="padding:18px 16px; border-bottom:1px solid #e5e7eb;">Waktu</th>
-                        <th style="padding:18px 16px; border-bottom:1px solid #e5e7eb;">Jumlah Orang</th>
-                        <th style="padding:18px 16px; border-bottom:1px solid #e5e7eb;">Status</th>
+                        <th style="padding:16px 24px; border-bottom:1px solid #e5e7eb;">Restoran</th>
+                        <th style="padding:16px 24px; border-bottom:1px solid #e5e7eb;">Tanggal</th>
+                        <th style="padding:16px 24px; border-bottom:1px solid #e5e7eb;">Waktu</th>
+                        <th style="padding:16px 24px; border-bottom:1px solid #e5e7eb;">Jumlah Orang</th>
+                        <th style="padding:16px 24px; border-bottom:1px solid #e5e7eb;">Status</th>
+                        <th style="padding:16px 24px; border-bottom:1px solid #e5e7eb;">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($reservations as $reservation)
-                        <tr>
-                            <td style="padding:18px 16px; border-bottom:1px solid #eef2f7;">{{ $reservation['restaurant'] }}</td>
-                            <td style="padding:18px 16px; border-bottom:1px solid #eef2f7;">{{ $reservation['date'] }}</td>
-                            <td style="padding:18px 16px; border-bottom:1px solid #eef2f7;">{{ $reservation['time'] }}</td>
-                            <td style="padding:18px 16px; border-bottom:1px solid #eef2f7;">{{ $reservation['guests'] }} orang</td>
-                            <td style="padding:18px 16px; border-bottom:1px solid #eef2f7;">
-                                <span style="display:inline-flex; padding:8px 14px; border-radius:9999px; font-weight:700; background:{{ $reservation['status'] === 'Confirmed' ? '#d1fae5' : ($reservation['status'] === 'Pending' ? '#fef3c7' : '#fee2e2') }}; color:{{ $reservation['status'] === 'Confirmed' ? '#166534' : ($reservation['status'] === 'Pending' ? '#92400e' : '#991b1b') }};">
-                                    {{ $reservation['status'] }}
+                            <td style="padding:16px 24px; border-bottom:1px solid #eef2f7;">{{ $reservation['restaurant'] }}</td>
+                            <td style="padding:16px 24px; border-bottom:1px solid #eef2f7;">{{ $reservation['date'] }}</td>
+                            <td style="padding:16px 24px; border-bottom:1px solid #eef2f7;">{{ $reservation['time'] }}</td>
+                            <td style="padding:16px 24px; border-bottom:1px solid #eef2f7;">{{ $reservation['guests'] }} orang</td>
+                            <td style="padding:16px 24px; border-bottom:1px solid #eef2f7;">
+                                @php
+                                    $statusId = $reservation['status'];
+                                    if ($statusId === 'Confirmed') $statusId = 'Dikonfirmasi';
+                                    elseif ($statusId === 'Pending') $statusId = 'Menunggu';
+                                    elseif ($statusId === 'Cancelled') $statusId = 'Dibatalkan';
+                                @endphp
+                                <span style="display:inline-flex; padding:6px 14px; border-radius:9999px; font-size: 13px; font-weight:700; background:{{ $reservation['status'] === 'Confirmed' ? '#d1fae5' : ($reservation['status'] === 'Pending' ? '#fef3c7' : '#fee2e2') }}; color:{{ $reservation['status'] === 'Confirmed' ? '#166534' : ($reservation['status'] === 'Pending' ? '#92400e' : '#991b1b') }};">
+                                    {{ $statusId }}
                                 </span>
+                            </td>
+                            <td style="padding:16px 24px; border-bottom:1px solid #eef2f7;">
+                                @if($statusId === 'Dikonfirmasi')
+                                    <button onclick="openReviewModal('{{ $reservation['restaurant'] }}')" style="background: transparent; border: 1px solid #e95a1e; color: #e95a1e; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 12px; transition: 0.2s;">Beri Ulasan</button>
+                                @endif
                             </td>
                         </tr>
                     @endforeach
@@ -43,5 +54,33 @@
             </table>
         @endif
     </div>
+
+    <!-- Review Modal -->
+    <div id="reviewModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 50; align-items: center; justify-content: center; padding: 20px;">
+        <div style="background: white; border-radius: 24px; width: 100%; max-width: 500px; position: relative; padding: 32px; box-shadow: 0 10px 40px rgba(0,0,0,0.1);">
+            <button onclick="closeReviewModal()" style="position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 24px; cursor: pointer; color: #64748b; line-height: 1;">&times;</button>
+            <h2 style="font-size: 20px; font-weight: 800; margin-bottom: 8px;">Berikan Ulasan</h2>
+            <p style="color: #64748b; font-size: 14px; margin-bottom: 24px;">Bagaimana pengalaman Anda di <strong id="modalRestoName">Restoran</strong>?</p>
+            
+            <div style="display: flex; gap: 8px; margin-bottom: 24px; font-size: 28px; color: #d1d5db; cursor: pointer;">
+                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+            </div>
+            
+            <textarea placeholder="Tuliskan pengalaman Anda..." style="width: 100%; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; min-height: 120px; font-size: 14px; outline: none; margin-bottom: 24px; resize: none; font-family: inherit;"></textarea>
+            
+            <button style="width: 100%; background: #e95a1e; color: white; border: none; padding: 14px; border-radius: 999px; font-weight: 700; font-size: 14px; cursor: pointer;">Kirim Ulasan</button>
+        </div>
+    </div>
 </section>
+
+<script>
+    function openReviewModal(restoName) {
+        document.getElementById('modalRestoName').innerText = restoName;
+        document.getElementById('reviewModal').style.display = 'flex';
+    }
+    
+    function closeReviewModal() {
+        document.getElementById('reviewModal').style.display = 'none';
+    }
+</script>
 @endsection

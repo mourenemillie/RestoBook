@@ -277,22 +277,22 @@
     <nav>
         <div class="logo">🍴 RestoBook</div>
         <div class="nav-links">
-            <a href="#">Explore</a>
-            <a href="#" class="active">Reservations</a>
-            <a href="#">About Us</a>
-            <a href="#">Support</a>
+            <a href="#">Jelajahi</a>
+            <a href="#" class="active">Reservasi</a>
+            <a href="#">Tentang Kami</a>
+            <a href="#">Bantuan</a>
         </div>
-        <a href="#" class="btn-signin">Sign In</a>
+        <a href="#" class="btn-signin">Masuk</a>
     </nav>
 
     <main>
         <div class="content-left">
             <div class="checkout-header">
-                <span>Secure Checkout</span>
-                <h1>Complete your<br><em>reservation.</em></h1>
+                <span>Checkout Aman</span>
+                <h1>Selesaikan<br><em>reservasi Anda.</em></h1>
             </div>
 
-            <div class="section-title">💳 Payment Methods</div>
+            <div class="section-title">💳 Metode Pembayaran</div>
             
             <div class="payment-grid">
                 <div class="payment-card">
@@ -324,12 +324,6 @@
                 </div>
             </div>
 
-            <div class="section-title">☁️ Upload Bukti Pembayaran</div>
-            <div class="upload-box">
-                <div style="font-size: 40px; margin-bottom: 10px;">📄</div>
-                <p><strong>Drop your receipt here</strong></p>
-                <p style="font-size: 12px; color: #777;">Accepted formats: JPG, PNG, PDF (Max 5MB)</p>
-                <button class="btn-upload">Choose File</button>
             </div>
         </div>
 
@@ -344,44 +338,44 @@
                 
                 <div class="summary-details">
                     <div class="detail-row">
-                        <span style="color: #888;">Date & Time</span>
+                        <span style="color: #888;">Tanggal & Waktu</span>
                         <span style="font-weight: 700;">Oct 24, 2024 • 19:00</span>
                     </div>
                     <div class="detail-row">
-                        <span style="color: #888;">Guests</span>
-                        <span style="font-weight: 700;">4 People</span>
+                        <span style="color: #888;">Tamu</span>
+                        <span style="font-weight: 700;">4 Orang</span>
                     </div>
                     <div class="detail-row">
-                        <span style="color: #888;">Table</span>
+                        <span style="color: #888;">Meja</span>
                         <span style="font-weight: 700;">T-12 (Window View)</span>
                     </div>
 
                     <div style="border-top: 1px solid #DDD; margin: 15px 0;"></div>
 
                     <div class="detail-row">
-                        <span style="color: #888;">Booking Fee</span>
+                        <span style="color: #888;">Biaya Reservasi</span>
                         <span>Rp 50.000</span>
                     </div>
                     <div class="detail-row">
-                        <span style="color: #888;">Service Charge (5%)</span>
+                        <span style="color: #888;">Biaya Layanan (5%)</span>
                         <span>Rp 2.500</span>
                     </div>
 
                     <div class="detail-row total">
-                        <span>Total Amount</span>
+                        <span>Total Harga</span>
                         <span>Rp 52.500</span>
                     </div>
 
-                    <button class="btn-confirm">Konfirmasi Pembayaran</button>
+                    <button class="btn-confirm">Bayar Sekarang dengan Midtrans</button>
                     <p style="text-align: center; font-size: 10px; color: #999; margin-top: 15px; text-transform: uppercase; letter-spacing: 1px;">
-                        🔒 Secure Encrypted Payment
+                        🔒 Pembayaran Aman Terenkripsi
                     </p>
                 </div>
             </div>
 
             <div class="timer-alert">
                 <span>ℹ️</span>
-                <p>Payment must be completed within <strong>15:00</strong> to secure your selected table.</p>
+                <p>Pembayaran harus diselesaikan dalam waktu <strong>15:00</strong> menit untuk mengamankan meja Anda.</p>
             </div>
         </aside>
     </main>
@@ -392,10 +386,10 @@
             © 2024 RestoBook. Cultivating culinary excellence for MSMEs.
         </div>
         <div class="footer-links">
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
-            <a href="#">Partner With Us</a>
-            <a href="#">Contact Support</a>
+            <a href="#">Kebijakan Privasi</a>
+            <a href="#">Syarat & Ketentuan</a>
+            <a href="#">Mitra Kami</a>
+            <a href="#">Hubungi Bantuan</a>
         </div>
     </footer>
 
