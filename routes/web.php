@@ -20,11 +20,24 @@ use App\Http\Controllers\Owner\TableController as OwnerTableController;
 |--------------------------------------------------------------------------
 */
 
-// Route Landing Page
-Route::get('/', [RestaurantController::class, 'index'])->name('landing');
+// Route Landing Page (Sekarang mengarah ke folder restaurant/index)
+Route::get('/', function () {
+    if (auth()->check()) {
+        return match (auth()->user()->role) {
+            'admin' => redirect()->route('admin.dashboard'),
+            'owner' => redirect()->route('owner.dashboard'),
+            default => redirect()->route('home'),
+        };
+    }
 
-// Route Detail Restoran
-Route::get('/restaurant/detail', [RestaurantController::class, 'show'])->name('restaurant.show');
+    // Mengubah dari view('landing') menjadi view('restaurant.index')
+    return view('restaurant.index'); 
+});
+
+// Route Detail Restoran (Baru ditambahkan)
+Route::get('/restaurant/detail', function () {
+    return view('restaurant.show');
+})->name('restaurant.show');
 
 // --- AUTH ROUTES ---
 Route::middleware('guest')->group(function () {
@@ -39,16 +52,18 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 // --- ADMIN ROUTES ---
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminDashboard::class, 'index'])->name('admin.dashboard');
-    Route::get('/users', [AdminUserController::class, 'index'])->name('admin.users');
-    Route::get('/restaurants', [AdminRestaurantController::class, 'index'])->name('admin.restaurants');
+    Route::get('/users', function () {
+        return view('admin.users');
+    })->name('admin.users');
 });
 
 // --- OWNER ROUTES ---
 Route::middleware(['auth', 'role:owner'])->prefix('owner')->group(function () {
     Route::get('/dashboard', [OwnerDashboard::class, 'index'])->name('owner.dashboard');
     Route::get('/reservasi', [OwnerReservationController::class, 'index'])->name('owner.reservasi');
-    Route::get('/kelola-meja', [OwnerTableController::class, 'index'])->name('owner.kelola-meja');
-    Route::get('/settings', [OwnerSettingController::class, 'index'])->name('owner.settings');
+    Route::get('/settings', function () {
+        return view('owner.settings');
+    })->name('owner.settings');
 });
 
 // --- CUSTOMER ROUTES ---
