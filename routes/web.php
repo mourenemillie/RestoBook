@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\RestaurantController as AdminRestaurantController;
 use App\Http\Controllers\Owner\SettingController as OwnerSettingController;
 use App\Http\Controllers\Owner\TableController as OwnerTableController;
+use App\Http\Controllers\BookingController; // Sudah terimport dengan aman
 
 /*
 |--------------------------------------------------------------------------
@@ -20,7 +21,7 @@ use App\Http\Controllers\Owner\TableController as OwnerTableController;
 |--------------------------------------------------------------------------
 */
 
-// Route Landing Page (Sekarang mengarah ke folder restaurant/index)
+// Route Landing Page
 Route::get('/', function () {
     if (auth()->check()) {
         return match (auth()->user()->role) {
@@ -29,15 +30,28 @@ Route::get('/', function () {
             default => redirect()->route('home'),
         };
     }
-
-    // Mengubah dari view('landing') menjadi view('restaurant.index')
     return view('restaurant.index'); 
 });
 
-// Route Detail Restoran (Baru ditambahkan)
+// Route Detail Restoran
 Route::get('/restaurant/detail', function () {
     return view('restaurant.show');
 })->name('restaurant.show');
+
+
+// --- FITUR BOOKING & PEMBAYARAN ---
+// Menangani submit form pemesanan meja (Method POST)
+Route::post('/restaurant/booking', [BookingController::class, 'store'])->name('restaurant.booking');
+
+// Menampilkan halaman checkout pembayaran berdasarkan kode unik (Method GET)
+Route::get('/booking/checkout/{booking_code}', [BookingController::class, 'checkout'])->name('booking.checkout');
+
+// Memproses aksi bayar/konfirmasi pembayaran (Method POST)
+Route::post('/booking/checkout/{booking_code}/pay', [BookingController::class, 'paymentProcess'])->name('booking.pay');
+
+// Menampilkan halaman sukses setelah berhasil booking & bayar (Method GET)
+Route::get('/booking/success/{booking_code}', [BookingController::class, 'success'])->name('booking.success');
+
 
 // --- AUTH ROUTES ---
 Route::middleware('guest')->group(function () {
