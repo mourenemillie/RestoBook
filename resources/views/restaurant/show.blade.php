@@ -16,7 +16,7 @@
         height: 400px;
         border-radius: 35px;
         background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.7)), 
-                    url('https://images.unsplash.com/photo-1552566626-52f8b828add9?q=80&w=1200');
+                    url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=1200');
         background-size: cover;
         background-position: center;
         display: flex;
@@ -76,7 +76,7 @@
     }
     .menu-card-wide img { width: 200px; height: 100%; object-fit: cover; }
 
-    /* Sidebar Booking */
+    /* Sidebar Booking Box */
     .booking-box {
         background: white;
         padding: 35px;
@@ -96,6 +96,8 @@
         margin-top: 8px;
         margin-bottom: 20px;
         font-weight: 600;
+        outline: none;
+        font-family: inherit;
     }
     .btn-reserve {
         width: 100%;
@@ -107,17 +109,31 @@
         border: none;
         cursor: pointer;
         transition: 0.3s;
-        display: block; /* Agar link memenuhi lebar container */
-        text-align: center; /* Mengetengahkan teks link */
-        text-decoration: none; /* Menghilangkan garis bawah link */
+        display: block;
+        text-align: center;
+        text-decoration: none;
     }
     .btn-reserve:hover { background: #b45309; color: white; }
+
+    /* Alert Notification Style */
+    .alert-danger {
+        background: #fef2f2;
+        color: #991b1b;
+        padding: 15px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        font-size: 13px;
+        border: 1px solid #fee2e2;
+    }
+    .alert-danger ul { margin: 0; padding-left: 20px; }
 
     /* Responsive */
     @media (max-width: 768px) {
         .resto-grid { grid-template-columns: 1fr; }
         .resto-hero { height: 300px; }
         .menu-list { grid-template-columns: 1fr; }
+        .menu-card-wide { flex-direction: column; }
+        .menu-card-wide img { width: 100%; height: 150px; }
     }
 </style>
 
@@ -141,7 +157,7 @@
             <div class="menu-list">
                 <div class="menu-card">
                     <div class="menu-img-wrapper">
-                        <img src="{{ asset('img/bakso_super.jpg') }}" alt="Bakso Sony">
+                        <img src="https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?q=80&w=600" alt="Bakso Sony">
                     </div>
                     <div class="menu-info">
                         <h3 style="margin:0">Bakso Super</h3>
@@ -152,7 +168,7 @@
 
                 <div class="menu-card">
                     <div class="menu-img-wrapper">
-                        <img src="{{ asset('img/mie_ayam.jpg') }}" alt="Mie Ayam">
+                        <img src="https://images.unsplash.com/photo-1585032226651-759b368d7246?q=80&w=600" alt="Mie Ayam">
                     </div>
                     <div class="menu-info">
                         <h3 style="margin:0">Mie Ayam</h3>
@@ -173,33 +189,66 @@
         </div>
 
         <div class="sidebar">
-            <div class="booking-box">
+            <form action="{{ route('restaurant.booking') }}" method="POST" class="booking-box">
+                @csrf
+                
+                {{-- Data Nama Restoran Tersembunyi --}}
+                <input type="hidden" name="restaurant_name" value="Bakso Son Haji Sony">
+
                 <h3 style="margin-top: 0; margin-bottom: 20px;">Pesan Meja</h3>
                 
+                {{-- Penanganan Error Validasi Masukan Form dari Laravel Controller --}}
+                @if ($errors->any())
+                    <div class="alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+                
                 <label style="font-size: 12px; font-weight: 800; color: #888;">TANGGAL</label>
-                <input type="date" class="input-field" value="{{ date('Y-m-d') }}">
+                <input type="date" name="booking_date" class="input-field" value="{{ old('booking_date', date('Y-m-d')) }}" required>
 
-                <label style="font-size: 12px; font-weight: 800; color: #888;">JUMLAH TAMU</label>
-                <select class="input-field">
-                    <option>2 Orang</option>
-                    <option>4 Orang</option>
-                    <option>6+ Orang</option>
+                <label style="font-size: 12px; font-weight: 800; color: #888;">JAM KEDATANGAN</label>
+                <select name="booking_time" class="input-field" required>
+                    <option value="10:00" {{ old('booking_time') == '10:00' ? 'selected' : '' }}>10:00 WIB</option>
+                    <option value="12:00" {{ old('booking_time') == '12:00' || !old('booking_time') ? 'selected' : '' }}>12:00 WIB</option>
+                    <option value="14:00" {{ old('booking_time') == '14:00' ? 'selected' : '' }}>14:00 WIB</option>
+                    <option value="16:00" {{ old('booking_time') == '16:00' ? 'selected' : '' }}>16:00 WIB</option>
+                    <option value="19:00" {{ old('booking_time') == '19:00' ? 'selected' : '' }}>19:00 WIB</option>
                 </select>
 
-                {{-- UPDATE DISINI: Menggunakan tag <a> untuk pindah halaman --}}
-                <a href="{{ route('restaurant.booking') }}" class="btn-reserve">
+                <label style="font-size: 12px; font-weight: 800; color: #888;">AREA MEJA</label>
+                <select name="table_area" class="input-field" required>
+                    <option value="Area Utama (Non-Smoking)" {{ old('table_area') == 'Area Utama (Non-Smoking)' ? 'selected' : '' }}>Area Utama (Non-Smoking)</option>
+                    <option value="Area Jendela (City View)" {{ old('table_area') == 'Area Jendela (City View)' ? 'selected' : '' }}>Area Jendela (City View)</option>
+                    <option value="Area Outdoor (Smoking)" {{ old('table_area') == 'Area Outdoor (Smoking)' ? 'selected' : '' }}>Area Outdoor (Smoking)</option>
+                    <option value="VIP Room (Private)" {{ old('table_area') == 'VIP Room (Private)' ? 'selected' : '' }}>VIP Room (Private)</option>
+                </select>
+
+                <label style="font-size: 12px; font-weight: 800; color: #888;">JUMLAH TAMU</label>
+                <select name="number_of_people" class="input-field" required>
+                    <option value="2 Orang" {{ old('number_of_people') == '2 Orang' ? 'selected' : '' }}>2 Orang</option>
+                    <option value="4 Orang" {{ old('number_of_people') == '4 Orang' ? 'selected' : '' }}>4 Orang</option>
+                    <option value="6 Orang" {{ old('number_of_people') == '6 Orang' ? 'selected' : '' }}>6 Orang</option>
+                    <option value="8 Orang" {{ old('number_of_people') == '8 Orang' ? 'selected' : '' }}>8 Orang</option>
+                </select>
+
+                <button type="submit" class="btn-reserve">
                     Booking Sekarang
-                </a>
+                </button>
                 
                 <p style="font-size: 12px; color: #aaa; text-align: center; margin-top: 15px;">
-                    Konfirmasi via WhatsApp setelah klik booking.
+                    Konfirmasi aman terintegrasi dengan metode pembayaran instan.
                 </p>
 
                 <div style="background: #fff8f0; padding: 20px; border-radius: 20px; margin-top: 25px; border: 1px dashed #d97706;">
                     <p style="margin: 0; font-size: 13px;">🕒 <strong>Jam Buka:</strong> 09:00 - 21:00</p>
                     <p style="margin: 10px 0 0; font-size: 13px;">🚗 <strong>Fasilitas:</strong> Parkir & Musholla</p>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 </div>
