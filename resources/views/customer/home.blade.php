@@ -99,7 +99,7 @@
         <div class="hero-grid">
             {{-- KIRI: Text --}}
             <div>
-                <span class="hero-badge">MSME EMPOWERMENT</span>
+                <span class="hero-badge">PEMBERDAYAAN UMKM</span>
                 <h1 class="hero-title">
                     Booking Meja Kini<br>
                     <span>Lebih Mudah</span>
@@ -150,41 +150,51 @@
             <a href="#" class="see-all">Lihat Semua →</a>
         </div>
         <div class="restaurant-grid">
-            @forelse($restaurants as $resto)
-            <div class="resto-card">
-                <div class="resto-img-wrap">
-                    <img src="{{ $resto->image ? asset('storage/'.$resto->image) : 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400' }}"
-                         alt="{{ $resto->name }}">
-                    <div class="rating-badge">4.8</div>
-                </div>
-                <div class="resto-body">
-                    <div class="resto-name">{{ $resto->name }}</div>
-                    <div class="resto-location">{{ $resto->address }}</div>
-                    <div class="resto-footer">
-                        <span class="badge-available">TERSEDIA</span>
-                        <a href="#" class="btn-booking">Booking</a>
-                    </div>
+    @forelse($restaurants as $resto)
+        <div class="resto-card">
+            <div class="resto-img-wrap">
+                <img src="{{ $resto->image ? asset('storage/'.$resto->image) : 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400' }}"
+                     alt="{{ $resto->name }}">
+                <div class="rating-badge">4.8</div>
+            </div>
+
+            <div class="resto-body">
+                <div class="resto-name">{{ $resto->name }}</div>
+                <div class="resto-location">{{ $resto->address }}</div>
+
+                <div class="resto-footer">
+                    <span class="badge-available">TERSEDIA</span>
+
+                    <a href="{{ route('customer.reservations.create', $resto->id) }}"
+                       class="btn-booking">
+                        Pesan
+                    </a>
                 </div>
             </div>
-            @empty
-            {{-- Data dummy kalau belum ada restoran --}}
-            @foreach([
-                ['name' => 'Sate Padang Begadang', 'address' => 'Jl. Diponegoro, Bandar Lampung', 'img' => 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400', 'rating' => '4.9', 'status' => 'available'],
-                ['name' => 'Bakso Son Haji Sony', 'address' => 'Jl. Wolter Monginsidi, Lampung', 'img' => 'https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=400', 'rating' => '4.7', 'status' => 'full'],
-                ['name' => 'Kopi Lampung Hub', 'address' => 'Way Halim, Bandar Lampung', 'img' => 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=400', 'rating' => '4.8', 'status' => 'available'],
-            ] as $dummy)
+        </div>
+
+    @empty
+
+        @foreach([
+            ['name' => 'Sate Padang Begadang', 'address' => 'Jl. Diponegoro, Bandar Lampung', 'img' => 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400', 'rating' => '4.9', 'status' => 'available'],
+            ['name' => 'Bakso Son Haji Sony', 'address' => 'Jl. Wolter Monginsidi, Lampung', 'img' => 'https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=400', 'rating' => '4.7', 'status' => 'full'],
+            ['name' => 'Kopi Lampung Hub', 'address' => 'Way Halim, Bandar Lampung', 'img' => 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=400', 'rating' => '4.8', 'status' => 'available'],
+        ] as $dummy)
+
             <div class="resto-card">
                 <div class="resto-img-wrap">
                     <img src="{{ $dummy['img'] }}" alt="{{ $dummy['name'] }}">
                     <div class="rating-badge">{{ $dummy['rating'] }}</div>
                 </div>
+
                 <div class="resto-body">
                     <div class="resto-name">{{ $dummy['name'] }}</div>
                     <div class="resto-location">{{ $dummy['address'] }}</div>
+
                     <div class="resto-footer">
                         @if($dummy['status'] === 'available')
                             <span class="badge-available">TERSEDIA</span>
-                            <a href="#" class="btn-booking">Booking</a>
+                            <a href="#" class="btn-booking">Pesan</a>
                         @else
                             <span class="badge-full">PENUH</span>
                             <a href="#" class="btn-antri">Antre</a>
@@ -192,11 +202,11 @@
                     </div>
                 </div>
             </div>
-            @endforeach
-            @endforelse
-        </div>
-    </div>
-</section>
+
+        @endforeach
+
+    @endforelse
+</div>
 
 {{-- TABLE SECTION --}}
 <section class="table-section">
@@ -206,7 +216,7 @@
                 <h2 class="section-title">Pilih Meja</h2>
                 <p class="section-sub">Bagian ini dibuat dengan background transparan. Nanti tinggal pasang gambar denah meja di area sebelah kiri.</p>
             </div>
-            <a href="#" class="table-action">View Floorplan</a>
+            <a href="#" class="table-action">Lihat Denah</a>
         </div>
         <div class="table-card-inner">
             <div class="table-preview">
@@ -216,15 +226,15 @@
                 <p>Gunakan area ini untuk menampilkan layout meja, pilihan area, atau foto floorplan restoran. Background transparan memudahkan tampilan gambar tetap terlihat elegan.</p>
                 <div class="table-meta">
                     <div class="table-meta-item">
-                        <strong>Area meja</strong>
-                        <span>Window, Booth, Main, Bar</span>
+                        <strong>Area Meja</strong>
+                        <span>Jendela, Bilik, Utama, Bar</span>
                     </div>
                     <div class="table-meta-item">
-                        <strong>Slot tersedia</strong>
+                        <strong>Slot Tersedia</strong>
                         <span>18:00, 18:30, 19:00, 19:30, 20:00</span>
                     </div>
                     <div class="table-meta-item">
-                        <strong>Kapastias tamu</strong>
+                        <strong>Kapasitas Tamu</strong>
                         <span>1-12 orang per meja</span>
                     </div>
                 </div>

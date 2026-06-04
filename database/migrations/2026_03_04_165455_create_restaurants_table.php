@@ -20,6 +20,8 @@ return new class extends Migration
         $table->string('phone');
         $table->string('image')->nullable();
         $table->timestamps();
+        $table->enum('status', ['pending', 'active', 'rejected'])->default('pending');
+$table->string('city'); // kota di Lampung
     });
 }
 

@@ -12,7 +12,7 @@ class AdminSeeder extends Seeder
         User::create([
             'name' => 'Super Admin',
             'email' => 'admin@restobook.com',
-            'password' => Hash::make('admin123'),
+            'password' => 'admin123',
             'role' => 'superadmin',
         ]);
     }

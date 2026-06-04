@@ -29,6 +29,10 @@
         .field-group.full-width { grid-column: 1 / -1; }
         input { width: 100%; padding: 14px 16px; border: 1.5px solid #e7e1db; border-radius: 14px; font-size: 15px; color: #2c2f2e; background: #fffaf7; outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
         input:focus { border-color: #ea580c; box-shadow: 0 0 0 4px rgba(234, 88, 12, 0.12); }
+        .password-input-wrapper { position: relative; display: flex; align-items: center; width: 100%; }
+        .password-input-wrapper input { padding-right: 44px; }
+        .password-toggle-btn { position: absolute; right: 12px; background: none; border: none; cursor: pointer; color: #9ca3af; display: flex; align-items: center; justify-content: center; padding: 4px; }
+        .password-toggle-btn svg { width: 20px; height: 20px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
         .terms { display: flex; align-items: flex-start; gap: 12px; margin: 16px 0 22px; font-size: 14px; color: #5d5f5d; }
         .terms input { margin-top: 4px; width: 18px; height: 18px; accent-color: #c9460b; }
         .terms a { color: #c9460b; font-weight: 700; text-decoration: none; }
@@ -38,6 +42,7 @@
         .register-link, .bottom-text { text-align: center; margin-top: 24px; font-size: 14px; color: #5d5f5d; }
         .register-link a, .bottom-text a { color: #c9460b; font-weight: 700; text-decoration: none; }
         .register-link a:hover, .bottom-text a:hover { text-decoration: underline; }
+        .success { background: #ecfdf5; color: #166534; font-size: 13px; padding: 12px 14px; border-radius: 12px; margin-bottom: 18px; }
         .error { background: #fff1f0; color: #dc2626; font-size: 13px; padding: 12px 14px; border-radius: 12px; margin-bottom: 18px; }
         @media (max-width: 640px) {
             body { padding: 16px; }
