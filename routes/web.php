@@ -58,6 +58,14 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
 
 // --- OWNER ROUTES ---
 Route::middleware(['auth', 'role:owner'])->prefix('owner')->group(function () {
+    Route::patch('/reservasi/{id}/hadir',
+    [OwnerReservationController::class, 'hadir'])
+    ->name('owner.reservasi.hadir');
+Route::patch('/reservasi/{id}/tidak-hadir',
+    [OwnerReservationController::class, 'tidakHadir'])
+    ->name('owner.reservasi.tidak-hadir');
+    Route::get('/reservasi/{id}', [OwnerReservationController::class, 'show'])
+    ->name('owner.reservasi.show');
     Route::get('/dashboard', [OwnerDashboard::class, 'index'])->name('owner.dashboard');
     Route::get('/reservasi', [OwnerReservationController::class, 'index'])->name('owner.reservasi');
     Route::get('/kelola-meja', [OwnerTableController::class, 'index'])
@@ -81,5 +89,7 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::get('/reservations', [CustomerReservationController::class, 'index'])->name('customer.reservations');
     Route::get('/reservasi/create/{restaurant}', [CustomerReservationController::class, 'create'])
     ->name('customer.reservations.create');
+    Route::post('/reservasi/store', [CustomerReservationController::class, 'store'])
+    ->name('customer.reservations.store');
 });
 

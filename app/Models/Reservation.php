@@ -12,7 +12,13 @@ class Reservation extends Model
         'table_id',
         'reservation_date',
         'reservation_time',
-        'guest_count',
-        'status'
+        'num_guests',
+        'status',
+        'notes'
     ];
+    
+public function user()
+{
+    return $this->belongsTo(\App\Models\User::class);
 }
+    }

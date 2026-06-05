@@ -4,6 +4,30 @@
 
 @section('extra_styles')
 <style>
+   .success-alert{
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #BC4B09;
+    color: white;
+    padding: 14px 22px;
+    border-radius: 14px;
+    font-weight: 600;
+    box-shadow: 0 10px 25px rgba(188,75,9,.25);
+    z-index: 9999;
+    animation: slideIn .3s ease;
+}
+
+@keyframes slideIn{
+    from{
+        opacity:0;
+        transform:translateX(30px);
+    }
+    to{
+        opacity:1;
+        transform:translateX(0);
+    }
+}
 /* ===== HERO ===== */
 .hero { padding: 96px 48px 128px; max-width: 1280px; margin: 0 auto; }
 .hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; min-height: 700px; }
@@ -92,6 +116,11 @@
 @endsection
 
 @section('content')
+@if(session('success'))
+<div class="success-alert">
+    ✅ {{ session('success') }}
+</div>
+@endif
 
 {{-- HERO SECTION --}}
 <section style="background: linear-gradient(90deg, #f5f7f4 0%, #f5f7f4 100%);">
@@ -283,5 +312,17 @@
         </div>
     </div>
 </section>
+
+
+<script>
+setTimeout(function() {
+    const alert = document.querySelector('.success-alert');
+    if(alert){
+        alert.remove();
+    }
+}, 3000);
+</script>
+
+
 
 @endsection

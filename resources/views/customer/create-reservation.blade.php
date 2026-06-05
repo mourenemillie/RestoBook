@@ -110,28 +110,29 @@
             {{ $restaurant->name }} • {{ $restaurant->address }}
         </p>
 
-        <form>
+        <form action="{{ route('customer.reservations.store') }}" method="POST">
+    @csrf
 
-            <div class="form-group">
-                <label>Tanggal Reservasi</label>
-                <input type="date">
-            </div>
+    <div class="form-group">
+        <label>Tanggal Reservasi</label>
+        <input type="date" name="reservation_date" required>
+    </div>
 
-            <div class="form-group">
-                <label>Jam Reservasi</label>
-                <input type="time">
-            </div>
+    <div class="form-group">
+        <label>Jam Reservasi</label>
+        <input type="time" name="reservation_time" required>
+    </div>
 
-            <div class="form-group">
-                <label>Jumlah Tamu</label>
-                <input type="number" min="1">
-            </div>
+    <div class="form-group">
+        <label>Jumlah Tamu</label>
+        <input type="number" name="num_guests" min="1" required>
+    </div>
 
-            <button type="submit" class="btn">
-                Reservasi Sekarang
-            </button>
+    <button type="submit" class="btn">
+        Reservasi Sekarang
+    </button>
 
-        </form>
+</form>
 
     </div>
 
