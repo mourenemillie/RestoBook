@@ -93,6 +93,13 @@
 .umkm-card p { font-size: 12px; color: #595c5a; margin-bottom: 16px; }
 .btn-kunjungi { width: 100%; background: white; border: 1px solid rgba(140,74,0,0.2); border-radius: 9999px; color: #8c4a00; font-size: 12px; font-weight: 700; padding: 9px; text-align: center; cursor: pointer; display: block; text-decoration: none; }
 .btn-kunjungi:hover { background: #fff5ee; }
+
+.resto-hours{
+    margin-top: 8px;
+    font-size: 14px;
+    color: #666;
+}
+
     /* ===== TABLE SECTION ===== */
     .table-section { padding: 96px 48px; max-width: 1280px; margin: 0 auto; }
     .table-card { background: rgba(255,255,255,0.45); backdrop-filter: blur(18px); border: 1px solid rgba(255,255,255,0.8); border-radius: 48px; padding: 40px; }
@@ -187,9 +194,26 @@
                 <div class="rating-badge">4.8</div>
             </div>
 
-            <div class="resto-body">
-                <div class="resto-name">{{ $resto->name }}</div>
-                <div class="resto-location">{{ $resto->address }}</div>
+           <div class="resto-body">
+    <div class="resto-name">{{ $resto->name }}</div>
+
+    <div class="resto-location">
+        {{ $resto->address }}
+    </div>
+
+    <div class="resto-hours">
+        🕒
+        {{ \Carbon\Carbon::parse($resto->open_time)->format('H:i') }}
+        -
+        {{ \Carbon\Carbon::parse($resto->close_time)->format('H:i') }}
+    </div>
+
+    
+
+    <div class="resto-phone">
+        📞 {{ $resto->phone }}
+    </div>
+
 
                 <div class="resto-footer">
                     <span class="badge-available">TERSEDIA</span>

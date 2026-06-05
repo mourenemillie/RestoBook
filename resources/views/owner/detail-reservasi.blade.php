@@ -149,9 +149,15 @@
     </div>
 
     <div class="actions">
-        <a href="{{ url('/owner/reservasi') }}" class="btn btn-back">
-            ← Kembali
-        </a>
+        @if(request('from') == 'dashboard')
+    <a href="{{ route('owner.dashboard') }}">
+        ← Kembali
+    </a>
+@else
+    <a href="{{ route('owner.reservasi') }}">
+        ← Kembali
+    </a>
+@endif
 
         <a href="{{ url('/owner/reservasi') }}" class="btn btn-primary">
             Selesai

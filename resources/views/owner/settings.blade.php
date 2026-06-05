@@ -386,10 +386,43 @@
         input:checked + .slider:before {
             transform: translateX(20px);
         }
+        .btn-save{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    background:#c85a08;
+    color:white;
+    font-weight:700;
+    cursor:pointer;
+    transition:.3s;
+}
+.success-alert{
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #c85a08;
+    color: white;
+    padding: 14px 22px;
+    border-radius: 12px;
+    font-weight: 600;
+    box-shadow: 0 10px 25px rgba(0,0,0,.15);
+    z-index: 9999;
+}
+
+.btn-save:hover{
+    background:#a84b06;
+}
     </style>
 </head>
 <body>
+   <body>
 
+@if(session('success'))
+<script>
+    alert("{{ session('success') }}");
+</script>
+@endif
     <!-- SIDEBAR -->
     <aside class="sidebar">
         <div class="logo">
@@ -448,59 +481,99 @@
         </header>
 
         <div class="content-grid">
-            <!-- Kolom Kiri -->
-            <div class="col-left">
-                <!-- Card Profil Restoran -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="icon-box">
-                            <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-                        </div>
-                        <h2>Profil Restoran</h2>
+
+    <!-- Kolom Kiri -->
+    <div class="col-left">
+
+        <form action="{{ route('owner.settings.update') }}" method="POST">
+            @csrf
+
+            <!-- Card Profil Restoran -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon-box">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                        </svg>
                     </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">NAMA RESTORAN</label>
-                        <input type="text" class="form-control" value="Waroeng Djontor Bandar Lampung">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">NOMOR TELEPON</label>
-                        <input type="text" class="form-control" value="+62 21 555 0123">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">ALAMAT</label>
-                        <textarea class="form-control">Jl. ZA. Pagar Alam, Gedong Meneng, Kec. Rajabasa, Kota Bandar Lampung, Lampung 35148</textarea>
-                    </div>
+                    <h2>Profil Restoran</h2>
                 </div>
 
-                <!-- Card Jam Operasional -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="icon-box">
-                            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                        </div>
-                        <h2>Jam Operasional</h2>
-                    </div>
+                <div class="form-group">
+                    <label class="form-label">NAMA RESTORAN</label>
+                    <input type="text"
+                           class="form-control"
+                           name="name"
+                           value="{{ $restaurant->name ?? '' }}">
+                </div>
 
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">JAM BUKA</label>
-                            <input type="text" class="form-control" value="10:00 AM">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">JAM TUTUP</label>
-                            <input type="text" class="form-control" value="10:00 PM">
-                        </div>
-                    </div>
+                <div class="form-group">
+                    <label class="form-label">NOMOR TELEPON</label>
+                    <input type="text"
+                           class="form-control"
+                           name="phone"
+                           value="{{ $restaurant->phone ?? '' }}">
+                </div>
 
-                    <div class="info-banner">
-                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
-                        <p>Pengaturan jam operasional akan mempengaruhi ketersediaan slot reservasi di halaman publik pelanggan.</p>
-                    </div>
+                <div class="form-group">
+                    <label class="form-label">ALAMAT</label>
+                    <textarea class="form-control"
+                              name="address">{{ $restaurant->address ?? '' }}</textarea>
                 </div>
             </div>
+
+            <!-- Card Jam Operasional -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon-box">
+                        <svg viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                    </div>
+                    <h2>Jam Operasional</h2>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">JAM BUKA</label>
+                        <input type="time"
+                               class="form-control"
+                               name="open_time"
+                               value="{{ $restaurant->open_time ?? '' }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">JAM TUTUP</label>
+                        <input type="time"
+                               class="form-control"
+                               name="close_time"
+                               value="{{ $restaurant->close_time ?? '' }}">
+                    </div>
+                </div>
+
+                <div class="info-banner">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path>
+                    </svg>
+                    <p>
+                        Pengaturan jam operasional akan mempengaruhi
+                        ketersediaan slot reservasi di halaman publik pelanggan.
+                    </p>
+                </div>
+            </div>
+
+            <div style="margin-top:20px;">
+                <button type="submit" class="btn-save">
+                    Simpan Perubahan
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+                
 
             <!-- Kolom Kanan -->
             <div class="col-right">

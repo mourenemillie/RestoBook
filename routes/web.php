@@ -78,9 +78,12 @@ Route::patch('/reservasi/{id}/tidak-hadir',
     ->name('owner.kelola-meja.edit');
 Route::put('/kelola-meja/{id}', [OwnerTableController::class, 'update'])
     ->name('owner.kelola-meja.update');
-    Route::get('/settings', function () {
-        return view('owner.settings');
-    })->name('owner.settings');
+    Route::get('/settings',
+    [OwnerSettingController::class, 'index'])
+    ->name('owner.settings');
+    Route::post('/settings/update',
+    [OwnerSettingController::class, 'update'])
+    ->name('owner.settings.update');
 });
 
 // --- CUSTOMER ROUTES ---
