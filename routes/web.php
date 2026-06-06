@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\RestaurantController as AdminRestaurantController;
 use App\Http\Controllers\Owner\SettingController as OwnerSettingController;
 use App\Http\Controllers\Owner\TableController as OwnerTableController;
+use App\Http\Controllers\Owner\MenuController;
 
 /*
 |--------------------------------------------------------------------------
@@ -84,7 +85,24 @@ Route::put('/kelola-meja/{id}', [OwnerTableController::class, 'update'])
     Route::post('/settings/update',
     [OwnerSettingController::class, 'update'])
     ->name('owner.settings.update');
+    Route::get('/tambah-menu',
+    [MenuController::class, 'create'])
+    ->name('owner.tambah-menu');
+
+Route::post('/tambah-menu',
+    [MenuController::class, 'store'])
+    ->name('owner.tambah-menu.store');
 });
+Route::get('/menu/{id}/edit',
+    [MenuController::class, 'edit'])
+    ->name('owner.menu.edit');
+
+// Menu routes
+Route::get('/owner/menu/create',       [MenuController::class, 'create'])->name('owner.menu.create');
+Route::post('/owner/menu',             [MenuController::class, 'store'])->name('owner.menu.store');
+Route::get('/owner/menu/{id}/edit',    [MenuController::class, 'edit'])->name('owner.menu.edit');
+Route::put('/owner/menu/{id}',         [MenuController::class, 'update'])->name('owner.menu.update');
+Route::delete('/owner/menu/{id}',      [MenuController::class, 'destroy'])->name('owner.menu.destroy');
 
 // --- CUSTOMER ROUTES ---
 Route::middleware(['auth', 'role:customer'])->group(function () {
