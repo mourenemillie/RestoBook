@@ -10,7 +10,7 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $restaurant = auth()->user()->restaurant;
+        $restaurant = \App\Models\Restaurant::where('user_id', auth()->id())->first();
 
         if (!$restaurant) {
             return redirect()->route('owner.settings')->with('error', 'Restoran belum disetting.');
