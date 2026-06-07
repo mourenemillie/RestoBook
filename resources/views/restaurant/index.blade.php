@@ -16,7 +16,7 @@
             </p>
             
             {{-- FORM PENCARIAN --}}
-            <form action="{{ route('restaurant.show') }}" method="GET" class="mt-10 bg-white p-3 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] flex flex-col md:flex-row gap-3 border border-gray-100 max-w-xl">
+            <form action="#" method="GET" class="mt-10 bg-white p-3 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] flex flex-col md:flex-row gap-3 border border-gray-100 max-w-xl">
                 <div class="flex flex-1 items-center px-4 gap-3">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -108,7 +108,7 @@
                     </p>
                     <div class="flex justify-between items-center mt-auto pt-6 border-t border-gray-50">
                         <div class="text-orange-400 flex gap-1">★★★★★</div>
-                        <a href="{{ route('restaurant.show') }}" class="bg-slate-900 text-white hover:bg-orange-600 px-6 py-3.5 rounded-2xl text-xs font-black uppercase tracking-widest transition-all transform group-hover:-translate-y-1 shadow-xl">
+                        <a href="{{ route('login') }}" class="bg-slate-900 text-white hover:bg-orange-600 px-6 py-3.5 rounded-2xl text-xs font-black uppercase tracking-widest transition-all transform group-hover:-translate-y-1 shadow-xl">
                             Pesan
                         </a>
                     </div>
