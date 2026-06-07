@@ -136,7 +136,8 @@ class AuthController extends Controller
             }
 
         } catch (\Exception $e) {
-            return redirect('/login')->withErrors(['email' => 'Gagal login menggunakan Google. Silakan coba lagi.']);
+            \Log::error('Google Login Error: ' . $e->getMessage() . ' Trace: ' . $e->getTraceAsString());
+            return redirect('/login')->withErrors(['email' => 'Gagal login menggunakan Google. Silakan coba lagi. Error: ' . $e->getMessage()]);
         }
     }
 }

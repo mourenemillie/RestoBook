@@ -20,6 +20,14 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->validateCsrfTokens(except: [
             '/api/midtrans/notification',
         ]);
+
+        $middleware->redirectUsersTo(function () {
+            if (auth()->check()) {
+                if (auth()->user()->role === 'admin') return '/admin/dashboard';
+                if (auth()->user()->role === 'owner') return '/owner/dashboard';
+            }
+            return '/home';
+        });
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
