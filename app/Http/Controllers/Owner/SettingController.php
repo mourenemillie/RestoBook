@@ -33,6 +33,11 @@ class SettingController extends Controller
             $data['image'] = $path;
         }
 
+        if ($request->hasFile('avatar')) {
+            $avatarPath = $request->file('avatar')->store('avatars', 'public');
+            auth()->user()->update(['avatar' => $avatarPath]);
+        }
+
         $restaurant->update($data);
 
         return back()->with('success', 'Pengaturan berhasil disimpan!');
