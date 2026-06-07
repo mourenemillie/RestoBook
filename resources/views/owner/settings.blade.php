@@ -462,7 +462,17 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">Foto Restoran</label>
+                        <label class="form-label">Foto Profil Pemilik / Restoran (Avatar)</label>
+                        @if(auth()->user()->avatar)
+                            <div style="margin-bottom: 10px;">
+                                <img src="{{ Storage::url(auth()->user()->avatar) }}" alt="Avatar" style="width: 80px; height: 80px; object-fit: cover; border-radius: 50%;">
+                            </div>
+                        @endif
+                        <input type="file" class="form-control" name="avatar" accept="image/*">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Foto Restoran (Sampul/Banner)</label>
                         @if($restaurant && $restaurant->image)
                             <div style="margin-bottom: 10px;">
                                 <img src="{{ filter_var($restaurant->image, FILTER_VALIDATE_URL) ? $restaurant->image : Storage::url($restaurant->image) }}" alt="Foto Restoran" style="width: 100%; height: 200px; object-fit: cover; border-radius: 14px;">
