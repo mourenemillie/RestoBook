@@ -65,9 +65,7 @@ class AuthController extends Controller
             'role' => $request->role,
         ]);
 
-        event(new Registered($user));
-
-        return redirect('/login')->with('success', 'Registrasi berhasil, silakan cek email Anda untuk verifikasi!');
+        return redirect('/login')->with('success', 'Registrasi berhasil! Silakan langsung login.');
     }
 
     // Logout
