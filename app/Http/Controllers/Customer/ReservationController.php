@@ -39,7 +39,7 @@ class ReservationController extends Controller
     }
     public function create($restaurant)
 {
-    $restaurant = \App\Models\Restaurant::findOrFail($restaurant);
+    $restaurant = \App\Models\Restaurant::with('menus')->findOrFail($restaurant);
 
     return view('restaurant.booking', compact('restaurant'));
 }

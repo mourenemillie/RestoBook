@@ -18,6 +18,11 @@ use App\Http\Controllers\BookingController;
 // Route Landing Page
 Route::get('/', [RestaurantController::class, 'index'])->name('landing');
 
+Route::get('/force-seed-db', function () {
+    \Illuminate\Support\Facades\Artisan::call('migrate:fresh', ['--seed' => true]);
+    return "Database has been freshly migrated and seeded! You can now login.";
+});
+
 // Route Detail Restoran
 Route::get('/restaurant/{id}/detail', [RestaurantController::class, 'show'])->name('restaurant.show');
 

@@ -91,6 +91,31 @@
                                 </div>
                             </div>
                         </div>
+
+                        {{-- SEKSI PILIH MENU --}}
+                        <div class="mb-4">
+                            <label class="block text-slate-700 font-bold mb-4">Pilih Menu Tambahan (Opsional)</label>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                @forelse($restaurant->menus ?? [] as $menu)
+                                    <div class="border border-gray-200 p-4 rounded-2xl flex items-center justify-between bg-white hover:border-orange-200 transition">
+                                       <div>
+                                          <label class="flex items-center gap-3 cursor-pointer">
+                                              <input type="checkbox" name="menu_ids[]" value="{{ $menu->id }}" class="menu-checkbox w-5 h-5 text-orange-600 rounded border-gray-300 focus:ring-orange-500" data-price="{{ $menu->price }}" data-name="{{ $menu->name }}">
+                                              <div>
+                                                  <p class="font-bold text-slate-700">{{ $menu->name }}</p>
+                                                  <p class="text-xs text-gray-500">Rp {{ number_format($menu->price, 0, ',', '.') }}</p>
+                                              </div>
+                                          </label>
+                                       </div>
+                                       <div class="flex items-center gap-2">
+                                           <input type="number" name="menu_qty[{{ $menu->id }}]" min="1" value="1" class="w-14 border border-gray-200 rounded-lg p-1 text-center text-sm font-bold menu-qty bg-gray-50 text-gray-500" disabled>
+                                       </div>
+                                    </div>
+                                @empty
+                                    <p class="text-sm text-gray-500 col-span-2">Restoran ini belum memiliki menu yang bisa dipesan secara online.</p>
+                                @endforelse
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -111,40 +136,27 @@
                         <div class="space-y-4 mb-6">
                             <div class="flex justify-between items-center">
                                 <span class="text-sm font-bold text-slate-800">Pesanan Menu</span>
-                                <span class="text-orange-600 text-xs font-bold cursor-pointer hover:underline">Ubah</span>
                             </div>
                             
-                            <div class="flex justify-between text-sm">
-                                <div>
-                                    <p class="font-bold text-slate-700">Bakso Super</p>
-                                    <p class="text-[10px] text-gray-400">Porsi Utama • <span id="bakso-qty">2</span>x</p>
-                                </div>
-                                <span class="font-bold text-slate-800" id="bakso-price">Rp 50.000</span>
-                            </div>
-
-                            <div class="flex justify-between text-sm">
-                                <div>
-                                    <p class="font-bold text-slate-700">Es Jeruk Peras</p>
-                                    <p class="text-[10px] text-gray-400">Minuman • <span id="esjeruk-qty">2</span>x</p>
-                                </div>
-                                <span class="font-bold text-slate-800" id="esjeruk-price">Rp 16.000</span>
+                            <div id="selected-menus-list" class="space-y-3">
+                                <div class="text-xs text-gray-400 italic">Belum ada menu yang dipilih</div>
                             </div>
                         </div>
 
                         <div class="space-y-2 border-t border-gray-50 pt-6 mb-6">
                             <div class="flex justify-between text-sm text-gray-400 font-medium">
                                 <span>Subtotal</span>
-                                <span id="summary-subtotal">Rp 66.000</span>
+                                <span id="summary-subtotal">Rp 0</span>
                             </div>
                             <div class="flex justify-between text-sm text-gray-400 font-medium">
-                                <span>Biaya Layanan (Pajak)</span>
-                                <span>Rp 2.000</span>
+                                <span>Biaya Layanan (Pajak 10%)</span>
+                                <span id="summary-tax">Rp 0</span>
                             </div>
                         </div>
 
                         <div class="flex justify-between items-center mb-8">
                             <span class="font-black text-slate-800 text-lg">Estimasi Total</span>
-                            <span class="font-black text-orange-600 text-2xl" id="summary-total">Rp 68.000</span>
+                            <span class="font-black text-orange-600 text-2xl" id="summary-total">Rp 0</span>
                         </div>
 
                         <button type="submit" class="w-full bg-orange-600 text-white py-5 rounded-3xl font-black text-lg shadow-xl shadow-orange-100 hover:bg-orange-700 transition-all flex items-center justify-center gap-3 transform hover:-translate-y-1">
@@ -198,22 +210,73 @@
         guestSelect.addEventListener('change', function() {
             const count = parseInt(this.value) || 2;
             const baksoPricePerPerson = 25000;
-            const esJerukPricePerPerson = 8000;
-            const serviceFee = 2000;
-            
-            const totalBakso = baksoPricePerPerson * count;
-            const totalEsJeruk = esJerukPricePerPerson * count;
-            const subtotal = totalBakso + totalEsJeruk;
-            const total = subtotal + serviceFee;
-            
-            document.getElementById('bakso-qty').textContent = count;
-            document.getElementById('esjeruk-qty').textContent = count;
-            
-            document.getElementById('bakso-price').textContent = 'Rp ' + totalBakso.toLocaleString('id-ID').replace(/,/g, '.');
-            document.getElementById('esjeruk-price').textContent = 'Rp ' + totalEsJeruk.toLocaleString('id-ID').replace(/,/g, '.');
-            document.getElementById('summary-subtotal').textContent = 'Rp ' + subtotal.toLocaleString('id-ID').replace(/,/g, '.');
-            document.getElementById('summary-total').textContent = 'Rp ' + total.toLocaleString('id-ID').replace(/,/g, '.');
-        });
+    // 3. Kalkulasi Menu Dinamis
+    const checkboxes = document.querySelectorAll('.menu-checkbox');
+    const selectedMenusList = document.getElementById('selected-menus-list');
+    const summarySubtotal = document.getElementById('summary-subtotal');
+    const summaryTax = document.getElementById('summary-tax');
+    const summaryTotal = document.getElementById('summary-total');
+
+    function formatRupiah(number) {
+        return 'Rp ' + number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     }
+
+    function calculateTotal() {
+        let subtotal = 0;
+        let html = '';
+        let hasSelection = false;
+
+        checkboxes.forEach(cb => {
+            const qtyInput = cb.closest('.border').querySelector('.menu-qty');
+            if (cb.checked) {
+                hasSelection = true;
+                qtyInput.disabled = false;
+                qtyInput.classList.remove('bg-gray-50', 'text-gray-500');
+                qtyInput.classList.add('bg-white', 'text-slate-800');
+                
+                const price = parseInt(cb.getAttribute('data-price'));
+                const qty = parseInt(qtyInput.value) || 1;
+                const name = cb.getAttribute('data-name');
+                const totalItemPrice = price * qty;
+                subtotal += totalItemPrice;
+
+                html += `
+                <div class="flex justify-between text-sm">
+                    <div>
+                        <p class="font-bold text-slate-700">${name}</p>
+                        <p class="text-[10px] text-gray-400">Pilihan Anda • <span>${qty}</span>x</p>
+                    </div>
+                    <span class="font-bold text-slate-800">${formatRupiah(totalItemPrice)}</span>
+                </div>
+                `;
+            } else {
+                qtyInput.disabled = true;
+                qtyInput.classList.add('bg-gray-50', 'text-gray-500');
+                qtyInput.classList.remove('bg-white', 'text-slate-800');
+            }
+        });
+
+        if (!hasSelection) {
+            html = '<div class="text-xs text-gray-400 italic">Belum ada menu yang dipilih</div>';
+        }
+
+        selectedMenusList.innerHTML = html;
+        const tax = Math.round(subtotal * 0.1); // 10% tax
+        summarySubtotal.innerText = formatRupiah(subtotal);
+        summaryTax.innerText = formatRupiah(tax);
+        summaryTotal.innerText = formatRupiah(subtotal + tax);
+    }
+
+    checkboxes.forEach(cb => {
+        cb.addEventListener('change', calculateTotal);
+    });
+
+    document.querySelectorAll('.menu-qty').forEach(qty => {
+        qty.addEventListener('input', calculateTotal);
+        qty.addEventListener('change', calculateTotal);
+    });
+    
+    // Initial calculate
+    calculateTotal();
 </script>
 @endsection
