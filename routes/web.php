@@ -76,6 +76,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
 
 // --- OWNER ROUTES ---
 Route::middleware(['auth', 'role:owner'])->prefix('owner')->group(function () {
+    Route::get('/dashboard', [OwnerDashboard::class, 'index'])->name('owner.dashboard');
     Route::get('/reservasi', [OwnerReservationController::class, 'index'])->name('owner.reservasi');
     Route::get('/reservasi/{id}', [OwnerReservationController::class, 'show'])->name('owner.reservasi.show');
     Route::patch('/reservasi/{id}/hadir', [OwnerReservationController::class, 'hadir'])->name('owner.reservasi.hadir');

@@ -10,26 +10,28 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $totalReservasi = Reservation::count();
+        $restaurant = auth()->user()->restaurant;
 
-        $reservasiAktif = Reservation::where('status', 'pending')->count();
+        if (!$restaurant) {
+            return redirect()->route('owner.settings')->with('error', 'Restoran belum disetting.');
+        }
 
-        $reservasiBatal = Reservation::where('status', 'cancelled')->count();
+        $restaurantId = $restaurant->id;
 
-        $mejaTersedia = Table::where('status', 'available')->count();
+        $totalReservasi = Reservation::where('restaurant_id', $restaurantId)->count();
+        $reservasiAktif = Reservation::where('restaurant_id', $restaurantId)->whereIn('status', ['pending', 'paid', 'approved'])->count();
+        $reservasiBatal = Reservation::where('restaurant_id', $restaurantId)->whereIn('status', ['cancelled', 'rejected'])->count();
+        $mejaTersedia = Table::where('restaurant_id', $restaurantId)->where('status', 'available')->count();
+        $totalMeja = Table::where('restaurant_id', $restaurantId)->count();
+        
+        $reservations = Reservation::where('restaurant_id', $restaurantId)
+            ->latest()
+            ->take(5)
+            ->get();
 
-        $totalMeja = Table::count();
-        $reservations = Reservation::latest()
-    ->take(5)
-    ->get();
-
-return view('owner.dashboard', [
-    'totalReservasi' => $totalReservasi,
-    'reservasiAktif' => $reservasiAktif,
-    'reservasiBatal' => $reservasiBatal,
-    'mejaTersedia' => $mejaTersedia,
-    'totalMeja' => $totalMeja,
-    'reservations' => $reservations,
-]);
+        return view('owner.dashboard', compact(
+            'totalReservasi', 'reservasiAktif', 'reservasiBatal', 
+            'mejaTersedia', 'totalMeja', 'reservations'
+        ));
     }
 }
