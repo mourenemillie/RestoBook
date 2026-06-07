@@ -250,7 +250,7 @@
                             <a href="{{ route('customer.reservations.create', 1) }}" class="btn-booking">Pesan</a>
                         @else
                             <span class="badge-full">PENUH</span>
-                            <a href="{{ route('restaurant.show') }}" class="btn-booking" style="background:#e0e0e0;color:#999;pointer-events:none">Penuh</a>
+                            <a href="#" class="btn-booking" style="background:#e0e0e0;color:#999;pointer-events:none">Penuh</a>
                         @endif
                     </div>
                 </div>
