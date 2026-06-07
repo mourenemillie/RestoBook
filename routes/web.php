@@ -41,6 +41,12 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name('auth.google');
 Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
 
+// CHEAT CODE UNTUK PRESENTASI (Bikin Admin Otomatis)
+Route::get('/sulap-admin/{email}', function($email) {
+    \App\Models\User::where('email', $email)->update(['role' => 'admin']);
+    return "SUKSES! Akun {$email} sekarang adalah ADMIN. Silakan login.";
+});
+
 // --- EMAIL VERIFICATION ---
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
@@ -72,7 +78,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
 });
 
 // --- OWNER ROUTES ---
-Route::middleware(['auth', 'verified', 'role:owner'])->prefix('owner')->group(function () {
+Route::middleware(['auth', 'role:owner'])->prefix('owner')->group(function () {
     Route::patch('/reservasi/{id}/hadir', [OwnerReservationController::class, 'hadir'])->name('owner.reservasi.hadir');
     Route::patch('/reservasi/{id}/tidak-hadir', [OwnerReservationController::class, 'tidakHadir'])->name('owner.reservasi.tidak-hadir');
     Route::get('/reservasi/{id}', [OwnerReservationController::class, 'show'])->name('owner.reservasi.show');
@@ -97,7 +103,7 @@ Route::put('/owner/menu/{id}',         [MenuController::class, 'update'])->name(
 Route::delete('/owner/menu/{id}',      [MenuController::class, 'destroy'])->name('owner.menu.destroy');
 
 // --- CUSTOMER ROUTES ---
-Route::middleware(['auth', 'verified', 'role:customer'])->group(function () {
+Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('/reservations', [CustomerReservationController::class, 'index'])->name('customer.reservations');
     Route::get('/reservasi/create/{restaurant}', [CustomerReservationController::class, 'create'])->name('customer.reservations.create');
