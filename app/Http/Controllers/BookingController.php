@@ -27,7 +27,7 @@ class BookingController extends Controller
     {
         $request->validate([
             'restaurant_name'  => 'required|string',
-            'booking_date'     => 'required|date|after_or_equal:today',
+            'booking_date'     => 'required|date',
             'number_of_people' => 'required|string',
             'booking_time'     => 'required|string',
             'table_area'       => 'required|string',
@@ -101,13 +101,18 @@ class BookingController extends Controller
                 ],
             ];
 
-            $snapToken = Snap::getSnapToken($params);
-            
-            DB::table('reservations')->where('booking_code', $booking_code)->update([
-                'snap_token' => $snapToken
-            ]);
+            try {
+                $snapToken = Snap::getSnapToken($params);
+                
+                DB::table('reservations')->where('booking_code', $booking_code)->update([
+                    'snap_token' => $snapToken
+                ]);
 
-            $booking->snap_token = $snapToken;
+                $booking->snap_token = $snapToken;
+            } catch (\Exception $e) {
+                // Tangkap error jika Midtrans belum di-setting
+                return redirect()->route('restaurant.show')->withErrors('Gagal memproses pembayaran: Pastikan MIDTRANS_SERVER_KEY sudah disetting dengan benar di server. Detail Error: ' . $e->getMessage());
+            }
         }
 
         return view('restaurant.payment', compact('booking'));
