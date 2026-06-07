@@ -37,15 +37,10 @@ Route::middleware('guest')->group(function () {
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
-// --- SOCIALITE (GOOGLE LOGIN) ---
+//SOCIALITE (GOOGLE LOGIN)
 Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name('auth.google');
 Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
 
-// CHEAT CODE UNTUK PRESENTASI (Bikin Admin Otomatis)
-Route::get('/sulap-admin/{email}', function($email) {
-    \App\Models\User::where('email', $email)->update(['role' => 'admin']);
-    return "SUKSES! Akun {$email} sekarang adalah ADMIN. Silakan login.";
-});
 
 // --- EMAIL VERIFICATION ---
 Route::get('/email/verify', function () {
