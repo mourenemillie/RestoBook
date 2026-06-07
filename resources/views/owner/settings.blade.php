@@ -446,7 +446,7 @@
 
         <!-- ===== KOLOM KIRI ===== -->
         <div>
-            <form action="{{ route('owner.settings.update') }}" method="POST">
+            <form action="{{ route('owner.settings.update') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
                 <!-- Profil Restoran -->
@@ -459,6 +459,16 @@
                             </svg>
                         </div>
                         <h2>Profil Restoran</h2>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Foto Restoran</label>
+                        @if($restaurant && $restaurant->image)
+                            <div style="margin-bottom: 10px;">
+                                <img src="{{ filter_var($restaurant->image, FILTER_VALIDATE_URL) ? $restaurant->image : Storage::url($restaurant->image) }}" alt="Foto Restoran" style="width: 100%; height: 200px; object-fit: cover; border-radius: 14px;">
+                            </div>
+                        @endif
+                        <input type="file" class="form-control" name="image" accept="image/*">
                     </div>
 
                     <div class="form-group">

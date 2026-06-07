@@ -4,23 +4,22 @@ namespace App\Http\Controllers\Owner;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Reservation;
+use Illuminate\Support\Facades\Auth;
 
 class ReservationController extends Controller
 {
    public function index(Request $request)
 {
-    $query = \App\Models\Reservation::latest();
-
-    if ($request->status == 'pending') {
-        $query->where('status', 'pending');
+    $restaurant = \App\Models\Restaurant::where('user_id', Auth::id())->first();
+    
+    if (!$restaurant) {
+        return redirect()->route('owner.dashboard')->with('error', 'Restoran tidak ditemukan.');
     }
 
-    if ($request->status == 'completed') {
-        $query->where('status', 'completed');
-    }
+    $query = \App\Models\Reservation::where('restaurant_id', $restaurant->id)->latest();
 
-    if ($request->status == 'cancelled') {
-        $query->where('status', 'cancelled');
+    if ($request->status) {
+        $query->where('status', $request->status);
     }
 
     $reservations = $query->get();
@@ -52,6 +51,20 @@ public function tidakHadir($id)
         'status' => 'cancelled'
     ]);
 
-    return back();
+    return back()->with('success', 'Reservasi dibatalkan.');
+}
+
+public function approve($id)
+{
+    $reservation = \App\Models\Reservation::findOrFail($id);
+    $reservation->update(['status' => 'approved']);
+    return back()->with('success', 'Reservasi diterima!');
+}
+
+public function reject($id)
+{
+    $reservation = \App\Models\Reservation::findOrFail($id);
+    $reservation->update(['status' => 'rejected']);
+    return back()->with('success', 'Reservasi ditolak!');
 }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Owner;
 use App\Http\Controllers\Controller;
 use App\Models\Menu;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class MenuController extends Controller
 {
@@ -35,8 +36,10 @@ class MenuController extends Controller
                 ->store('menus', 'public');
         }
 
+        $restaurant = \App\Models\Restaurant::where('user_id', Auth::id())->first();
+
         Menu::create([
-            'restaurant_id' => 1,
+            'restaurant_id' => $restaurant->id,
             'name' => $request->name,
             'category' => $request->category,
             'description' => $request->description,
@@ -53,13 +56,19 @@ class MenuController extends Controller
 {
     $menu = Menu::findOrFail($id);
 
-    $menu->update([
+    $data = [
         'name' => $request->name,
         'category' => $request->category,
         'description' => $request->description,
         'price' => $request->price,
         'is_available' => $request->is_available,
-    ]);
+    ];
+
+    if ($request->hasFile('image')) {
+        $data['image'] = $request->file('image')->store('menus', 'public');
+    }
+
+    $menu->update($data);
 
     return redirect()
         ->route('owner.kelola-meja')

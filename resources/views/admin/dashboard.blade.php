@@ -666,10 +666,10 @@
                 </div>
                 <div class="stat-content">
                     <div class="stat-title">Total Restoran</div>
-                    <div class="stat-value">248</div>
+                    <div class="stat-value">{{ number_format($totalRestaurants) }}</div>
                     <div class="stat-trend positive">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
-                        +12 pendaftar bulan ini
+                        +{{ $newRestaurantsThisMonth }} bulan ini
                     </div>
                 </div>
             </div>
@@ -680,10 +680,10 @@
                 </div>
                 <div class="stat-content">
                     <div class="stat-title">Total User</div>
-                    <div class="stat-value">12,450</div>
+                    <div class="stat-value">{{ number_format($totalUsers) }}</div>
                     <div class="stat-trend positive">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
-                        +840 pengguna baru bulan ini
+                        +{{ $newUsersThisMonth }} pengguna baru bulan ini
                     </div>
                 </div>
             </div>
@@ -694,10 +694,10 @@
                 </div>
                 <div class="stat-content">
                     <div class="stat-title">Reservasi Aktif</div>
-                    <div class="stat-value">892</div>
+                    <div class="stat-value">{{ number_format($activeReservations) }}</div>
                     <div class="stat-trend neutral">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                        15 masuk hari ini
+                        {{ $reservationsToday }} masuk hari ini
                     </div>
                 </div>
             </div>
@@ -708,10 +708,10 @@
                 </div>
                 <div class="stat-content">
                     <div class="stat-title">Pendapatan Platform</div>
-                    <div class="stat-value">Rp 42.5M</div>
+                    <div class="stat-value">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</div>
                     <div class="stat-trend positive">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
-                        +5.2% dibanding bulan lalu
+                        Dari reservasi selesai
                     </div>
                 </div>
             </div>
@@ -728,52 +728,45 @@
                         <p>Review dan verifikasi pendaftaran mitra baru</p>
                     </div>
                 </div>
-                <div class="badge-pending">3 Pending</div>
+                <div class="badge-pending">{{ $pendingRestaurants->count() }} Pending</div>
             </div>
 
             <div class="approval-list">
+                @forelse($pendingRestaurants as $pending)
                 <div class="approval-item">
                     <div class="restaurant-info">
-                        <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=100&h=100&fit=crop" alt="Sate Taichan" class="restaurant-img">
+                        @if($pending->image)
+                            <img src="{{ Storage::url($pending->image) }}" alt="{{ $pending->name }}" class="restaurant-img">
+                        @else
+                            <div class="restaurant-img">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                            </div>
+                        @endif
                         <div class="restaurant-details">
-                            <h3>Sate Taichan Bang Ocit</h3>
+                            <h3>{{ $pending->name }}</h3>
                             <div class="restaurant-location">
                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                                Tanjung Karang Pusat
+                                {{ $pending->city ?? 'Bandar Lampung' }}
                             </div>
                             <div class="tags">
-                                <span class="tag">UMKM Mikro</span>
-                                <span class="tag">Halal</span>
+                                <span class="tag">{{ $pending->user->name }}</span>
                             </div>
                         </div>
                     </div>
                     <div class="action-buttons">
-                        <button class="btn-outline">Tolak</button>
-                        <button class="btn-filled">Setujui</button>
+                        <form action="{{ route('admin.restaurants.reject', $pending->id) }}" method="POST" style="display:inline;">
+                            @csrf @method('PATCH')
+                            <button class="btn-outline">Tolak</button>
+                        </form>
+                        <form action="{{ route('admin.restaurants.approve', $pending->id) }}" method="POST" style="display:inline;">
+                            @csrf @method('PATCH')
+                            <button class="btn-filled">Setujui</button>
+                        </form>
                     </div>
                 </div>
-
-                <div class="approval-item">
-                    <div class="restaurant-info">
-                        <div class="restaurant-img">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
-                        </div>
-                        <div class="restaurant-details">
-                            <h3>Kopi Kenangan</h3>
-                            <div class="restaurant-location">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                                Kedaton
-                            </div>
-                            <div class="tags">
-                                <span class="tag">Cafe</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="action-buttons">
-                        <button class="btn-outline">Tolak</button>
-                        <button class="btn-filled">Setujui</button>
-                    </div>
-                </div>
+                @empty
+                <div style="padding: 20px; text-align: center; color: var(--text-gray);">Tidak ada restoran yang menunggu persetujuan.</div>
+                @endforelse
             </div>
         </section>
 

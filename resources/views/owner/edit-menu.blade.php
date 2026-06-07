@@ -404,9 +404,8 @@
 
     <!-- Form -->
     <form action="{{ route('owner.menu.update', $menu->id) }}" method="POST" enctype="multipart/form-data">
-    @csrf
-    @method('PUT')
         @csrf
+        @method('PUT')
 
         <div class="form-layout">
 

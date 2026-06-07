@@ -14,6 +14,8 @@ class OwnerDashboardController extends Controller
                 'val' => rand(20, 120)
             ]);
 
+        $restaurant = \App\Models\Restaurant::where('user_id', auth()->id())->first();
+
         return view('dashboard.owner', [
             'totalTamu' => 142,
             'reservasiAktif' => 28,
@@ -44,6 +46,7 @@ class OwnerDashboardController extends Controller
 
             'tables' => [],
             'chartData' => $chartData->toArray(),
+            'restaurant_status' => $restaurant ? $restaurant->status : 'pending',
         ]);
     }
 }

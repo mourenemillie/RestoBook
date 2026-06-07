@@ -64,6 +64,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::put('/users/{id}', [AdminUserController::class, 'update'])->name('admin.users.update');
     Route::delete('/users/{id}', [AdminUserController::class, 'destroy'])->name('admin.users.destroy');
     
+    Route::patch('/restaurants/{id}/approve', [AdminRestaurantController::class, 'approve'])->name('admin.restaurants.approve');
+    Route::patch('/restaurants/{id}/reject', [AdminRestaurantController::class, 'reject'])->name('admin.restaurants.reject');
     Route::get('/restaurants', [AdminRestaurantController::class, 'index'])->name('admin.restaurants');
     Route::put('/restaurants/{id}', [AdminRestaurantController::class, 'update'])->name('admin.restaurants.update');
     Route::delete('/restaurants/{id}', [AdminRestaurantController::class, 'destroy'])->name('admin.restaurants.destroy');
@@ -74,11 +76,12 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
 
 // --- OWNER ROUTES ---
 Route::middleware(['auth', 'role:owner'])->prefix('owner')->group(function () {
+    Route::get('/reservasi', [OwnerReservationController::class, 'index'])->name('owner.reservasi');
+    Route::get('/reservasi/{id}', [OwnerReservationController::class, 'show'])->name('owner.reservasi.show');
     Route::patch('/reservasi/{id}/hadir', [OwnerReservationController::class, 'hadir'])->name('owner.reservasi.hadir');
     Route::patch('/reservasi/{id}/tidak-hadir', [OwnerReservationController::class, 'tidakHadir'])->name('owner.reservasi.tidak-hadir');
-    Route::get('/reservasi/{id}', [OwnerReservationController::class, 'show'])->name('owner.reservasi.show');
-    Route::get('/dashboard', [OwnerDashboard::class, 'index'])->name('owner.dashboard');
-    Route::get('/reservasi', [OwnerReservationController::class, 'index'])->name('owner.reservasi');
+    Route::patch('/reservasi/{id}/approve', [OwnerReservationController::class, 'approve'])->name('owner.reservasi.approve');
+    Route::patch('/reservasi/{id}/reject', [OwnerReservationController::class, 'reject'])->name('owner.reservasi.reject');
     Route::get('/kelola-meja', [OwnerTableController::class, 'index'])->name('owner.kelola-meja');
     Route::post('/kelola-meja', [OwnerTableController::class, 'store'])->name('owner.kelola-meja.store');
     Route::get('/kelola-meja/create', [OwnerTableController::class, 'create'])->name('owner.kelola-meja.create');
