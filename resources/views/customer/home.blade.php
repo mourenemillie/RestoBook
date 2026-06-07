@@ -188,14 +188,14 @@
         <div class="restaurant-grid">
     @forelse($restaurants as $resto)
         <div class="resto-card">
-            <div class="resto-img-wrap">
+            <div class="resto-img-wrap" onclick="window.location='{{ route('restaurant.show', $resto->id) }}'" style="cursor: pointer;">
                 <img src="{{ $resto->image ? asset('storage/'.$resto->image) : 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400' }}"
                      alt="{{ $resto->name }}">
                 <div class="rating-badge">4.8</div>
             </div>
 
            <div class="resto-body">
-    <div class="resto-name">{{ $resto->name }}</div>
+    <div class="resto-name" onclick="window.location='{{ route('restaurant.show', $resto->id) }}'" style="cursor: pointer; hover:text-orange-600;">{{ $resto->name }}</div>
 
     <div class="resto-location">
         {{ $resto->address }}
@@ -218,7 +218,7 @@
                 <div class="resto-footer">
                     <span class="badge-available">TERSEDIA</span>
 
-                    <a href="{{ route('restaurant.show') }}"
+                    <a href="{{ route('customer.reservations.create', $resto->id) }}"
                        class="btn-booking">
                         Pesan
                     </a>
@@ -235,19 +235,19 @@
         ] as $dummy)
 
             <div class="resto-card">
-                <div class="resto-img-wrap">
+                <div class="resto-img-wrap" onclick="window.location='{{ route('restaurant.show', 1) }}'" style="cursor: pointer;">
                     <img src="{{ $dummy['img'] }}" alt="{{ $dummy['name'] }}">
                     <div class="rating-badge">{{ $dummy['rating'] }}</div>
                 </div>
 
                 <div class="resto-body">
-                    <div class="resto-name">{{ $dummy['name'] }}</div>
+                    <div class="resto-name" onclick="window.location='{{ route('restaurant.show', 1) }}'" style="cursor: pointer; hover:text-orange-600;">{{ $dummy['name'] }}</div>
                     <div class="resto-location">{{ $dummy['address'] }}</div>
 
                     <div class="resto-footer">
                         @if($dummy['status'] === 'available')
                             <span class="badge-available">TERSEDIA</span>
-                            <a href="{{ route('restaurant.show') }}" class="btn-booking">Pesan</a>
+                            <a href="{{ route('customer.reservations.create', 1) }}" class="btn-booking">Pesan</a>
                         @else
                             <span class="badge-full">PENUH</span>
                             <a href="{{ route('restaurant.show') }}" class="btn-booking" style="background:#e0e0e0;color:#999;pointer-events:none">Penuh</a>

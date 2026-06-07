@@ -19,7 +19,7 @@ use App\Http\Controllers\BookingController;
 Route::get('/', [RestaurantController::class, 'index'])->name('landing');
 
 // Route Detail Restoran
-Route::get('/restaurant/detail', [RestaurantController::class, 'show'])->name('restaurant.show');
+Route::get('/restaurant/{id}/detail', [RestaurantController::class, 'show'])->name('restaurant.show');
 
 // --- FITUR BOOKING & PEMBAYARAN ---
 Route::post('/restaurant/booking', [BookingController::class, 'store'])->name('restaurant.booking');

@@ -19,8 +19,9 @@ class RestaurantController extends Controller
         return view('restaurant.index');
     }
 
-    public function show()
+    public function show($id)
     {
-        return view('restaurant.show');
+        $restaurant = \App\Models\Restaurant::with('menus')->findOrFail($id);
+        return view('restaurant.show', compact('restaurant'));
     }
 }
