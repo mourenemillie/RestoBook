@@ -109,7 +109,6 @@ class AuthController extends Controller
                     'avatar' => $googleUser->avatar,
                 ]);
                 
-                // Jika user login dgn google tapi belum verified emailnya (karena daftar manual sebelumnya)
                 if (!$user->hasVerifiedEmail()) {
                     $user->markEmailAsVerified();
                 }
@@ -122,7 +121,7 @@ class AuthController extends Controller
                     'google_id' => $googleUser->id,
                     'avatar' => $googleUser->avatar,
                     'password' => null,
-                    'role' => 'customer', // default role
+                    'role' => 'customer',
                 ]);
                 $user->markEmailAsVerified();
                 Auth::login($user);

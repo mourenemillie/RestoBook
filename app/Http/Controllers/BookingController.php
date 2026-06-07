@@ -10,19 +10,16 @@ use Midtrans\Snap;
 
 class BookingController extends Controller
 {
-    // 1. Menampilkan Landing Page (Merujuk ke views/restaurant/index.blade.php)
     public function index()
     {
         return view('restaurant.index'); 
     }
 
-    // 2. Menampilkan Form Detail Restoran (Merujuk ke views/restaurant/show.blade.php)
     public function create()
     {
         return view('restaurant.show'); 
     }
 
-    // 3. Memproses Data Pemesanan & Kalkulasi Harga Berdasarkan Jumlah Tamu
     public function store(Request $request)
     {
         $request->validate([
@@ -33,29 +30,46 @@ class BookingController extends Controller
             'table_area'       => 'required|string',
         ]);
 
-        // Mengambil angka murni dari string select (Contoh: "4 Orang" diambil angka 4)
         $guestCount = (int) filter_var($request->number_of_people, FILTER_SANITIZE_NUMBER_INT);
         if ($guestCount <= 0) { 
-            $guestCount = 2; // Default fallback jika penyaringan angka gagal
+            $guestCount = 2; 
         } 
 
-        // Perhitungan Harga Paket Menu Sesuai Kelipatan Tamu
         $baksoPrice = 25000;
         $esJerukPrice = 8000;
         $serviceFee = 2000;
         
-        // Total kalkulasi: ((Bakso + Es Jeruk) * Jumlah Orang) + Biaya Layanan
         $totalPrice = (($baksoPrice + $esJerukPrice) * $guestCount) + $serviceFee;
 
-        // Membuat Kode Booking Acak Unik (Contoh: BKS-ABC12)
         $bookingCode = 'BKS-' . strtoupper(Str::random(5));
+        $restaurantId = 1;
+        $tableId = 1;
+        
+        if (!\App\Models\Restaurant::find($restaurantId)) {
+            \App\Models\Restaurant::updateOrCreate(['id' => $restaurantId], [
+                'user_id' => auth()->id() ?? \App\Models\User::first()->id ?? \App\Models\User::factory()->create()->id,
+                'name' => 'Bakso Son Haji Sony',
+                'address' => 'Jl. Wolter Monginsidi',
+                'city' => 'Bandar Lampung',
+                'phone' => '081234567890',
+                'status' => 'active'
+            ]);
+        }
+        
+        if (!\App\Models\Table::find($tableId)) {
+            \App\Models\Table::updateOrCreate(['id' => $tableId], [
+                'restaurant_id' => $restaurantId,
+                'table_number' => 'M1',
+                'capacity' => 4,
+                'status' => 'available'
+            ]);
+        }
 
-        // Memasukkan data pesanan ke dalam tabel database 'reservations'
         DB::table('reservations')->insert([
             'booking_code'     => $bookingCode,
             'user_id'          => auth()->id() ?? 1,
-            'restaurant_id'    => 1,
-            'table_id'         => 1,
+            'restaurant_id'    => $restaurantId,
+            'table_id'         => $tableId,
             'reservation_date' => $request->booking_date,
             'reservation_time' => $request->booking_time,
             'num_guests'       => $guestCount,
@@ -66,11 +80,9 @@ class BookingController extends Controller
             'updated_at'       => now(),
         ]);
 
-        // Dialihkan ke rute checkout sesuai yang ada di routes/web.php
         return redirect()->route('booking.checkout', $bookingCode);
     }
 
-    // 4. Menampilkan Halaman Checkout Pembayaran (Merujuk ke views/restaurant/payment.blade.php)
     public function checkout($booking_code)
     {
         $booking = DB::table('reservations')->where('booking_code', $booking_code)->first();
@@ -79,7 +91,6 @@ class BookingController extends Controller
             abort(404, 'Reservasi tidak valid atau tidak ditemukan.');
         }
 
-        // Set Konfigurasi Midtrans
         Config::$serverKey = env('MIDTRANS_SERVER_KEY');
         Config::$isProduction = env('MIDTRANS_IS_PRODUCTION', false);
         Config::$isSanitized = true;
@@ -110,7 +121,6 @@ class BookingController extends Controller
 
                 $booking->snap_token = $snapToken;
             } catch (\Exception $e) {
-                // Tangkap error jika Midtrans belum di-setting
                 return redirect()->route('restaurant.show')->withErrors('Gagal memproses pembayaran: Pastikan MIDTRANS_SERVER_KEY sudah disetting dengan benar di server. Detail Error: ' . $e->getMessage());
             }
         }
@@ -118,7 +128,6 @@ class BookingController extends Controller
         return view('restaurant.payment', compact('booking'));
     }
 
-    // 5. Handle Midtrans Webhook Notification
     public function handleNotification(Request $request)
     {
         $serverKey = env('MIDTRANS_SERVER_KEY');
@@ -133,7 +142,6 @@ class BookingController extends Controller
         return response()->json(['status' => 'success']);
     }
 
-    // 6. Tampilan Akhir Halaman Sukses (Merujuk ke views/restaurant/success.blade.php)
     public function success($booking_code)
     {
         $booking = DB::table('reservations')->where('booking_code', $booking_code)->first();
