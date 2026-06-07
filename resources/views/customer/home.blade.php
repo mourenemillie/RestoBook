@@ -261,40 +261,6 @@
     @endforelse
 </div>
 
-{{-- TABLE SECTION --}}
-<section class="table-section">
-    <div class="table-card">
-        <div class="section-header">
-            <div>
-                <h2 class="section-title">Pilih Meja</h2>
-                <p class="section-sub">Bagian ini dibuat dengan background transparan. Nanti tinggal pasang gambar denah meja di area sebelah kiri.</p>
-            </div>
-            <a href="#" class="table-action">Lihat Denah</a>
-        </div>
-        <div class="table-card-inner">
-            <div class="table-preview">
-                Taruh gambar denah meja di sini nanti
-            </div>
-            <div class="table-detail">
-                <p>Gunakan area ini untuk menampilkan layout meja, pilihan area, atau foto floorplan restoran. Background transparan memudahkan tampilan gambar tetap terlihat elegan.</p>
-                <div class="table-meta">
-                    <div class="table-meta-item">
-                        <strong>Area Meja</strong>
-                        <span>Jendela, Bilik, Utama, Bar</span>
-                    </div>
-                    <div class="table-meta-item">
-                        <strong>Slot Tersedia</strong>
-                        <span>18:00, 18:30, 19:00, 19:30, 20:00</span>
-                    </div>
-                    <div class="table-meta-item">
-                        <strong>Kapasitas Tamu</strong>
-                        <span>1-12 orang per meja</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
 
 {{-- UMKM SECTION --}}
 <section>
