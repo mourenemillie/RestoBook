@@ -42,4 +42,18 @@ class RestaurantController extends Controller
 
         return redirect()->route('admin.restaurants')->with('success', 'Restoran berhasil dihapus!');
     }
+
+    public function approve($id)
+    {
+        $restaurant = Restaurant::findOrFail($id);
+        $restaurant->update(['status' => 'active']);
+        return redirect()->back()->with('success', 'Restoran disetujui!');
+    }
+
+    public function reject($id)
+    {
+        $restaurant = Restaurant::findOrFail($id);
+        $restaurant->update(['status' => 'rejected']);
+        return redirect()->back()->with('success', 'Restoran ditolak!');
+    }
 }

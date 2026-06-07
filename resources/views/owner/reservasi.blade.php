@@ -382,6 +382,11 @@
         Menunggu
     </a>
 
+    <a href="{{ route('owner.reservasi', ['status' => 'approved']) }}"
+       class="filter-btn {{ request('status') == 'approved' ? 'active' : '' }}">
+        Diterima
+    </a>
+
     <a href="{{ route('owner.reservasi', ['status' => 'completed']) }}"
        class="filter-btn {{ request('status') == 'completed' ? 'active' : '' }}">
         Hadir
@@ -390,6 +395,11 @@
     <a href="{{ route('owner.reservasi', ['status' => 'cancelled']) }}"
        class="filter-btn {{ request('status') == 'cancelled' ? 'active' : '' }}">
         Tidak Hadir
+    </a>
+
+    <a href="{{ route('owner.reservasi', ['status' => 'rejected']) }}"
+       class="filter-btn {{ request('status') == 'rejected' ? 'active' : '' }}">
+        Ditolak
     </a>
 
 </div>
@@ -431,6 +441,28 @@
 
     @if($reservation->status == 'pending')
 
+        <form action="{{ route('owner.reservasi.reject', $reservation->id) }}"
+              method="POST">
+            @csrf
+            @method('PATCH')
+
+            <button type="submit" class="btn-outline">
+                Tolak
+            </button>
+        </form>
+
+        <form action="{{ route('owner.reservasi.approve', $reservation->id) }}"
+              method="POST">
+            @csrf
+            @method('PATCH')
+
+            <button type="submit" class="btn-filled">
+                Terima
+            </button>
+        </form>
+
+    @elseif($reservation->status == 'approved')
+
         <form action="{{ route('owner.reservasi.tidak-hadir', $reservation->id) }}"
               method="POST">
             @csrf
@@ -453,14 +485,20 @@
 
     @elseif($reservation->status == 'completed')
 
-        <button class="btn-filled">
+        <button class="btn-filled" disabled style="opacity: 0.6; cursor: default;">
             Hadir
         </button>
 
     @elseif($reservation->status == 'cancelled')
 
-        <button class="btn-outline">
+        <button class="btn-outline" disabled style="opacity: 0.6; cursor: default;">
             Tidak Hadir
+        </button>
+
+    @elseif($reservation->status == 'rejected')
+
+        <button class="btn-outline" disabled style="border-color: var(--danger-color); color: var(--danger-color); opacity: 0.6; cursor: default;">
+            Ditolak
         </button>
 
     @endif

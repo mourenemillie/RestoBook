@@ -11,7 +11,7 @@
         <div class="error">{{ $errors->first() }}</div>
     @endif
 
-    <form action="/register" method="POST">
+    <form action="/register" method="POST" autocomplete="off">
         @csrf
         <div class="section-title">Saya mendaftar sebagai:</div>
         <div class="role-toggle">

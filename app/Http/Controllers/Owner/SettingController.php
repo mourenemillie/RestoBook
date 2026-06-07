@@ -20,13 +20,20 @@ class SettingController extends Controller
     {
         $restaurant = Restaurant::where('user_id', Auth::id())->first();
 
-       $restaurant->update([
-    'name' => $request->name,
-    'phone' => $request->phone,
-    'address' => $request->address,
-    'open_time' => $request->open_time,
-    'close_time' => $request->close_time,
-]);
+        $data = [
+            'name' => $request->name,
+            'phone' => $request->phone,
+            'address' => $request->address,
+            'open_time' => $request->open_time,
+            'close_time' => $request->close_time,
+        ];
+
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('restaurants', 'public');
+            $data['image'] = $path;
+        }
+
+        $restaurant->update($data);
 
         return back()->with('success', 'Pengaturan berhasil disimpan!');
     }

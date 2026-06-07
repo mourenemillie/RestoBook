@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Restaurant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -64,6 +65,17 @@ class AuthController extends Controller
             'phone' => $request->phone,
             'role' => $request->role,
         ]);
+
+        if ($request->role === 'owner') {
+            Restaurant::create([
+                'user_id' => $user->id,
+                'name' => $request->restaurant_name ?? 'Restoran Baru',
+                'address' => $request->location ?? 'Belum diisi',
+                'phone' => $request->phone,
+                'status' => 'pending',
+                'city' => 'Bandar Lampung',
+            ]);
+        }
 
         return redirect('/login')->with('success', 'Registrasi berhasil! Silakan langsung login.');
     }
