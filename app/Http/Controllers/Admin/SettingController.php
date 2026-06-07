@@ -19,25 +19,26 @@ class SettingController extends Controller
 
     public function update(Request $request)
     {
-        $user = \Illuminate\Support\Facades\Auth::user();
+        if ($request->has('type') && $request->type === 'profile') {
+            $user = \Illuminate\Support\Facades\Auth::user();
 
-        // Validasi untuk Profil
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-            'password' => 'nullable|string|min:8|confirmed',
-        ]);
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+                'password' => 'nullable|string|min:8|confirmed',
+            ]);
 
-        // Update Profil User
-        $user->name = $request->name;
-        $user->email = $request->email;
+            $user->name = $request->name;
+            $user->email = $request->email;
 
-        if ($request->filled('password')) {
-            $user->password = \Illuminate\Support\Facades\Hash::make($request->password);
+            if ($request->filled('password')) {
+                $user->password = \Illuminate\Support\Facades\Hash::make($request->password);
+            }
+            $user->save();
+
+            return redirect()->route('admin.settings')->with('success', 'Profil berhasil diupdate.');
         }
-        $user->save();
 
-        // Update Global Settings
         $allowedSettings = [
             'app_name', 'contact_email', 'contact_phone', 'timezone', 'currency'
         ];

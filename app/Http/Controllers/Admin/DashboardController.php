@@ -22,7 +22,6 @@ class DashboardController extends Controller
         $activeReservations = Reservation::whereIn('status', ['pending', 'paid', 'approved'])->count();
         $reservationsToday = Reservation::whereDate('created_at', now()->today())->count();
 
-        // Calculate total revenue from completed/paid reservations
         $totalRevenue = Reservation::whereIn('status', ['paid', 'completed'])->sum('total_price');
 
         $pendingRestaurants = Restaurant::with('user')->where('status', 'pending')->get();
