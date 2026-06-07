@@ -4,6 +4,30 @@
 
 @section('extra_styles')
 <style>
+   .success-alert{
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #BC4B09;
+    color: white;
+    padding: 14px 22px;
+    border-radius: 14px;
+    font-weight: 600;
+    box-shadow: 0 10px 25px rgba(188,75,9,.25);
+    z-index: 9999;
+    animation: slideIn .3s ease;
+}
+
+@keyframes slideIn{
+    from{
+        opacity:0;
+        transform:translateX(30px);
+    }
+    to{
+        opacity:1;
+        transform:translateX(0);
+    }
+}
 /* ===== HERO ===== */
 .hero { padding: 96px 48px 128px; max-width: 1280px; margin: 0 auto; }
 .hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; min-height: 700px; }
@@ -69,6 +93,13 @@
 .umkm-card p { font-size: 12px; color: #595c5a; margin-bottom: 16px; }
 .btn-kunjungi { width: 100%; background: white; border: 1px solid rgba(140,74,0,0.2); border-radius: 9999px; color: #8c4a00; font-size: 12px; font-weight: 700; padding: 9px; text-align: center; cursor: pointer; display: block; text-decoration: none; }
 .btn-kunjungi:hover { background: #fff5ee; }
+
+.resto-hours{
+    margin-top: 8px;
+    font-size: 14px;
+    color: #666;
+}
+
     /* ===== TABLE SECTION ===== */
     .table-section { padding: 96px 48px; max-width: 1280px; margin: 0 auto; }
     .table-card { background: rgba(255,255,255,0.45); backdrop-filter: blur(18px); border: 1px solid rgba(255,255,255,0.8); border-radius: 48px; padding: 40px; }
@@ -92,6 +123,11 @@
 @endsection
 
 @section('content')
+@if(session('success'))
+<div class="success-alert">
+    ✅ {{ session('success') }}
+</div>
+@endif
 
 {{-- HERO SECTION --}}
 <section style="background: linear-gradient(90deg, #f5f7f4 0%, #f5f7f4 100%);">
@@ -150,37 +186,64 @@
             <a href="#" class="see-all">Lihat Semua →</a>
         </div>
         <div class="restaurant-grid">
-            @forelse($restaurants as $resto)
-            <div class="resto-card">
-                <div class="resto-img-wrap">
-                    <img src="{{ $resto->image ? asset('storage/'.$resto->image) : 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400' }}"
-                         alt="{{ $resto->name }}">
-                    <div class="rating-badge">4.8</div>
-                </div>
-                <div class="resto-body">
-                    <div class="resto-name">{{ $resto->name }}</div>
-                    <div class="resto-location">{{ $resto->address }}</div>
-                    <div class="resto-footer">
-                        <span class="badge-available">TERSEDIA</span>
-                        <a href="#" class="btn-booking">Pesan</a>
-                    </div>
+    @forelse($restaurants as $resto)
+        <div class="resto-card">
+            <div class="resto-img-wrap">
+                <img src="{{ $resto->image ? asset('storage/'.$resto->image) : 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400' }}"
+                     alt="{{ $resto->name }}">
+                <div class="rating-badge">4.8</div>
+            </div>
+
+           <div class="resto-body">
+    <div class="resto-name">{{ $resto->name }}</div>
+
+    <div class="resto-location">
+        {{ $resto->address }}
+    </div>
+
+    <div class="resto-hours">
+        🕒
+        {{ \Carbon\Carbon::parse($resto->open_time)->format('H:i') }}
+        -
+        {{ \Carbon\Carbon::parse($resto->close_time)->format('H:i') }}
+    </div>
+
+    
+
+    <div class="resto-phone">
+        📞 {{ $resto->phone }}
+    </div>
+
+
+                <div class="resto-footer">
+                    <span class="badge-available">TERSEDIA</span>
+
+                    <a href="{{ route('customer.reservations.create', $resto->id) }}"
+                       class="btn-booking">
+                        Pesan
+                    </a>
                 </div>
             </div>
-            @empty
-            {{-- Data dummy kalau belum ada restoran --}}
-            @foreach([
-                ['name' => 'Sate Padang Begadang', 'address' => 'Jl. Diponegoro, Bandar Lampung', 'img' => 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400', 'rating' => '4.9', 'status' => 'available'],
-                ['name' => 'Bakso Son Haji Sony', 'address' => 'Jl. Wolter Monginsidi, Lampung', 'img' => 'https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=400', 'rating' => '4.7', 'status' => 'full'],
-                ['name' => 'Kopi Lampung Hub', 'address' => 'Way Halim, Bandar Lampung', 'img' => 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=400', 'rating' => '4.8', 'status' => 'available'],
-            ] as $dummy)
+        </div>
+
+    @empty
+
+        @foreach([
+            ['name' => 'Sate Padang Begadang', 'address' => 'Jl. Diponegoro, Bandar Lampung', 'img' => 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400', 'rating' => '4.9', 'status' => 'available'],
+            ['name' => 'Bakso Son Haji Sony', 'address' => 'Jl. Wolter Monginsidi, Lampung', 'img' => 'https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=400', 'rating' => '4.7', 'status' => 'full'],
+            ['name' => 'Kopi Lampung Hub', 'address' => 'Way Halim, Bandar Lampung', 'img' => 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=400', 'rating' => '4.8', 'status' => 'available'],
+        ] as $dummy)
+
             <div class="resto-card">
                 <div class="resto-img-wrap">
                     <img src="{{ $dummy['img'] }}" alt="{{ $dummy['name'] }}">
                     <div class="rating-badge">{{ $dummy['rating'] }}</div>
                 </div>
+
                 <div class="resto-body">
                     <div class="resto-name">{{ $dummy['name'] }}</div>
                     <div class="resto-location">{{ $dummy['address'] }}</div>
+
                     <div class="resto-footer">
                         @if($dummy['status'] === 'available')
                             <span class="badge-available">TERSEDIA</span>
@@ -192,11 +255,11 @@
                     </div>
                 </div>
             </div>
-            @endforeach
-            @endforelse
-        </div>
-    </div>
-</section>
+
+        @endforeach
+
+    @endforelse
+</div>
 
 {{-- TABLE SECTION --}}
 <section class="table-section">
@@ -273,5 +336,17 @@
         </div>
     </div>
 </section>
+
+
+<script>
+setTimeout(function() {
+    const alert = document.querySelector('.success-alert');
+    if(alert){
+        alert.remove();
+    }
+}, 3000);
+</script>
+
+
 
 @endsection

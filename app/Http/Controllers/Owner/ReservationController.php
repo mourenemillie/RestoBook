@@ -1,34 +1,57 @@
 <?php
 
 namespace App\Http\Controllers\Owner;
-
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Reservation;
 
 class ReservationController extends Controller
 {
-    public function index()
-    {
-        return view('owner.reservasi', [
-            'reservations' => [
-                [
-                    'name' => 'Aris Setiawan',
-                    'time' => '19:00 WIB',
-                    'guest' => '4 Orang',
-                    'status' => 'Menunggu'
-                ],
-                [
-                    'name' => 'Siska Wijaya',
-                    'time' => '18:30 WIB',
-                    'guest' => '2 Orang',
-                    'status' => 'Dikonfirmasi'
-                ],
-                [
-                    'name' => 'Dewo Prakoso',
-                    'time' => '17:00 WIB',
-                    'guest' => '6 Orang',
-                    'status' => 'Selesai'
-                ],
-            ]
-        ]);
+   public function index(Request $request)
+{
+    $query = \App\Models\Reservation::latest();
+
+    if ($request->status == 'pending') {
+        $query->where('status', 'pending');
     }
+
+    if ($request->status == 'completed') {
+        $query->where('status', 'completed');
+    }
+
+    if ($request->status == 'cancelled') {
+        $query->where('status', 'cancelled');
+    }
+
+    $reservations = $query->get();
+
+    return view('owner.reservasi', compact('reservations'));
+}
+public function show($id)
+{
+    $reservation = \App\Models\Reservation::with('user')->findOrFail($id);
+
+    return view('owner.detail-reservasi', compact('reservation'));
+}
+public function hadir($id)
+{
+    $reservation = \App\Models\Reservation::findOrFail($id);
+
+    $reservation->update([
+        'status' => 'completed'
+    ]);
+
+    return back();
+}
+
+public function tidakHadir($id)
+{
+    $reservation = \App\Models\Reservation::findOrFail($id);
+
+    $reservation->update([
+        'status' => 'cancelled'
+    ]);
+
+    return back();
+}
 }

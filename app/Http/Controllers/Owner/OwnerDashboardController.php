@@ -8,18 +8,18 @@ class OwnerDashboardController extends Controller
 {
     public function index()
     {
-        $chartData = collect(['Sen','Sel','Rab','Kam','Jum','Sab','Min'])
+        $chartData = collect(['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'])
             ->map(fn($d) => [
                 'label' => $d,
-                'val'   => rand(20, 120)
+                'val' => rand(20, 120)
             ]);
 
         return view('dashboard.owner', [
-            'totalTamu'      => 142,
+            'totalTamu' => 142,
             'reservasiAktif' => 28,
-            'mejaTersedia'   => 15,
-            'totalMeja'      => 40,
-            'batalHariIni'   => 3,
+            'mejaTersedia' => 15,
+            'totalMeja' => 40,
+            'batalHariIni' => 3,
 
             'reservations' => [
                 [

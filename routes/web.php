@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
 use App\Http\Controllers\Owner\DashboardController as OwnerDashboard;
@@ -13,13 +12,8 @@ use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\RestaurantController as AdminRestaurantController;
 use App\Http\Controllers\Owner\SettingController as OwnerSettingController;
 use App\Http\Controllers\Owner\TableController as OwnerTableController;
-use App\Http\Controllers\BookingController; // Sudah terimport dengan aman
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-*/
+use App\Http\Controllers\Owner\MenuController;
+use App\Http\Controllers\BookingController;
 
 // Route Landing Page
 Route::get('/', function () {
@@ -38,20 +32,11 @@ Route::get('/restaurant/detail', function () {
     return view('restaurant.show');
 })->name('restaurant.show');
 
-
 // --- FITUR BOOKING & PEMBAYARAN ---
-// Menangani submit form pemesanan meja (Method POST)
 Route::post('/restaurant/booking', [BookingController::class, 'store'])->name('restaurant.booking');
-
-// Menampilkan halaman checkout pembayaran berdasarkan kode unik (Method GET)
 Route::get('/booking/checkout/{booking_code}', [BookingController::class, 'checkout'])->name('booking.checkout');
-
-// Memproses aksi bayar/konfirmasi pembayaran (Method POST)
 Route::post('/booking/checkout/{booking_code}/pay', [BookingController::class, 'paymentProcess'])->name('booking.pay');
-
-// Menampilkan halaman sukses setelah berhasil booking & bayar (Method GET)
 Route::get('/booking/success/{booking_code}', [BookingController::class, 'success'])->name('booking.success');
-
 
 // --- AUTH ROUTES ---
 Route::middleware('guest')->group(function () {
@@ -73,22 +58,35 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
 
 // --- OWNER ROUTES ---
 Route::middleware(['auth', 'role:owner'])->prefix('owner')->group(function () {
+    Route::patch('/reservasi/{id}/hadir', [OwnerReservationController::class, 'hadir'])->name('owner.reservasi.hadir');
+    Route::patch('/reservasi/{id}/tidak-hadir', [OwnerReservationController::class, 'tidakHadir'])->name('owner.reservasi.tidak-hadir');
+    Route::get('/reservasi/{id}', [OwnerReservationController::class, 'show'])->name('owner.reservasi.show');
     Route::get('/dashboard', [OwnerDashboard::class, 'index'])->name('owner.dashboard');
     Route::get('/reservasi', [OwnerReservationController::class, 'index'])->name('owner.reservasi');
-    Route::get('/settings', function () {
-        return view('owner.settings');
-    })->name('owner.settings');
+    Route::get('/kelola-meja', [OwnerTableController::class, 'index'])->name('owner.kelola-meja');
+    Route::post('/kelola-meja', [OwnerTableController::class, 'store'])->name('owner.kelola-meja.store');
+    Route::get('/kelola-meja/create', [OwnerTableController::class, 'create'])->name('owner.kelola-meja.create');
+    Route::get('/kelola-meja/{id}/edit', [OwnerTableController::class, 'edit'])->name('owner.kelola-meja.edit');
+    Route::put('/kelola-meja/{id}', [OwnerTableController::class, 'update'])->name('owner.kelola-meja.update');
+    Route::get('/settings', [OwnerSettingController::class, 'index'])->name('owner.settings');
+    Route::post('/settings/update', [OwnerSettingController::class, 'update'])->name('owner.settings.update');
+    Route::get('/tambah-menu', [MenuController::class, 'create'])->name('owner.tambah-menu');
+    Route::post('/tambah-menu', [MenuController::class, 'store'])->name('owner.tambah-menu.store');
 });
+
+Route::get('/menu/{id}/edit', [MenuController::class, 'edit'])->name('owner.menu.edit');
+
+// Menu routes
+Route::get('/owner/menu/create',       [MenuController::class, 'create'])->name('owner.menu.create');
+Route::post('/owner/menu',             [MenuController::class, 'store'])->name('owner.menu.store');
+Route::get('/owner/menu/{id}/edit',    [MenuController::class, 'edit'])->name('owner.menu.edit');
+Route::put('/owner/menu/{id}',         [MenuController::class, 'update'])->name('owner.menu.update');
+Route::delete('/owner/menu/{id}',      [MenuController::class, 'destroy'])->name('owner.menu.destroy');
 
 // --- CUSTOMER ROUTES ---
 Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('/reservations', [CustomerReservationController::class, 'index'])->name('customer.reservations');
-});
-
-// --- PROFILE ROUTES ---
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/reservasi/create/{restaurant}', [CustomerReservationController::class, 'create'])->name('customer.reservations.create');
+    Route::post('/reservasi/store', [CustomerReservationController::class, 'store'])->name('customer.reservations.store');
 });

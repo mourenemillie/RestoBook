@@ -183,6 +183,8 @@
             color: var(--pill-text);
             cursor: pointer;
             transition: all 0.2s ease;
+            text-decoration: none;
+    display: inline-block;
         }
 
         .filter-btn.active {
@@ -369,68 +371,119 @@
                 <p>Kelola reservasi dan kedatangan tamu hari ini.</p>
             </div>
             <div class="filter-pills">
-                <button class="filter-btn active">Semua</button>
-                <button class="filter-btn">Menunggu</button>
-                <button class="filter-btn">Hadir</button>
-                <button class="filter-btn">Tidak Hadir</button>
-            </div>
+
+    <a href="{{ route('owner.reservasi') }}"
+       class="filter-btn {{ request('status') == null ? 'active' : '' }}">
+        Semua
+    </a>
+
+    <a href="{{ route('owner.reservasi', ['status' => 'pending']) }}"
+       class="filter-btn {{ request('status') == 'pending' ? 'active' : '' }}">
+        Menunggu
+    </a>
+
+    <a href="{{ route('owner.reservasi', ['status' => 'completed']) }}"
+       class="filter-btn {{ request('status') == 'completed' ? 'active' : '' }}">
+        Hadir
+    </a>
+
+    <a href="{{ route('owner.reservasi', ['status' => 'cancelled']) }}"
+       class="filter-btn {{ request('status') == 'cancelled' ? 'active' : '' }}">
+        Tidak Hadir
+    </a>
+
+</div>
         </header>
 
         <div class="reservation-list">
-            <!-- Card 1 -->
-            <div class="reservation-card">
-                <div class="card-left">
-                    <div class="time-badge">18:30</div>
-                    <div class="guest-info">
-                        <h2>Budi Santoso</h2>
-                        <div class="tags">
-                            <span class="tag table">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M4 6h16"></path><path d="M4 6v12"></path><path d="M20 6v12"></path><path d="M4 10h16"></path>
-                                </svg>
-                                Meja 04
-                            </span>
-                            <span class="tag guest">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                                </svg>
-                                4 Tamu
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-actions">
-                    <button class="btn-outline">Tidak Hadir</button>
-                    <button class="btn-filled">Hadir</button>
-                </div>
+
+    @forelse($reservations as $reservation)
+
+    <div class="reservation-card">
+        <div class="card-left">
+
+            <div class="time-badge">
+                {{ \Carbon\Carbon::parse($reservation->reservation_time)->format('H:i') }}
             </div>
 
-            <!-- Card 2 -->
-            <div class="reservation-card">
-                <div class="card-left">
-                    <div class="time-badge">19:00</div>
-                    <div class="guest-info">
-                        <h2>Siti Aminah</h2>
-                        <div class="tags">
-                            <span class="tag table">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M4 6h16"></path><path d="M4 6v12"></path><path d="M20 6v12"></path><path d="M4 10h16"></path>
-                                </svg>
-                                Meja 12
-                            </span>
-                            <span class="tag guest">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                                </svg>
-                                2 Tamu
-                            </span>
-                        </div>
-                    </div>
+            <div class="guest-info">
+
+                <h2>
+                    {{ \App\Models\User::find($reservation->user_id)?->name }}
+                </h2>
+
+                <div class="tags">
+
+                    <span class="tag table">
+                        Meja {{ $reservation->table_id }}
+                    </span>
+
+                    <span class="tag guest">
+                        {{ $reservation->num_guests }} Tamu
+                    </span>
+
                 </div>
-                <div class="card-actions">
-                    <button class="btn-outline">Tidak Hadir</button>
-                    <button class="btn-filled">Hadir</button>
-                </div>
+
+            </div>
+        </div>
+
+        <div class="card-actions">
+
+    @if($reservation->status == 'pending')
+
+        <form action="{{ route('owner.reservasi.tidak-hadir', $reservation->id) }}"
+              method="POST">
+            @csrf
+            @method('PATCH')
+
+            <button type="submit" class="btn-outline">
+                Tidak Hadir
+            </button>
+        </form>
+
+        <form action="{{ route('owner.reservasi.hadir', $reservation->id) }}"
+              method="POST">
+            @csrf
+            @method('PATCH')
+
+            <button type="submit" class="btn-filled">
+                Hadir
+            </button>
+        </form>
+
+    @elseif($reservation->status == 'completed')
+
+        <button class="btn-filled">
+            Hadir
+        </button>
+
+    @elseif($reservation->status == 'cancelled')
+
+        <button class="btn-outline">
+            Tidak Hadir
+        </button>
+
+    @endif
+
+    <a href="{{ route('owner.reservasi.show', $reservation->id) }}"
+       class="btn-filled">
+        Detail
+    </a>
+
+</div>
+    </div>
+
+    @empty
+
+    <div class="reservation-card">
+        <div class="guest-info">
+            <h2>Belum ada reservasi</h2>
+        </div>
+    </div>
+
+    @endforelse
+
+</div>
             </div>
         </div>
     </main>
