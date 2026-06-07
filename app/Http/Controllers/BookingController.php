@@ -121,7 +121,7 @@ class BookingController extends Controller
 
                 $booking->snap_token = $snapToken;
             } catch (\Exception $e) {
-                return redirect()->route('restaurant.show')->withErrors('Gagal memproses pembayaran: Pastikan MIDTRANS_SERVER_KEY sudah disetting dengan benar di server. Detail Error: ' . $e->getMessage());
+                return redirect()->route('restaurant.show', ['id' => $booking->restaurant_id])->withErrors('Gagal memproses pembayaran: Pastikan MIDTRANS_SERVER_KEY sudah disetting dengan benar di server. Detail Error: ' . $e->getMessage());
             }
         }
 
