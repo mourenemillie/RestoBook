@@ -89,8 +89,6 @@ Route::middleware(['auth', 'verified', 'role:owner'])->prefix('owner')->group(fu
     Route::post('/tambah-menu', [MenuController::class, 'store'])->name('owner.tambah-menu.store');
 });
 
-Route::get('/menu/{id}/edit', [MenuController::class, 'edit'])->name('owner.menu.edit');
-
 // Menu routes
 Route::get('/owner/menu/create',       [MenuController::class, 'create'])->name('owner.menu.create');
 Route::post('/owner/menu',             [MenuController::class, 'store'])->name('owner.menu.store');
