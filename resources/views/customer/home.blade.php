@@ -176,7 +176,7 @@
 </section>
 
 {{-- RESTAURANT SECTION --}}
-<section class="restaurant-section">
+<section id="reservasi" class="restaurant-section">
     <div class="restaurant-inner">
         <div class="section-header">
             <div>
@@ -218,7 +218,7 @@
                 <div class="resto-footer">
                     <span class="badge-available">TERSEDIA</span>
 
-                    <a href="{{ route('customer.reservations.create', $resto->id) }}"
+                    <a href="{{ route('restaurant.show') }}"
                        class="btn-booking">
                         Pesan
                     </a>
@@ -247,10 +247,10 @@
                     <div class="resto-footer">
                         @if($dummy['status'] === 'available')
                             <span class="badge-available">TERSEDIA</span>
-                            <a href="#" class="btn-booking">Pesan</a>
+                            <a href="{{ route('restaurant.show') }}" class="btn-booking">Pesan</a>
                         @else
                             <span class="badge-full">PENUH</span>
-                            <a href="#" class="btn-antri">Antre</a>
+                            <a href="{{ route('restaurant.show') }}" class="btn-booking" style="background:#e0e0e0;color:#999;pointer-events:none">Penuh</a>
                         @endif
                     </div>
                 </div>
@@ -260,16 +260,18 @@
 
     @endforelse
 </div>
+</div>
+</section>
 
-
-{{-- UMKM SECTION --}}
-<section>
-    <div class="umkm-section">
-        <div class="umkm-grid">
-            <div>
-                <p class="umkm-label">GERAKAN EKONOMI LOKAL</p>
-                <h2 class="umkm-title">Dukung UMKM<br><span>Kuliner Lokal</span></h2>
-                <p class="umkm-desc">Kami mendedikasikan ruang khusus untuk kedai-kedai kecil agar tetap bisa bersaing. Reservasi di sini langsung membantu perkembangan ekonomi lokal Bandar Lampung.</p>
+{{-- TENTANG RESTO SECTION --}}
+<section id="tentang-resto" class="umkm-section">
+    <div class="umkm-grid">
+        {{-- KIRI: Teks & Fitur --}}
+        <div>
+            <div class="max-w-xl">
+                <p class="umkm-label">TENTANG RESTO</p>
+                <h2 class="umkm-title">Tentang<br><span>RestoBook</span></h2>
+                <p class="umkm-desc">Kami mendedikasikan platform ini untuk memudahkan reservasi restoran dan mendukung UMKM kuliner.</p>
                 <div class="umkm-feature">
                     <div class="umkm-feature-icon">💰</div>
                     <div>

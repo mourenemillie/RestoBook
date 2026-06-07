@@ -71,7 +71,7 @@
 
         <label class="terms">
             <input type="checkbox" name="terms" required>
-            Saya menyetujui <a href="#">Syarat & Ketentuan</a> serta <a href="#">Kebijakan Privasi</a> yang berlaku.
+            <span>Saya menyetujui <a href="#">Syarat & Ketentuan</a> serta <a href="#">Kebijakan Privasi</a> yang berlaku.</span>
         </label>
 
         <button type="submit" class="btn">Daftar Sekarang</button>

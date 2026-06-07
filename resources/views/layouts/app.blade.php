@@ -49,13 +49,12 @@
                 <a href="{{ url('/') }}" class="{{ request()->is('/') ? 'text-primary font-bold' : 'hover:text-primary transition' }}">Jelajahi</a>
                 
                 @auth
-                    <a href="{{ route('customer.reservations') ?? '#' }}" class="{{ request()->routeIs('customer.reservations') ? 'text-primary font-bold' : 'hover:text-primary transition' }}">Reservasi</a>
+                    <a href="{{ url('/#reservasi') }}" class="hover:text-primary transition">Reservasi</a>
                 @else
-                    <a href="#" class="hover:text-primary transition">Reservasi</a>
+                    <a href="{{ url('/#reservasi') }}" class="hover:text-primary transition">Reservasi</a>
                 @endauth
                 
-                <a href="#" class="hover:text-primary transition">Tentang Kami</a>
-                <a href="#" class="hover:text-primary transition">Bantuan</a>
+                <a href="{{ url('/#tentang-resto') }}" class="hover:text-primary transition">Tentang Kami</a>
             </div>
 
             <div class="flex gap-6 items-center text-sm">
