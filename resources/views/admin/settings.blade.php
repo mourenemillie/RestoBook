@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - RestoBook Admin</title>
+    <title>Pengaturan - RestoBook Admin</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
@@ -595,6 +595,41 @@
             font-weight: 500;
         }
 
+        .tabs {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .tab-btn {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-gray);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover {
+            color: var(--primary-orange);
+        }
+
+        .tab-btn.active {
+            color: var(--primary-orange);
+            border-bottom-color: var(--primary-orange);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -615,7 +650,7 @@
         </div>
 
         <nav class="nav-menu">
-            <a href="{{ route('admin.dashboard') }}" class="nav-item active">
+            <a href="{{ route('admin.dashboard') }}" class="nav-item">
                 <svg viewBox="0 0 24 24"><path d="M4 13h6c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v8c0 .55.45 1 1 1zm0 8h6c.55 0 1-.45 1-1v-4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1zm10 0h6c.55 0 1-.45 1-1v-8c0-.55-.45-1-1-1h-6c-.55 0-1 .45-1 1v8c0 .55.45 1 1 1zM13 4v4c0 .55.45 1 1 1h6c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1h-6c-.55 0-1 .45-1 1z"/></svg>
                 Dashboard
             </a>
@@ -627,7 +662,7 @@
                 <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
                 Kelola User
             </a>
-            <a href="{{ route('admin.settings') }}" class="nav-item">
+            <a href="{{ route('admin.settings') }}" class="nav-item active">
                 <svg viewBox="0 0 24 24"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.06-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.73,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.06,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.43-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.49-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/></svg>
                 Pengaturan
             </a>
@@ -645,215 +680,143 @@
     <main class="main-content">
         <header class="header">
             <div class="header-title">
-                <h1>Super Admin</h1>
-                <p>Sistem Manajemen Platform RestoBook</p>
-            </div>
-            <div class="header-actions">
-                <button class="btn-notification">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-                </button>
-                <button class="btn-export">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                    Export Laporan
-                </button>
+                <h1>Pengaturan Sistem</h1>
+                <p>Kelola konfigurasi dan pengaturan dasar platform RestoBook</p>
             </div>
         </header>
 
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-                </div>
-                <div class="stat-content">
-                    <div class="stat-title">Total Restoran</div>
-                    <div class="stat-value">248</div>
-                    <div class="stat-trend positive">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
-                        +12 pendaftar bulan ini
-                    </div>
-                </div>
+        @if(session('success'))
+            <div style="background: #ecfdf5; color: var(--success-green); padding: 16px; border-radius: 12px; margin-bottom: 24px; font-weight: 500; display: flex; align-items: center; gap: 8px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                {{ session('success') }}
             </div>
-            
-            <div class="stat-card">
-                <div class="stat-icon light-brown">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                </div>
-                <div class="stat-content">
-                    <div class="stat-title">Total User</div>
-                    <div class="stat-value">12,450</div>
-                    <div class="stat-trend positive">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
-                        +840 pengguna baru bulan ini
-                    </div>
-                </div>
+        @endif
+        
+        @if($errors->any())
+            <div style="background: #feeceb; color: #eb5757; padding: 16px; border-radius: 12px; margin-bottom: 24px; font-weight: 500;">
+                <ul style="margin-left: 20px;">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
             </div>
+        @endif
 
-            <div class="stat-card">
-                <div class="stat-icon light-brown">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                </div>
-                <div class="stat-content">
-                    <div class="stat-title">Reservasi Aktif</div>
-                    <div class="stat-value">892</div>
-                    <div class="stat-trend neutral">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                        15 masuk hari ini
-                    </div>
-                </div>
-            </div>
-
-            <div class="stat-card">
-                <div class="stat-icon">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"></rect><circle cx="12" cy="12" r="2"></circle><path d="M6 12h.01M18 12h.01"></path></svg>
-                </div>
-                <div class="stat-content">
-                    <div class="stat-title">Pendapatan Platform</div>
-                    <div class="stat-value">Rp 42.5M</div>
-                    <div class="stat-trend positive">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
-                        +5.2% dibanding bulan lalu
-                    </div>
-                </div>
-            </div>
+        <div class="tabs">
+            <button class="tab-btn active" onclick="openTab(event, 'profil')">Profil & Keamanan</button>
+            <button class="tab-btn" onclick="openTab(event, 'global')">Pengaturan Global</button>
         </div>
 
-        <section class="section-card">
-            <div class="section-header">
-                <div class="section-title-wrap">
-                    <div class="section-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect><path d="M9 14h6"></path><path d="M9 10h6"></path><path d="M9 18h6"></path></svg>
-                    </div>
-                    <div class="section-title">
-                        <h2>Restoran Menunggu Approval</h2>
-                        <p>Review dan verifikasi pendaftaran mitra baru</p>
-                    </div>
-                </div>
-                <div class="badge-pending">3 Pending</div>
-            </div>
-
-            <div class="approval-list">
-                <div class="approval-item">
-                    <div class="restaurant-info">
-                        <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=100&h=100&fit=crop" alt="Sate Taichan" class="restaurant-img">
-                        <div class="restaurant-details">
-                            <h3>Sate Taichan Bang Ocit</h3>
-                            <div class="restaurant-location">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                                Tanjung Karang Pusat
-                            </div>
-                            <div class="tags">
-                                <span class="tag">UMKM Mikro</span>
-                                <span class="tag">Halal</span>
-                            </div>
+        <form action="{{ route('admin.settings.update') }}" method="POST">
+            @csrf
+            
+            <!-- TAB PROFIL -->
+            <section id="profil" class="tab-content active section-card">
+                <div class="section-header">
+                    <div class="section-title-wrap">
+                        <div class="section-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        </div>
+                        <div class="section-title">
+                            <h2>Profil & Keamanan Akun</h2>
+                            <p>Atur nama, email, dan kata sandi untuk akun Super Admin</p>
                         </div>
                     </div>
-                    <div class="action-buttons">
-                        <button class="btn-outline">Tolak</button>
-                        <button class="btn-filled">Setujui</button>
-                    </div>
                 </div>
+                
+                <div style="padding: 10px 0;">
+                    <div style="margin-bottom: 24px;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 8px; color: var(--text-dark);">Nama Lengkap</label>
+                        <input type="text" name="name" value="{{ old('name', $user->name) }}" style="width: 100%; max-width: 500px; padding: 14px 16px; border: 1px solid var(--border-color); border-radius: 12px; font-size: 15px; outline: none; background: #fafafa; color: var(--text-dark); transition: all 0.2s;" onfocus="this.style.borderColor='var(--primary-orange)'; this.style.background='#fff';" onblur="this.style.borderColor='var(--border-color)'; this.style.background='#fafafa';">
+                    </div>
+                    
+                    <div style="margin-bottom: 24px;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 8px; color: var(--text-dark);">Alamat Email</label>
+                        <input type="email" name="email" value="{{ old('email', $user->email) }}" style="width: 100%; max-width: 500px; padding: 14px 16px; border: 1px solid var(--border-color); border-radius: 12px; font-size: 15px; outline: none; background: #fafafa; color: var(--text-dark); transition: all 0.2s;" onfocus="this.style.borderColor='var(--primary-orange)'; this.style.background='#fff';" onblur="this.style.borderColor='var(--border-color)'; this.style.background='#fafafa';">
+                    </div>
 
-                <div class="approval-item">
-                    <div class="restaurant-info">
-                        <div class="restaurant-img">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
-                        </div>
-                        <div class="restaurant-details">
-                            <h3>Kopi Kenangan</h3>
-                            <div class="restaurant-location">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                                Kedaton
-                            </div>
-                            <div class="tags">
-                                <span class="tag">Cafe</span>
-                            </div>
-                        </div>
+                    <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 32px 0;">
+                    
+                    <div style="margin-bottom: 24px;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 8px; color: var(--text-dark);">Password Baru (Opsional)</label>
+                        <input type="password" name="password" placeholder="Kosongkan jika tidak ingin mengubah password" style="width: 100%; max-width: 500px; padding: 14px 16px; border: 1px solid var(--border-color); border-radius: 12px; font-size: 15px; outline: none; background: #fafafa; color: var(--text-dark); transition: all 0.2s;" onfocus="this.style.borderColor='var(--primary-orange)'; this.style.background='#fff';" onblur="this.style.borderColor='var(--border-color)'; this.style.background='#fafafa';">
                     </div>
-                    <div class="action-buttons">
-                        <button class="btn-outline">Tolak</button>
-                        <button class="btn-filled">Setujui</button>
+                    
+                    <div style="margin-bottom: 24px;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 8px; color: var(--text-dark);">Konfirmasi Password Baru</label>
+                        <input type="password" name="password_confirmation" placeholder="Ulangi password baru di sini" style="width: 100%; max-width: 500px; padding: 14px 16px; border: 1px solid var(--border-color); border-radius: 12px; font-size: 15px; outline: none; background: #fafafa; color: var(--text-dark); transition: all 0.2s;" onfocus="this.style.borderColor='var(--primary-orange)'; this.style.background='#fff';" onblur="this.style.borderColor='var(--border-color)'; this.style.background='#fafafa';">
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <section class="table-section">
-            <div class="table-header">
-                <div class="table-title">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
-                    Semua Restoran
-                </div>
-                <div class="table-controls">
-                    <div class="search-box">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                        <input type="text" placeholder="Cari nama restoran...">
+            <!-- TAB GLOBAL -->
+            <section id="global" class="tab-content section-card">
+                <div class="section-header">
+                    <div class="section-title-wrap">
+                        <div class="section-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                        </div>
+                        <div class="section-title">
+                            <h2>Pengaturan Global</h2>
+                            <p>Atur identitas platform RestoBook yang dilihat pengunjung</p>
+                        </div>
                     </div>
-                    <button class="btn-filter">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
-                        Filter
-                    </button>
                 </div>
+                
+                <div style="padding: 10px 0;">
+                    <div style="margin-bottom: 24px;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 8px; color: var(--text-dark);">Nama Aplikasi / Platform</label>
+                        <input type="text" name="app_name" value="{{ old('app_name', $settings['app_name'] ?? 'RestoBook') }}" style="width: 100%; max-width: 500px; padding: 14px 16px; border: 1px solid var(--border-color); border-radius: 12px; font-size: 15px; outline: none; background: #fafafa; color: var(--text-dark);">
+                    </div>
+                    
+                    <div style="margin-bottom: 24px;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 8px; color: var(--text-dark);">Email Customer Service</label>
+                        <input type="email" name="contact_email" value="{{ old('contact_email', $settings['contact_email'] ?? 'support@restobook.com') }}" style="width: 100%; max-width: 500px; padding: 14px 16px; border: 1px solid var(--border-color); border-radius: 12px; font-size: 15px; outline: none; background: #fafafa; color: var(--text-dark);">
+                    </div>
+
+                    <div style="margin-bottom: 24px;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 8px; color: var(--text-dark);">Nomor WhatsApp CS</label>
+                        <input type="text" name="contact_phone" value="{{ old('contact_phone', $settings['contact_phone'] ?? '081234567890') }}" style="width: 100%; max-width: 500px; padding: 14px 16px; border: 1px solid var(--border-color); border-radius: 12px; font-size: 15px; outline: none; background: #fafafa; color: var(--text-dark);">
+                    </div>
+
+                    <div style="display: flex; gap: 20px; max-width: 500px;">
+                        <div style="flex: 1; margin-bottom: 24px;">
+                            <label style="display: block; font-weight: 600; margin-bottom: 8px; color: var(--text-dark);">Mata Uang Default</label>
+                            <input type="text" name="currency" value="{{ old('currency', $settings['currency'] ?? 'IDR') }}" style="width: 100%; padding: 14px 16px; border: 1px solid var(--border-color); border-radius: 12px; font-size: 15px; outline: none; background: #fafafa; color: var(--text-dark);">
+                        </div>
+                        <div style="flex: 1; margin-bottom: 24px;">
+                            <label style="display: block; font-weight: 600; margin-bottom: 8px; color: var(--text-dark);">Zona Waktu</label>
+                            <input type="text" name="timezone" value="{{ old('timezone', $settings['timezone'] ?? 'Asia/Jakarta') }}" style="width: 100%; padding: 14px 16px; border: 1px solid var(--border-color); border-radius: 12px; font-size: 15px; outline: none; background: #fafafa; color: var(--text-dark);">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            
+            <div style="margin-top: 24px; margin-bottom: 40px; text-align: right;">
+                <button type="submit" style="background: var(--dark-brown); color: white; padding: 14px 28px; border: none; border-radius: 12px; font-weight: 600; font-size: 15px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; box-shadow: 0 4px 12px rgba(166, 59, 10, 0.2);" onmouseover="this.style.transform='translateY(-2px)';" onmouseout="this.style.transform='translateY(0)';">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                    Simpan Semua Perubahan
+                </button>
             </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Nama Restoran</th>
-                        <th>Lokasi</th>
-                        <th>Status</th>
-                        <th>Reservasi</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            <div class="rest-cell">
-                                <div class="rest-avatar">W</div>
-                                <div class="rest-info-text" style="display: flex; align-items: center; gap: 8px;">
-                                    <h4 style="margin-bottom: 0;">Waroeng Steak & Shake</h4>
-                                    <span style="font-size: 10px; color: var(--text-gray); background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-weight: 600;">ID: RST-001</span>
-                                </div>
-                            </div>
-                        </td>
-                        <td>Way Halim</td>
-                        <td>
-                            <div class="status">
-                                <div class="dot"></div> Aktif
-                            </div>
-                        </td>
-                        <td>145</td>
-                        <td>
-                            <svg class="action-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="rest-cell">
-                                <div class="rest-avatar">W</div>
-                                <div class="rest-info-text" style="display: flex; align-items: center; gap: 8px;">
-                                    <h4 style="margin-bottom: 0;">Waroeng Djontor Kedaton</h4>
-                                    <span style="font-size: 10px; color: var(--text-gray); background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-weight: 600;">ID: RST-002</span>
-                                </div>
-                            </div>
-                        </td>
-                        <td>Kedaton</td>
-                        <td>
-                            <div class="status">
-                                <div class="dot"></div> Aktif
-                            </div>
-                        </td>
-                        <td>60</td>
-                        <td>
-                            <svg class="action-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="table-footer">
-                <a href="#">Lihat Semua Data</a>
-            </div>
-        </section>
+        </form>
     </main>
+
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            tablinks = document.getElementsByClassName("tab-btn");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+    </script>
 
 </body>
 </html>

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Midtrans\Config;
+use Midtrans\Snap;
 
 class BookingController extends Controller
 {
@@ -48,14 +50,16 @@ class BookingController extends Controller
         // Membuat Kode Booking Acak Unik (Contoh: BKS-ABC12)
         $bookingCode = 'BKS-' . strtoupper(Str::random(5));
 
-        // Memasukkan data pesanan ke dalam tabel database 'bookings'
-        DB::table('bookings')->insert([
+        // Memasukkan data pesanan ke dalam tabel database 'reservations'
+        DB::table('reservations')->insert([
             'booking_code'     => $bookingCode,
-            'restaurant_name'  => $request->restaurant_name,
-            'booking_date'     => $request->booking_date,
-            'number_of_people' => $request->number_of_people, // Menyimpan string lengkap "X Orang"
-            'booking_time'     => $request->booking_time,
-            'table_area'       => $request->table_area,
+            'user_id'          => auth()->id() ?? 1,
+            'restaurant_id'    => 1,
+            'table_id'         => 1,
+            'reservation_date' => $request->booking_date,
+            'reservation_time' => $request->booking_time,
+            'num_guests'       => $guestCount,
+            'notes'            => 'Area: ' . $request->table_area . ' - ' . $request->restaurant_name,
             'total_price'      => $totalPrice,
             'status'           => 'pending',
             'created_at'       => now(),
@@ -69,51 +73,65 @@ class BookingController extends Controller
     // 4. Menampilkan Halaman Checkout Pembayaran (Merujuk ke views/restaurant/payment.blade.php)
     public function checkout($booking_code)
     {
-        $booking = DB::table('bookings')->where('booking_code', $booking_code)->first();
+        $booking = DB::table('reservations')->where('booking_code', $booking_code)->first();
 
         if (!$booking) {
             abort(404, 'Reservasi tidak valid atau tidak ditemukan.');
         }
 
-        // Sudah diselaraskan menggunakan nama tunggal sesuai struktur file view Anda
+        // Set Konfigurasi Midtrans
+        Config::$serverKey = env('MIDTRANS_SERVER_KEY');
+        Config::$isProduction = env('MIDTRANS_IS_PRODUCTION', false);
+        Config::$isSanitized = true;
+        Config::$is3ds = true;
+
+        $snapToken = $booking->snap_token;
+
+        if (!$snapToken) {
+            $user = auth()->user();
+            $params = [
+                'transaction_details' => [
+                    'order_id' => $booking->booking_code,
+                    'gross_amount' => $booking->total_price,
+                ],
+                'customer_details' => [
+                    'first_name' => $user ? $user->name : 'Guest',
+                    'email' => $user ? $user->email : 'guest@example.com',
+                    'phone' => $user ? $user->phone : '0800000000',
+                ],
+            ];
+
+            $snapToken = Snap::getSnapToken($params);
+            
+            DB::table('reservations')->where('booking_code', $booking_code)->update([
+                'snap_token' => $snapToken
+            ]);
+
+            $booking->snap_token = $snapToken;
+        }
+
         return view('restaurant.payment', compact('booking'));
     }
 
-    // 5. Memproses Konfirmasi Struk Pembayaran
-    public function paymentProcess(Request $request, $booking_code)
+    // 5. Handle Midtrans Webhook Notification
+    public function handleNotification(Request $request)
     {
-        $request->validate([
-            'payment_method' => 'required|string',
-            'payment_proof'  => 'required|image|mimes:jpeg,png,jpg|max:5120', // Maksimal file 5MB
-        ]);
-
-        $booking = DB::table('bookings')->where('booking_code', $booking_code)->first();
-        if (!$booking) { 
-            abort(404); 
+        $serverKey = env('MIDTRANS_SERVER_KEY');
+        $hashed = hash("sha512", $request->order_id.$request->status_code.$request->gross_amount.$serverKey);
+        if($hashed == $request->signature_key){
+            if($request->transaction_status == 'capture' || $request->transaction_status == 'settlement'){
+                DB::table('reservations')->where('booking_code', $request->order_id)->update(['status' => 'paid', 'updated_at' => now()]);
+            } elseif ($request->transaction_status == 'cancel' || $request->transaction_status == 'deny' || $request->transaction_status == 'expire'){
+                DB::table('reservations')->where('booking_code', $request->order_id)->update(['status' => 'cancelled', 'updated_at' => now()]);
+            }
         }
-
-        // Proses penyimpanan gambar bukti transfer ke folder storage/app/public/proofs
-        $fileName = null;
-        if ($request->hasFile('payment_proof')) {
-            $file = $request->file('payment_proof');
-            $fileName = 'proof_' . $booking_code . '_' . time() . '.' . $file->getClientOriginalExtension();
-            $file->storeAs('public/proofs', $fileName);
-        }
-
-        // Perbarui status database menjadi 'paid' dan simpan nama file bukti ke database jika diperlukan
-        DB::table('bookings')->where('booking_code', $booking_code)->update([
-            'status'     => 'paid',
-            'updated_at' => now(),
-        ]);
-
-        // Diarahkan langsung ke halaman sukses dengan route name yang valid dari routes/web.php
-        return redirect()->route('booking.success', $booking_code);
+        return response()->json(['status' => 'success']);
     }
 
     // 6. Tampilan Akhir Halaman Sukses (Merujuk ke views/restaurant/success.blade.php)
     public function success($booking_code)
     {
-        $booking = DB::table('bookings')->where('booking_code', $booking_code)->first();
+        $booking = DB::table('reservations')->where('booking_code', $booking_code)->first();
         if (!$booking) { 
             abort(404); 
         }

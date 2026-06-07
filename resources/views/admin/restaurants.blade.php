@@ -6,20 +6,21 @@
     <title>Kelola Semua Restoran - RestoBook Admin</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
 
         :root {
-            --primary-orange: #eb5e28;
-            --primary-orange-light: #fff5f0;
-            --dark-orange: #a93c14;
-            --bg-color: #f4f7f6;
-            --text-dark: #1e293b;
-            --text-gray: #64748b;
-            --border-color: #e2e8f0;
-            --table-header-bg: #f8ded4;
-            --table-header-text: #7c4c3e;
-            --badge-bg: #fdeee9;
-            --badge-text: #b25838;
-            --status-active: #10b981;
+            --primary-orange: #e25c23;
+            --primary-orange-light: #fff6f3;
+            --dark-orange: #a63b0a;
+            --bg-color: #fffaf8;
+            --text-dark: #271f1d;
+            --text-gray: #807773;
+            --border-color: #f5ece9;
+            --table-header-bg: #fff8f5;
+            --table-header-text: #a63b0a;
+            --badge-bg: #fff1eb;
+            --badge-text: #b75429;
+            --status-active: #29a073;
             --status-suspended: #ef4444;
         }
 
@@ -369,22 +370,121 @@
             height: 18px;
         }
 
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+        .modal.active {
+            display: flex;
+        }
+        .modal-content {
+            background-color: #ffffff;
+            padding: 32px;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .modal-header h3 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-gray);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+        }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 14px;
+            outline: none;
+            background: #fafafa;
+            color: var(--text-dark);
+            transition: all 0.2s;
+        }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            border-color: var(--primary-orange);
+            background: #ffffff;
+        }
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 24px;
+        }
+        .btn-cancel {
+            background: none;
+            border: 1px solid var(--border-color);
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            color: var(--text-gray);
+        }
+        .btn-save {
+            background-color: var(--primary-orange);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(226, 92, 35, 0.2);
+            transition: all 0.2s;
+        }
+        .btn-save:hover {
+            background-color: var(--dark-orange);
+            transform: translateY(-1px);
+        }
     </style>
 </head>
 <body>
 
     <aside class="sidebar">
-        <div class="logo">
-            <div class="logo-icon">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/000000/svg">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 14c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z" fill="white"/>
-                </svg>
-            </div>
-            <span>RestoBook Admin</span>
-        </div>
+        <a href="{{ route('admin.dashboard') }}" class="logo" style="text-decoration: none;">
+            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1; font-size: 28px; color: var(--primary-orange);">restaurant</span>
+            <span style="font-weight: 800; font-size: 20px; color: #a63b0a; letter-spacing: -0.5px;">Resto<span style="color: var(--primary-orange);">Book</span> <span style="font-weight: 600; color: #271f1d; font-size: 16px; margin-left: 4px;">Admin</span></span>
+        </a>
 
         <div class="user-profile">
-            <img src="https://i.pravatar.cc/150?img=11" alt="Admin Sistem">
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--border-color); display: flex; align-items: center; justify-content: center; color: var(--text-gray);">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            </div>
             <div class="user-info">
                 <h4>Admin Sistem</h4>
             </div>
@@ -403,14 +503,14 @@
                 <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
                 Kelola User
             </a>
-            <a href="#" class="nav-item">
+            <a href="{{ route('admin.settings') }}" class="nav-item">
                 <svg viewBox="0 0 24 24"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.06-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.73,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.06,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.43-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.49-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/></svg>
                 Pengaturan
             </a>
             
-            <form action="{{ route('logout') }}" method="POST" id="logout-form-admin-restaurants">
+            <form action="{{ route('logout') }}" method="POST" id="logout-form-admin">
                 @csrf
-                <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form-admin-restaurants').submit();" class="nav-item logout">
+                <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form-admin').submit();" class="nav-item logout">
                     <svg viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
                     Logout
                 </a>
@@ -422,125 +522,222 @@
         <header class="header">
             <div class="header-title">
                 <h1>Kelola Semua Restoran</h1>
-                <p>Pantau dan kelola akun restoran serta status kelaikan di platform RestoBook.</p>
+                <p>Pantau, verifikasi, dan kelola status kelaikan restoran di platform RestoBook.</p>
             </div>
         </header>
+
+        @if(session('success'))
+            <div style="background: #ecfdf5; color: #29a073; padding: 16px; border-radius: 12px; margin-bottom: 24px; font-weight: 500;">
+                {{ session('success') }}
+            </div>
+        @endif
 
         <section class="filter-section">
             <div class="search-box">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                <input type="text" placeholder="Cari nama restoran atau lokasi...">
-            </div>
-            <div class="filter-buttons">
-                <button class="filter-btn">Semua Kategori</button>
-                <button class="filter-btn">UMKM Mikro</button>
-                <button class="filter-btn">Cafe</button>
-                <button class="filter-btn">Resto Keluarga</button>
+                <input type="text" id="resto-search" placeholder="Cari nama restoran..." onkeyup="searchResto()">
             </div>
         </section>
 
         <section class="table-card">
             <div class="table-top">
-                <span class="table-info">Menampilkan 1-3 dari 56 restoran</span>
-                <div class="pagination">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                </div>
+                <span class="table-info">Menampilkan {{ count($restaurants) }} restoran</span>
             </div>
             <table>
                 <thead>
                     <tr>
                         <th>NAMA RESTORAN</th>
                         <th>PEMILIK</th>
+                        <th>NO. TELEPON</th>
                         <th>LOKASI</th>
-                        <th>KATEGORI</th>
                         <th>STATUS</th>
                         <th>AKSI</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
+                    @forelse($restaurants as $r)
+                    <tr class="resto-row">
                         <td>
                             <div class="user-cell">
-                                <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=100&h=100&fit=crop" alt="Sate Padang">
-                                Sate Padang Begadang
+                                <img src="{{ $r->image ? asset('storage/'.$r->image) : 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=100&h=100&fit=crop' }}" alt="{{ $r->name }}">
+                                <span class="search-name">{{ $r->name }}</span>
                             </div>
                         </td>
-                        <td>Ahmad Pratama</td>
-                        <td class="phone-cell">Jl. Diponegoro,<br>Bandar Lampung</td>
-                        <td><span class="badge">UMKM MIKRO</span></td>
+                        <td>{{ $r->user->name ?? 'Pemilik' }}</td>
                         <td>
-                            <div class="status active">
-                                <div class="dot"></div> Aktif
-                            </div>
+                            @if($r->phone)
+                                {{ substr($r->phone, 0, 4) }}-****-****
+                            @else
+                                -
+                            @endif
+                        </td>
+                        <td class="phone-cell">{{ $r->address }}</td>
+                        <td>
+                            @if($r->status === 'active')
+                                <div class="status active">
+                                    <div class="dot"></div> Aktif
+                                </div>
+                            @elseif($r->status === 'pending')
+                                <div class="status" style="color: #fbbf24;">
+                                    <div class="dot" style="background-color: #fbbf24;"></div> Pending
+                                </div>
+                            @else
+                                <div class="status suspended">
+                                    <div class="dot"></div> Ditolak
+                                </div>
+                            @endif
                         </td>
                         <td>
-                            <div class="actions">
-                                <button class="btn-suspend" title="Suspend Restoran">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg>
-                                </button>
-                                <button class="btn-delete" title="Hapus Restoran">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                </button>
+                            <div class="actions" style="display: flex; gap: 12px; align-items: center;">
+                                <!-- Edit Button -->
+                                <svg onclick="openEditModal({{ $r->id }}, '{{ addslashes($r->name) }}', '{{ addslashes($r->address) }}', '{{ addslashes($r->phone) }}', '{{ $r->status }}')" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="cursor: pointer; width: 18px; height: 18px; color: #94a3b8;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                
+                                <!-- Delete Button -->
+                                <svg onclick="confirmDelete({{ $r->id }}, '{{ addslashes($r->name) }}')" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="cursor: pointer; width: 18px; height: 18px; color: #ef4444;"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                             </div>
                         </td>
                     </tr>
+                    @empty
                     <tr>
-                        <td>
-                            <div class="user-cell">
-                                <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=100&h=100&fit=crop" alt="Kopi Kenangan">
-                                Kopi Kenangan Kedaton
-                            </div>
-                        </td>
-                        <td>Budi Santoso</td>
-                        <td class="phone-cell">Kedaton,<br>Bandar Lampung</td>
-                        <td><span class="badge" style="background:#e0f2fe;color:#0369a1;">CAFE</span></td>
-                        <td>
-                            <div class="status active">
-                                <div class="dot"></div> Aktif
-                            </div>
-                        </td>
-                        <td>
-                            <div class="actions">
-                                <button class="btn-suspend" title="Suspend Restoran">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg>
-                                </button>
-                                <button class="btn-delete" title="Hapus Restoran">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                </button>
-                            </div>
-                        </td>
+                        <td colspan="6" style="text-align: center; color: var(--text-gray); padding: 32px;">Belum ada data restoran.</td>
                     </tr>
-                    <tr>
-                        <td>
-                            <div class="user-cell">
-                                <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=100&h=100&fit=crop" alt="Taichan">
-                                Sate Taichan Senayan
-                            </div>
-                        </td>
-                        <td>Dimas Anggara</td>
-                        <td class="phone-cell">Jl. ZA. Pagar Alam,<br>Rajabasa</td>
-                        <td><span class="badge">UMKM MIKRO</span></td>
-                        <td>
-                            <div class="status suspended">
-                                <div class="dot"></div> Suspended
-                            </div>
-                        </td>
-                        <td>
-                            <div class="actions">
-                                <button class="btn-suspend" style="color:var(--status-suspended)" title="Aktifkan Kembali">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                </button>
-                                <button class="btn-delete" title="Hapus Restoran">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
+                    @endforelse
                 </tbody>
             </table>
         </section>
     </main>
 
+    <!-- EDIT RESTO MODAL -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Ubah Data Restoran</h3>
+                <button class="close-btn" onclick="closeEditModal()">&times;</button>
+            </div>
+            <form id="editForm" method="POST">
+                @csrf
+                @method('PUT')
+                
+                <div class="form-group">
+                    <label>Nama Restoran</label>
+                    <input type="text" name="name" id="edit-name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Alamat Restoran</label>
+                    <input type="text" name="address" id="edit-address" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Nomor Telepon</label>
+                    <input type="text" name="phone" id="edit-phone" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Status Verifikasi</label>
+                    <select name="status" id="edit-status" required>
+                        <option value="pending">Pending (Belum Diverifikasi)</option>
+                        <option value="active">Active (Disetujui/Aktif)</option>
+                        <option value="rejected">Rejected (Ditolak/Ditangguhkan)</option>
+                    </select>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="closeEditModal()">Batal</button>
+                    <button type="submit" class="btn-save">Simpan Perubahan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Hidden Delete Form -->
+    <form id="deleteForm" method="POST" style="display: none;">
+        @csrf
+        @method('DELETE')
+    </form>
+
+    <!-- CUSTOM DELETE CONFIRMATION MODAL -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content" style="max-width: 420px; text-align: center; padding: 36px 32px;">
+            <div style="color: #ef4444; margin-bottom: 20px; display: flex; justify-content: center;">
+                <svg width="64" height="64" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="background: #fee2e2; padding: 14px; border-radius: 50%;">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
+            </div>
+            <h3 style="font-size: 20px; font-weight: 700; color: var(--text-dark); margin-bottom: 12px;">Peringatan Penting</h3>
+            <p id="delete-warning-text" style="font-size: 14px; color: var(--text-gray); line-height: 1.6; margin-bottom: 28px;">Apakah Anda yakin ingin menghapus data ini? Tindakan ini tidak dapat dibatalkan.</p>
+            
+            <div style="display: flex; gap: 12px; justify-content: center; width: 100%;">
+                <button type="button" class="btn-cancel" onclick="closeDeleteModal()" style="flex: 1; padding: 12px 20px; border-radius: 12px;">Batal</button>
+                <button type="button" class="btn-save" id="btn-confirm-delete" style="flex: 1; background-color: #ef4444; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2); padding: 12px 20px; border-radius: 12px;">Hapus Restoran</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let deleteTargetUrl = '';
+
+        function openEditModal(id, name, address, phone, status) {
+            document.getElementById('edit-name').value = name;
+            document.getElementById('edit-address').value = address;
+            document.getElementById('edit-phone').value = phone;
+            document.getElementById('edit-status').value = status;
+            
+            var actionUrl = "{{ route('admin.restaurants.update', ':id') }}";
+            actionUrl = actionUrl.replace(':id', id);
+            document.getElementById('editForm').action = actionUrl;
+            
+            document.getElementById('editModal').classList.add('active');
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').classList.remove('active');
+        }
+
+        function confirmDelete(id, name) {
+            var actionUrl = "{{ route('admin.restaurants.destroy', ':id') }}";
+            actionUrl = actionUrl.replace(':id', id);
+            deleteTargetUrl = actionUrl;
+            
+            document.getElementById('delete-warning-text').innerHTML = 'Apakah Anda yakin ingin menghapus restoran <strong>' + name + '</strong>?<br>Semua data reservasi terkait juga akan terpengaruh.';
+            document.getElementById('deleteModal').classList.add('active');
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').classList.remove('active');
+        }
+
+        document.getElementById('btn-confirm-delete').addEventListener('click', function() {
+            var form = document.getElementById('deleteForm');
+            form.action = deleteTargetUrl;
+            form.submit();
+        });
+
+        function searchResto() {
+            var input = document.getElementById('resto-search');
+            var filter = input.value.toLowerCase();
+            var rows = document.querySelectorAll('.resto-row');
+            
+            rows.forEach(function(row) {
+                var nameText = row.querySelector('.search-name').textContent.toLowerCase();
+                if (nameText.indexOf(filter) > -1) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        }
+
+        window.onclick = function(event) {
+            var editModal = document.getElementById('editModal');
+            var deleteModal = document.getElementById('deleteModal');
+            if (event.target == editModal) {
+                closeEditModal();
+            }
+            if (event.target == deleteModal) {
+                closeDeleteModal();
+            }
+        }
+    </script>
 </body>
 </html>

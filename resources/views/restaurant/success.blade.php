@@ -14,7 +14,7 @@
         <span class="text-emerald-600 font-bold uppercase tracking-widest text-xs block mb-2">Pembayaran Berhasil</span>
         <h1 class="text-4xl font-black text-slate-900 mb-4">Meja Anda Telah Diamankan!</h1>
         <p class="text-gray-500 max-w-md mx-auto mb-10">
-            Terima kasih! Reservasi Anda di <span class="font-bold text-slate-700">{{ $booking->restaurant_name }}</span> telah dikonfirmasi secara otomatis oleh sistem kami.
+            Terima kasih! Reservasi Anda di <span class="font-bold text-slate-700">RestoBook Partner</span> telah dikonfirmasi secara otomatis oleh sistem kami.
         </p>
 
         {{-- KARTU DETAIL KODE BOOKING --}}
@@ -34,19 +34,19 @@
             <div class="grid grid-cols-2 gap-y-4 text-sm">
                 <div>
                     <p class="text-gray-400 font-medium">Tanggal Kedatangan</p>
-                    <p class="font-bold text-slate-800 mt-0.5">{{ \Carbon\Carbon::parse($booking->booking_date)->translatedFormat('d F Y') }}</p>
+                    <p class="font-bold text-slate-800 mt-0.5">{{ \Carbon\Carbon::parse($booking->reservation_date)->translatedFormat('d F Y') }}</p>
                 </div>
                 <div>
                     <p class="text-gray-400 font-medium">Jam Kedatangan</p>
-                    <p class="font-bold text-slate-800 mt-0.5">⏰ {{ $booking->booking_time }} WIB</p>
+                    <p class="font-bold text-slate-800 mt-0.5">⏰ {{ \Carbon\Carbon::parse($booking->reservation_time)->format('H:i') }} WIB</p>
                 </div>
                 <div>
                     <p class="text-gray-400 font-medium">Jumlah Tamu</p>
-                    <p class="font-bold text-slate-800 mt-0.5">👥 {{ $booking->number_of_people }}</p>
+                    <p class="font-bold text-slate-800 mt-0.5">👥 {{ $booking->num_guests }} Orang</p>
                 </div>
                 <div>
-                    <p class="text-gray-400 font-medium">Area Pilihan Meja</p>
-                    <p class="font-bold text-slate-800 mt-0.5">🪑 {{ $booking->table_area }}</p>
+                    <p class="text-gray-400 font-medium">Keterangan / Area Pilihan</p>
+                    <p class="font-bold text-slate-800 mt-0.5">🪑 {{ $booking->notes }}</p>
                 </div>
             </div>
 

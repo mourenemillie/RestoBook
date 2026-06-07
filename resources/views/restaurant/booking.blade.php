@@ -117,24 +117,24 @@
                             <div class="flex justify-between text-sm">
                                 <div>
                                     <p class="font-bold text-slate-700">Bakso Super</p>
-                                    <p class="text-[10px] text-gray-400">Porsi Utama • 1x</p>
+                                    <p class="text-[10px] text-gray-400">Porsi Utama • <span id="bakso-qty">2</span>x</p>
                                 </div>
-                                <span class="font-bold text-slate-800">Rp 25.000</span>
+                                <span class="font-bold text-slate-800" id="bakso-price">Rp 50.000</span>
                             </div>
 
                             <div class="flex justify-between text-sm">
                                 <div>
                                     <p class="font-bold text-slate-700">Es Jeruk Peras</p>
-                                    <p class="text-[10px] text-gray-400">Minuman • 1x</p>
+                                    <p class="text-[10px] text-gray-400">Minuman • <span id="esjeruk-qty">2</span>x</p>
                                 </div>
-                                <span class="font-bold text-slate-800">Rp 8.000</span>
+                                <span class="font-bold text-slate-800" id="esjeruk-price">Rp 16.000</span>
                             </div>
                         </div>
 
                         <div class="space-y-2 border-t border-gray-50 pt-6 mb-6">
                             <div class="flex justify-between text-sm text-gray-400 font-medium">
                                 <span>Subtotal</span>
-                                <span>Rp 33.000</span>
+                                <span id="summary-subtotal">Rp 66.000</span>
                             </div>
                             <div class="flex justify-between text-sm text-gray-400 font-medium">
                                 <span>Biaya Layanan (Pajak)</span>
@@ -144,7 +144,7 @@
 
                         <div class="flex justify-between items-center mb-8">
                             <span class="font-black text-slate-800 text-lg">Estimasi Total</span>
-                            <span class="font-black text-orange-600 text-2xl">Rp 35.000</span>
+                            <span class="font-black text-orange-600 text-2xl" id="summary-total">Rp 68.000</span>
                         </div>
 
                         <button type="submit" class="w-full bg-orange-600 text-white py-5 rounded-3xl font-black text-lg shadow-xl shadow-orange-100 hover:bg-orange-700 transition-all flex items-center justify-center gap-3 transform hover:-translate-y-1">
@@ -191,5 +191,29 @@
             document.getElementById('selected_table_area').value = this.getAttribute('data-area');
         });
     });
+
+    // 3. Logika Update Harga Dinamis Berdasarkan Jumlah Tamu
+    const guestSelect = document.querySelector('select[name="number_of_people"]');
+    if (guestSelect) {
+        guestSelect.addEventListener('change', function() {
+            const count = parseInt(this.value) || 2;
+            const baksoPricePerPerson = 25000;
+            const esJerukPricePerPerson = 8000;
+            const serviceFee = 2000;
+            
+            const totalBakso = baksoPricePerPerson * count;
+            const totalEsJeruk = esJerukPricePerPerson * count;
+            const subtotal = totalBakso + totalEsJeruk;
+            const total = subtotal + serviceFee;
+            
+            document.getElementById('bakso-qty').textContent = count;
+            document.getElementById('esjeruk-qty').textContent = count;
+            
+            document.getElementById('bakso-price').textContent = 'Rp ' + totalBakso.toLocaleString('id-ID').replace(/,/g, '.');
+            document.getElementById('esjeruk-price').textContent = 'Rp ' + totalEsJeruk.toLocaleString('id-ID').replace(/,/g, '.');
+            document.getElementById('summary-subtotal').textContent = 'Rp ' + subtotal.toLocaleString('id-ID').replace(/,/g, '.');
+            document.getElementById('summary-total').textContent = 'Rp ' + total.toLocaleString('id-ID').replace(/,/g, '.');
+        });
+    }
 </script>
 @endsection

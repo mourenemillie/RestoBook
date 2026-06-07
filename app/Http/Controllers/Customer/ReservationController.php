@@ -41,7 +41,7 @@ class ReservationController extends Controller
 {
     $restaurant = \App\Models\Restaurant::findOrFail($restaurant);
 
-    return view('customer.create-reservation', compact('restaurant'));
+    return view('restaurant.booking', compact('restaurant'));
 }
 public function store(Request $request)
 {

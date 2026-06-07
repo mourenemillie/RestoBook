@@ -44,6 +44,11 @@
         .register-link a:hover, .bottom-text a:hover { text-decoration: underline; }
         .success { background: #ecfdf5; color: #166534; font-size: 13px; padding: 12px 14px; border-radius: 12px; margin-bottom: 18px; }
         .error { background: #fff1f0; color: #dc2626; font-size: 13px; padding: 12px 14px; border-radius: 12px; margin-bottom: 18px; }
+        .divider { display: flex; align-items: center; text-align: center; margin: 20px 0; }
+        .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid #e7e1db; }
+        .divider span { padding: 0 10px; color: #9ca3af; font-size: 14px; }
+        .btn-google { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; background: #fff; color: #374151; font-size: 15px; font-weight: 600; padding: 14px; border-radius: 9999px; border: 1.5px solid #e7e1db; text-decoration: none; transition: background 0.2s, border-color 0.2s; }
+        .btn-google:hover { background: #f9fafb; border-color: #d1d5db; }
         @media (max-width: 640px) {
             body { padding: 16px; }
             .card { padding: 28px 20px 24px; max-width: 100%; }
