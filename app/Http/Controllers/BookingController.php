@@ -160,8 +160,12 @@ class BookingController extends Controller
 
                 $booking->snap_token = $snapToken;
             } catch (\Exception $e) {
+<<<<<<< HEAD
                 \Log::error('Midtrans Snap Error: ' . $e->getMessage());
                 session()->flash('midtrans_error', 'Error dari Midtrans: ' . $e->getMessage() . ' (Pastikan API Key sudah benar dan teraktivasi)');
+=======
+                return redirect()->route('restaurant.show', ['id' => $booking->restaurant_id])->withErrors('Gagal memproses pembayaran: Pastikan MIDTRANS_SERVER_KEY sudah disetting dengan benar di server. Detail Error: ' . $e->getMessage());
+>>>>>>> e1c8c9739d67725cd7a2f57842bd096d6f043eb2
             }
         }
 
