@@ -40,8 +40,7 @@
     
     <nav class="bg-white sticky top-0 z-50 py-4 px-8 shadow-sm">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
-            
-            <a href="{{ url('/') }}" class="flex items-center gap-2"
+            <a href="{{ url('/') }}" class="flex items-center gap-2">
                 <span class="text-primary text-2xl font-bold material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">restaurant</span>
                 <span class="text-2xl font-extrabold text-[#963700] tracking-tight">Resto<span class="text-primary">Book</span></span>
             </a>
@@ -50,13 +49,12 @@
                 <a href="{{ url('/') }}" class="{{ request()->is('/') ? 'text-primary font-bold' : 'hover:text-primary transition' }}">Jelajahi</a>
                 
                 @auth
-                    <a href="{{ route('customer.reservations') ?? '#' }}" class="{{ request()->routeIs('customer.reservations') ? 'text-primary font-bold' : 'hover:text-primary transition' }}">Reservasi</a>
+                    <a href="{{ url('/#reservasi') }}" class="hover:text-primary transition">Reservasi</a>
                 @else
-                    <a href="#" class="hover:text-primary transition">Reservasi</a>
+                    <a href="{{ url('/#reservasi') }}" class="hover:text-primary transition">Reservasi</a>
                 @endauth
                 
-                <a href="#" class="hover:text-primary transition">Tentang Kami</a>
-                <a href="#" class="hover:text-primary transition">Bantuan</a>
+                <a href="{{ url('/#tentang-resto') }}" class="hover:text-primary transition">Tentang Kami</a>
             </div>
 
             <div class="flex gap-6 items-center text-sm">
@@ -66,7 +64,7 @@
                 @endguest
 
                 @auth
-                    <div class="flex items-center gap-4">
+                        <div class="flex items-center gap-4">
                         @if(auth()->user()->role === 'admin')
                             <a href="{{ route('admin.dashboard') }}" class="font-bold text-primary hover:text-[#C44005] transition">Dashboard</a>
                         @elseif(auth()->user()->role === 'owner')

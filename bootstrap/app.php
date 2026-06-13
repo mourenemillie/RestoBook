@@ -11,10 +11,24 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-    $middleware->alias([
-        'role' => \App\Http\Middleware\RoleMiddleware::class,
-    ]);
-})
+        $middleware->trustProxies(at: '*');
+
+        $middleware->alias([
+            'role' => \App\Http\Middleware\RoleMiddleware::class,
+        ]);
+        
+        $middleware->validateCsrfTokens(except: [
+            '/api/midtrans/notification',
+        ]);
+
+        $middleware->redirectUsersTo(function () {
+            if (auth()->check()) {
+                if (auth()->user()->role === 'admin') return '/admin/dashboard';
+                if (auth()->user()->role === 'owner') return '/owner/dashboard';
+            }
+            return '/home';
+        });
+    })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
     })->create();

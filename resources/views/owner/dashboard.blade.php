@@ -462,6 +462,25 @@
             text-align: center;
         }
 
+        /* Responsive Adjustments */
+        @media (max-width: 992px) {
+            body { flex-direction: column; }
+            .sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--border-color); padding: 16px; align-items: flex-start; }
+            .logo { margin-bottom: 16px; padding: 0; }
+            .user-profile { margin-bottom: 16px; padding: 0; display: none; }
+            .nav-menu { display: flex; width: 100%; overflow-x: auto; gap: 8px; padding-bottom: 8px; flex-direction: row; }
+            .nav-item { margin-bottom: 0; padding: 10px 16px; white-space: nowrap; }
+            .main-content { max-width: 100%; padding: 20px; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .header { flex-direction: column; align-items: flex-start; gap: 16px; }
+            .header-actions { width: 100%; justify-content: space-between; }
+        }
+        @media (max-width: 576px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .table-responsive { overflow-x: auto; display: block; width: 100%; }
+            th, td { white-space: nowrap; }
+            .content-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
@@ -577,8 +596,8 @@
                         12%
                     </div>
                 </div>
-                <div class="stat-title">Total Tamu Hari Ini</div>
-                <div class="stat-value">142</div>
+                <div class="stat-title">Total Reservasi</div>
+<div class="stat-value">{{ $totalReservasi }}</div>
             </div>
 
             <div class="stat-card">
@@ -599,8 +618,8 @@
                         5%
                     </div>
                 </div>
-                <div class="stat-title">Reservasi Aktif</div>
-                <div class="stat-value">28</div>
+               <div class="stat-title">Menunggu Konfirmasi</div>
+<div class="stat-value">{{ $reservasiAktif }}</div>
             </div>
 
             <div class="stat-card">
@@ -615,7 +634,9 @@
                     </div>
                 </div>
                 <div class="stat-title">Meja Tersedia</div>
-                <div class="stat-value">12<span>/24</span></div>
+<div class="stat-value">
+    {{ $mejaTersedia }}<span>/{{ $totalMeja }}</span>
+</div>
             </div>
 
             <div class="stat-card">
@@ -635,8 +656,8 @@
                         2%
                     </div>
                 </div>
-                <div class="stat-title">Batal Hari Ini</div>
-                <div class="stat-value">3</div>
+                <div class="stat-title">Reservasi Tidak Hadir</div>
+<div class="stat-value">{{ $reservasiBatal }}</div>
             </div>
         </div>
 
@@ -656,68 +677,44 @@
                             <th>Aksi</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <div class="customer-cell">
-                                    <div class="avatar-initial bg-avatar-1">A</div>
-                                    Ahmad Fauzi
-                                </div>
-                            </td>
-                            <td>19:00 WIB</td>
-                            <td>4 Orang</td>
-                            <td><span class="status-badge status-waiting">Menunggu</span></td>
-                            <td>
-                                <button class="btn-more">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <circle cx="12" cy="12" r="1"></circle>
-                                        <circle cx="12" cy="5" r="1"></circle>
-                                        <circle cx="12" cy="19" r="1"></circle>
-                                    </svg>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="customer-cell">
-                                    <div class="avatar-initial bg-avatar-2">B</div>
-                                    Budi Santoso
-                                </div>
-                            </td>
-                            <td>20:30 WIB</td>
-                            <td>2 Orang</td>
-                            <td><span class="status-badge status-confirmed">Dikonfirmasi</span></td>
-                            <td>
-                                <button class="btn-more">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <circle cx="12" cy="12" r="1"></circle>
-                                        <circle cx="12" cy="5" r="1"></circle>
-                                        <circle cx="12" cy="19" r="1"></circle>
-                                    </svg>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="customer-cell">
-                                    <div class="avatar-initial bg-avatar-3">C</div>
-                                    Citra Kirana
-                                </div>
-                            </td>
-                            <td>18:15 WIB</td>
-                            <td>6 Orang</td>
-                            <td><span class="status-badge status-done">Selesai</span></td>
-                            <td>
-                                <button class="btn-more">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <circle cx="12" cy="12" r="1"></circle>
-                                        <circle cx="12" cy="5" r="1"></circle>
-                                        <circle cx="12" cy="19" r="1"></circle>
-                                    </svg>
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
+                   <tbody>
+@foreach($reservations as $reservation)
+<tr>
+    <td>
+        <div class="customer-cell">
+            <div class="avatar-initial bg-avatar-1">
+                {{ strtoupper(substr($reservation->user->name ?? 'U', 0, 1)) }}
+            </div>
+
+            {{ $reservation->user->name ?? 'User' }}
+        </div>
+    </td>
+
+    <td>
+        {{ \Carbon\Carbon::parse($reservation->reservation_time)->format('H:i') }}
+    </td>
+
+    <td>
+        {{ $reservation->num_guests }} Orang
+    </td>
+
+    <td>
+        <span class="status-badge status-waiting">
+            {{ ucfirst($reservation->status) }}
+        </span>
+    </td>
+
+    <td>
+        <a href="{{ route('owner.reservasi.show', [
+    'id' => $reservation->id,
+    'from' => 'dashboard'
+]) }}">
+            Detail
+        </a>
+    </td>
+</tr>
+@endforeach
+</tbody>
                 </table>
             </div>
 

@@ -3,177 +3,156 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pengaturan - RestoBook</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Pengaturan – RestoBook</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
         :root {
-            --primary: #E95A1E;
-            --primary-light: #FDF1EB;
-            --bg-body: #FCF8F6;
-            --bg-card: #FFFFFF;
-            --text-dark: #202020;
-            --text-muted: #7E7E7E;
-            --border: #F0F0F0;
-            --border-input: #E4E4E4;
-            --sidebar-w: 260px;
+            --primary-brand: #ed5f1f;
+            --primary-dark:  #a03605;
+            --bg-color:      #ffffff;
+            --sidebar-bg:    #ffffff;
+            --text-dark:     #1e1512;
+            --text-gray:     #786f6c;
+            --border-light:  #f3f0ef;
+
+            --nav-active-bg:     #fff6f3;
+            --nav-active-border: #ed5f1f;
+
+            --danger-color: #d1302b;
+
+            /* Settings-specific */
+            --bg-body:       #fafafa;
+            --border-input:  #e8e3e0;
+            --primary-light: #fff2eb;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
 
         body {
             background-color: var(--bg-body);
-            color: var(--text-dark);
             display: flex;
             min-height: 100vh;
+            color: var(--text-dark);
         }
 
-        /* --- SIDEBAR --- */
+        /* ===== SIDEBAR — identik dengan reservasi.blade.php ===== */
         .sidebar {
-            width: var(--sidebar-w);
-            background: var(--bg-card);
-            border-right: 1px solid var(--border);
+            width: 260px;
+            background-color: var(--sidebar-bg);
             display: flex;
             flex-direction: column;
-            padding: 30px 0;
-            position: fixed;
+            border-right: 1px solid var(--border-light);
+            padding: 32px 0;
+            flex-shrink: 0;
+            position: sticky;
+            top: 0;
             height: 100vh;
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
+            padding: 0 28px;
+            margin-bottom: 40px;
+            color: var(--primary-brand);
             font-size: 20px;
             font-weight: 800;
-            color: var(--primary);
-            padding: 0 30px;
-            margin-bottom: 40px;
         }
 
         .user-profile {
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 0 30px;
+            padding: 0 28px;
             margin-bottom: 40px;
         }
 
         .user-profile img {
-            width: 40px;
-            height: 40px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             object-fit: cover;
         }
 
-        .user-info h4 {
-            font-size: 14px;
-            font-weight: 700;
-            margin-bottom: 2px;
-        }
-
-        .user-info p {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
+        .user-info h4 { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+        .user-info p  { font-size: 11px; color: var(--text-gray); }
 
         .nav-menu {
+            list-style: none;
             display: flex;
             flex-direction: column;
-            gap: 5px;
-            flex-grow: 1;
         }
 
         .nav-item {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 14px 30px;
+            gap: 16px;
+            padding: 16px 28px;
+            color: var(--text-gray);
             text-decoration: none;
-            color: var(--text-muted);
             font-weight: 600;
             font-size: 14px;
             border-left: 4px solid transparent;
         }
 
-        .nav-item svg {
-            width: 18px;
-            height: 18px;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
+        .nav-item svg { width: 20px; height: 20px; stroke-width: 2.5; flex-shrink: 0; }
 
         .nav-item.active {
-            background-color: var(--primary-light);
-            color: var(--primary);
-            border-left-color: var(--primary);
+            color: var(--primary-brand);
+            background-color: var(--nav-active-bg);
+            border-left-color: var(--nav-active-border);
         }
 
-        .logout-btn {
+        .logout {
+            margin-top: auto;
+            color: var(--danger-color);
+            padding: 16px 28px;
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 14px 30px;
-            text-decoration: none;
-            color: #D32F2F;
+            gap: 16px;
             font-weight: 600;
             font-size: 14px;
-            margin-top: auto;
+            text-decoration: none;
         }
 
-        .logout-btn svg {
-            width: 18px;
-            height: 18px;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 2;
-        }
-
-        /* --- MAIN CONTENT --- */
+        /* ===== MAIN CONTENT ===== */
         .main-content {
-            margin-left: var(--sidebar-w);
-            flex-grow: 1;
-            padding: 40px 50px;
-            max-width: 1200px;
+            flex: 1;
+            padding: 48px 64px;
+            overflow-y: auto;
+            background-color: var(--bg-body);
         }
 
+        /* Header */
         .header {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 30px;
+            align-items: flex-end;
+            margin-bottom: 48px;
         }
 
         .header-title h1 {
-            font-size: 28px;
+            font-size: 40px;
             font-weight: 800;
-            margin-bottom: 6px;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+            color: #1a110e;
         }
 
         .header-title p {
-            font-size: 14px;
-            color: var(--text-muted);
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 16px;
-            align-items: center;
+            color: var(--text-gray);
+            font-size: 16px;
+            font-weight: 500;
         }
 
         .btn-icon {
             width: 44px;
             height: 44px;
             border-radius: 50%;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
+            background: #fff;
+            border: 1px solid var(--border-light);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -183,85 +162,51 @@
 
         .btn-icon svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; }
 
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-        }
-
-        .btn-primary svg { width: 16px; height: 16px; stroke: white; fill: none; stroke-width: 2; }
-
-        .btn-outline {
-            background: transparent;
-            color: var(--primary);
-            border: 1px solid var(--primary);
-            width: 100%;
-            padding: 14px;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            cursor: pointer;
-            margin-top: 15px;
-        }
-
-        .btn-outline svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
-
-        /* --- LAYOUT GRID --- */
+        /* ===== CONTENT GRID ===== */
         .content-grid {
             display: grid;
             grid-template-columns: 1.2fr 0.8fr;
-            gap: 30px;
+            gap: 28px;
         }
 
+        /* ===== CARDS ===== */
         .card {
-            background: var(--bg-card);
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 32px;
+            margin-bottom: 28px;
+            border: 1px solid var(--border-light);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.03);
         }
+
+        .card:last-child { margin-bottom: 0; }
 
         .card-header {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 24px;
+            gap: 14px;
+            margin-bottom: 28px;
         }
 
         .icon-box {
-            width: 36px;
-            height: 36px;
+            width: 40px;
+            height: 40px;
             background: var(--primary-light);
-            border-radius: 10px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--primary);
+            color: var(--primary-brand);
+            flex-shrink: 0;
         }
 
-        .icon-box svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; }
+        .icon-box svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; }
 
-        .card-header h2 {
-            font-size: 18px;
-            font-weight: 700;
-        }
+        .card-header h2 { font-size: 20px; font-weight: 800; color: #1a110e; }
 
-        /* --- FORMS --- */
-        .form-group {
-            margin-bottom: 20px;
-        }
+        /* ===== FORMS ===== */
+        .form-group { margin-bottom: 20px; }
+        .form-group:last-child { margin-bottom: 0; }
 
         .form-row {
             display: grid;
@@ -273,315 +218,417 @@
             display: block;
             font-size: 11px;
             font-weight: 700;
-            color: var(--text-muted);
+            color: var(--text-gray);
             margin-bottom: 8px;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
         }
 
         .form-control {
             width: 100%;
             padding: 14px 16px;
-            border: 1px solid var(--border-input);
-            border-radius: 12px;
+            border: 1.5px solid var(--border-input);
+            border-radius: 14px;
             font-size: 14px;
+            font-weight: 500;
             color: var(--text-dark);
             outline: none;
             transition: border-color 0.2s;
+            background: #fff;
         }
 
-        .form-control:focus {
-            border-color: var(--primary);
-        }
+        .form-control:focus { border-color: var(--primary-brand); }
 
-        textarea.form-control {
-            resize: none;
-            height: 90px;
-        }
+        textarea.form-control { resize: none; height: 90px; }
 
-        /* --- INFO BANNER --- */
+        /* Info banner */
         .info-banner {
             background: var(--primary-light);
-            border-radius: 12px;
+            border-radius: 14px;
             padding: 16px 20px;
             display: flex;
             align-items: flex-start;
             gap: 12px;
-            margin-top: 10px;
+            margin-top: 16px;
         }
 
-        .info-banner svg {
-            width: 20px;
-            height: 20px;
-            fill: var(--primary);
-            flex-shrink: 0;
-        }
+        .info-banner svg { width: 20px; height: 20px; fill: var(--primary-brand); flex-shrink: 0; }
+        .info-banner p   { font-size: 13px; color: var(--text-dark); line-height: 1.6; font-weight: 500; }
 
-        .info-banner p {
-            font-size: 13px;
-            color: var(--text-dark);
-            line-height: 1.5;
-        }
-
-        /* --- LIST ITEMS & TOGGLES --- */
+        /* ===== LIST ITEMS & TOGGLES ===== */
         .list-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding-bottom: 20px;
             margin-bottom: 20px;
-            border-bottom: 1px solid var(--border);
+            border-bottom: 1px solid var(--border-light);
         }
 
-        .list-item:last-child {
-            padding-bottom: 0;
-            margin-bottom: 0;
-            border-bottom: none;
-        }
+        .list-item:last-child { padding-bottom: 0; margin-bottom: 0; border-bottom: none; }
 
-        .item-text h3 {
-            font-size: 14px;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
+        .item-text h3 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+        .item-text p  { font-size: 12px; color: var(--text-gray); }
 
-        .item-text p {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-
-        /* Toggle Switch */
-        .toggle {
-            position: relative;
-            width: 44px;
-            height: 24px;
-        }
-
+        .toggle { position: relative; width: 46px; height: 26px; flex-shrink: 0; }
         .toggle input { display: none; }
 
         .slider {
             position: absolute;
             cursor: pointer;
             top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #E0E0E0;
+            background-color: #d9d3d0;
             transition: .3s;
-            border-radius: 24px;
+            border-radius: 26px;
         }
 
         .slider:before {
             position: absolute;
             content: "";
-            height: 18px;
-            width: 18px;
+            height: 20px;
+            width: 20px;
             left: 3px;
             bottom: 3px;
             background-color: white;
             transition: .3s;
             border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
         }
 
-        input:checked + .slider {
-            background-color: var(--primary);
+        input:checked + .slider { background-color: var(--primary-brand); }
+        input:checked + .slider:before { transform: translateX(20px); }
+
+        /* ===== BUTTONS ===== */
+        .btn-save {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 30px;
+            background: var(--primary-dark);
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 8px;
         }
 
-        input:checked + .slider:before {
-            transform: translateX(20px);
+        .btn-save:hover { background: #8a2e04; }
+
+        .btn-secondary {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid var(--primary-dark);
+            border-radius: 30px;
+            background: transparent;
+            color: var(--primary-dark);
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+            margin-top: 16px;
+        }
+
+        .btn-secondary:hover { background: var(--primary-light); }
+        .btn-secondary svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2.5; }
+
+        /* Flash alert */
+        .flash-alert {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            background: var(--primary-dark);
+            color: white;
+            padding: 14px 22px;
+            border-radius: 14px;
+            font-weight: 600;
+            font-size: 14px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            z-index: 9999;
+        }
+        /* Responsive Adjustments */
+        @media (max-width: 992px) {
+            body { flex-direction: column; }
+            .sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--border-color); padding: 16px; align-items: flex-start; }
+            .logo { margin-bottom: 16px; padding: 0; }
+            .user-profile { margin-bottom: 16px; padding: 0; display: none; }
+            .nav-menu { display: flex; width: 100%; overflow-x: auto; gap: 8px; padding-bottom: 8px; flex-direction: row; }
+            .nav-item { margin-bottom: 0; padding: 10px 16px; white-space: nowrap; }
+            .main-content { max-width: 100%; padding: 20px; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .header { flex-direction: column; align-items: flex-start; gap: 16px; }
+            .header-actions { width: 100%; justify-content: space-between; }
+            .content-grid { grid-template-columns: 1fr !important; }
+        }
+        @media (max-width: 576px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .table-responsive { overflow-x: auto; display: block; width: 100%; }
+            th, td { white-space: nowrap; }
+            .form-row { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
-        <div class="logo">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path><path d="M7 2v20"></path><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"></path></svg>
-            RestoBook
+@if(session('success'))
+    <div class="flash-alert">{{ session('success') }}</div>
+@endif
+
+<!-- ===== SIDEBAR ===== -->
+<aside class="sidebar">
+    <div class="logo">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
+            <path d="M7 2v20"></path>
+            <path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"></path>
+        </svg>
+        RestoBook
+    </div>
+
+    <div class="user-profile">
+        <img src="https://i.pravatar.cc/150?img=11" alt="Resto Owner">
+        <div class="user-info">
+            <h4>Resto Owner</h4>
+            <p>Manage your resto</p>
         </div>
+    </div>
 
-        <div class="user-profile">
-            <img src="https://i.pravatar.cc/150?img=11" alt="User Avatar">
-            <div class="user-info">
-                <h4>Resto Owner</h4>
-                <p>Manage your resto</p>
-            </div>
-        </div>
+    <nav class="nav-menu">
+        <a href="{{ route('owner.dashboard') }}" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+            Dashboard
+        </a>
+        <a href="{{ route('owner.reservasi') }}" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            Reservasi
+        </a>
+        <a href="{{ route('owner.kelola-meja') }}" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
+                <path d="M7 2v20"></path>
+                <path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"></path>
+            </svg>
+            Kelola Menu dan Meja
+        </a>
+        <a href="{{ route('owner.settings') }}" class="nav-item active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+            Pengaturan
+        </a>
 
-        <nav class="nav-menu">
-            <a href="{{ route('owner.dashboard') }}" class="nav-item">
-                <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-                Dashboard
-            </a>
-            <a href="{{ route('owner.reservasi') }}" class="nav-item">
-                <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                Reservasi
-            </a>
-            <a href="{{ route('owner.kelola-meja') }}" class="nav-item">
-                <svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
-                Kelola Menu dan Meja
-            </a>
-            <a href="{{ route('owner.settings') }}" class="nav-item active">
-                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-                Pengaturan
-            </a>
-        </nav>
-
-        <form action="{{ route('logout') }}" method="POST" id="logout-form-owner-settings">
+        <form action="{{ route('logout') }}" method="POST" id="logout-form-settings">
             @csrf
-            <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form-owner-settings').submit();" class="logout-btn">
-                <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+            <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form-settings').submit();" class="logout">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                    <polyline points="16 17 21 12 16 7"></polyline>
+                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                </svg>
                 Logout
             </a>
         </form>
-    </aside>
+    </nav>
+</aside>
 
-    <!-- MAIN CONTENT -->
-    <main class="main-content">
-        <header class="header">
-            <div class="header-title">
-                <h1>Pengaturan</h1>
-                <p>Kelola profil, operasional, dan keamanan restoran Anda</p>
-            </div>
-            <div class="header-actions">
-                <button class="btn-icon">
-                    <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-                </button>
-            </div>
-        </header>
+<!-- ===== MAIN CONTENT ===== -->
+<main class="main-content">
 
-        <div class="content-grid">
-            <!-- Kolom Kiri -->
-            <div class="col-left">
-                <!-- Card Profil Restoran -->
+    <div class="header">
+        <div class="header-title">
+            <h1>Pengaturan</h1>
+            <p>Kelola profil, operasional, dan keamanan restoran Anda</p>
+        </div>
+        <button class="btn-icon">
+            <svg viewBox="0 0 24 24">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+        </button>
+    </div>
+
+    <div class="content-grid">
+
+        <!-- ===== KOLOM KIRI ===== -->
+        <div>
+            <form action="{{ route('owner.settings.update') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+
+                <!-- Profil Restoran -->
                 <div class="card">
                     <div class="card-header">
                         <div class="icon-box">
-                            <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                            <svg viewBox="0 0 24 24">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                            </svg>
                         </div>
                         <h2>Profil Restoran</h2>
                     </div>
-                    
+
                     <div class="form-group">
-                        <label class="form-label">NAMA RESTORAN</label>
-                        <input type="text" class="form-control" value="Waroeng Djontor Bandar Lampung">
+                        <label class="form-label">Foto Profil Pemilik / Restoran (Avatar)</label>
+                        @if(auth()->user()->avatar)
+                            <div style="margin-bottom: 10px;">
+                                <img src="{{ Storage::url(auth()->user()->avatar) }}" alt="Avatar" style="width: 80px; height: 80px; object-fit: cover; border-radius: 50%;">
+                            </div>
+                        @endif
+                        <input type="file" class="form-control" name="avatar" accept="image/*">
                     </div>
-                    
+
                     <div class="form-group">
-                        <label class="form-label">NOMOR TELEPON</label>
-                        <input type="text" class="form-control" value="+62 21 555 0123">
+                        <label class="form-label">Foto Restoran (Sampul/Banner)</label>
+                        @if($restaurant && $restaurant->image)
+                            <div style="margin-bottom: 10px;">
+                                <img src="{{ filter_var($restaurant->image, FILTER_VALIDATE_URL) ? $restaurant->image : Storage::url($restaurant->image) }}" alt="Foto Restoran" style="width: 100%; height: 200px; object-fit: cover; border-radius: 14px;">
+                            </div>
+                        @endif
+                        <input type="file" class="form-control" name="image" accept="image/*">
                     </div>
-                    
+
                     <div class="form-group">
-                        <label class="form-label">ALAMAT</label>
-                        <textarea class="form-control">Jl. ZA. Pagar Alam, Gedong Meneng, Kec. Rajabasa, Kota Bandar Lampung, Lampung 35148</textarea>
+                        <label class="form-label">Nama Restoran</label>
+                        <input type="text" class="form-control" name="name"
+                               value="{{ $restaurant->name ?? '' }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Nomor Telepon</label>
+                        <input type="text" class="form-control" name="phone"
+                               value="{{ $restaurant->phone ?? '' }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Alamat</label>
+                        <textarea class="form-control" name="address">{{ $restaurant->address ?? '' }}</textarea>
                     </div>
                 </div>
 
-                <!-- Card Jam Operasional -->
+                <!-- Jam Operasional -->
                 <div class="card">
                     <div class="card-header">
                         <div class="icon-box">
-                            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                            <svg viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
                         </div>
                         <h2>Jam Operasional</h2>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label class="form-label">JAM BUKA</label>
-                            <input type="text" class="form-control" value="10:00 AM">
+                            <label class="form-label">Jam Buka</label>
+                            <input type="time" class="form-control" name="open_time"
+                                   value="{{ $restaurant->open_time ?? '' }}">
                         </div>
                         <div class="form-group">
-                            <label class="form-label">JAM TUTUP</label>
-                            <input type="text" class="form-control" value="10:00 PM">
+                            <label class="form-label">Jam Tutup</label>
+                            <input type="time" class="form-control" name="close_time"
+                                   value="{{ $restaurant->close_time ?? '' }}">
                         </div>
                     </div>
 
                     <div class="info-banner">
-                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path>
+                        </svg>
                         <p>Pengaturan jam operasional akan mempengaruhi ketersediaan slot reservasi di halaman publik pelanggan.</p>
                     </div>
                 </div>
-            </div>
 
-            <!-- Kolom Kanan -->
-            <div class="col-right">
-                <!-- Card Notifikasi -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="icon-box">
-                            <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-                        </div>
-                        <h2>Notifikasi</h2>
-                    </div>
+                <button type="submit" class="btn-save">Simpan Perubahan</button>
 
-                    <div class="list-item">
-                        <div class="item-text">
-                            <h3>Reservasi Baru</h3>
-                            <p>Dapatkan notifikasi instan saat reservasi masuk.</p>
-                        </div>
-                        <label class="toggle">
-                            <input type="checkbox" checked>
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-
-                    <div class="list-item">
-                        <div class="item-text">
-                            <h3>Pengingat Reservasi</h3>
-                            <p>Notifikasi 30 menit sebelum jadwal reservasi.</p>
-                        </div>
-                        <label class="toggle">
-                            <input type="checkbox" checked>
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-
-                    <div class="list-item">
-                        <div class="item-text">
-                            <h3>Laporan Harian</h3>
-                            <p>Ringkasan reservasi harian setiap pagi.</p>
-                        </div>
-                        <label class="toggle">
-                            <input type="checkbox">
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Card Keamanan -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="icon-box">
-                            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                        </div>
-                        <h2>Keamanan</h2>
-                    </div>
-
-                    <div class="list-item" style="border:none; padding-bottom: 0;">
-                        <div class="item-text">
-                            <h3>Autentikasi Dua Faktor</h3>
-                            <p>Lapisan keamanan ekstra untuk akun Anda.</p>
-                        </div>
-                        <label class="toggle">
-                            <input type="checkbox">
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-
-                    <button class="btn-primary" style="width: 100%; justify-content: center; margin-top: 15px; color: white;">
-                        <svg viewBox="0 0 24 24" stroke="currentColor"><path d="M21 2v6h-6"></path><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 2v6h6"></path></svg>
-                        Ganti Password
-                    </button>
-                </div>
-            </div>
+            </form>
         </div>
 
-        <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
-            <button class="btn-primary" style="padding: 16px 32px; font-size: 16px;">
-                <svg viewBox="0 0 24 24" style="width: 20px; height: 20px;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
-                Simpan Perubahan
-            </button>
+        <!-- ===== KOLOM KANAN ===== -->
+        <div>
+
+            <!-- Notifikasi -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon-box">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                        </svg>
+                    </div>
+                    <h2>Notifikasi</h2>
+                </div>
+
+                <div class="list-item">
+                    <div class="item-text">
+                        <h3>Reservasi Baru</h3>
+                        <p>Dapatkan notifikasi instan saat reservasi masuk.</p>
+                    </div>
+                    <label class="toggle"><input type="checkbox" checked><span class="slider"></span></label>
+                </div>
+
+                <div class="list-item">
+                    <div class="item-text">
+                        <h3>Pengingat Reservasi</h3>
+                        <p>Notifikasi 30 menit sebelum jadwal reservasi.</p>
+                    </div>
+                    <label class="toggle"><input type="checkbox" checked><span class="slider"></span></label>
+                </div>
+
+                <div class="list-item">
+                    <div class="item-text">
+                        <h3>Laporan Harian</h3>
+                        <p>Ringkasan reservasi harian setiap pagi.</p>
+                    </div>
+                    <label class="toggle"><input type="checkbox"><span class="slider"></span></label>
+                </div>
+            </div>
+
+            <!-- Keamanan -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon-box">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        </svg>
+                    </div>
+                    <h2>Keamanan</h2>
+                </div>
+
+                <div class="list-item">
+                    <div class="item-text">
+                        <h3>Autentikasi Dua Faktor</h3>
+                        <p>Lapisan keamanan ekstra untuk akun Anda.</p>
+                    </div>
+                    <label class="toggle"><input type="checkbox"><span class="slider"></span></label>
+                </div>
+
+                <button class="btn-secondary">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    Ganti Password
+                </button>
+            </div>
+
         </div>
-    </main>
+    </div>
+
+</main>
 
 </body>
 </html>

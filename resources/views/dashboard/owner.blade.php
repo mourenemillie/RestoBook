@@ -19,6 +19,20 @@
             </div>
         </header>
 
+        @if($restaurant_status === 'pending')
+        <div class="card" style="background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; margin-bottom: 20px; padding: 20px;">
+            <h3 style="margin-bottom: 10px;">⚠️ Menunggu Persetujuan Admin</h3>
+            <p>Pendaftaran restoran Anda sedang ditinjau oleh Super Admin. Anda belum bisa menerima reservasi atau tampil di halaman utama sampai akun Anda disetujui.</p>
+        </div>
+        @endif
+
+        @if($restaurant_status === 'rejected')
+        <div class="card" style="background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; margin-bottom: 20px; padding: 20px;">
+            <h3 style="margin-bottom: 10px;">❌ Pendaftaran Ditolak</h3>
+            <p>Maaf, pendaftaran restoran Anda ditolak oleh Admin. Silakan periksa kembali data restoran Anda atau hubungi dukungan kami.</p>
+        </div>
+        @endif
+
         <!-- Stats Cards -->
         <section class="stats-grid">
             <div class="card stat-card">

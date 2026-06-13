@@ -6,20 +6,20 @@
     <title>Dashboard - RestoBook Admin</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
-
+        @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
         :root {
-            --primary-orange: #eb5e28;
-            --primary-orange-light: #fff5f0;
-            --dark-brown: #a04015;
-            --bg-color: #f5f8f7;
-            --text-dark: #1e293b;
-            --text-gray: #64748b;
-            --border-color: #e2e8f0;
-            --success-green: #10b981;
+            --primary-orange: #e25c23;
+            --primary-orange-light: #fff6f3;
+            --dark-brown: #a63b0a;
+            --bg-color: #fffaf8;
+            --text-dark: #271f1d;
+            --text-gray: #807773;
+            --border-color: #f2ebe8;
+            --success-green: #219653;
             --badge-bg: #fdeee9;
             --badge-text: #b25838;
-            --badge-pending-bg: #fce7e7;
-            --badge-pending-text: #c53030;
+            --badge-pending-bg: #feeceb;
+            --badge-pending-text: #eb5757;
             --table-header-bg: #fdf6f3;
         }
 
@@ -595,22 +595,38 @@
             font-weight: 500;
         }
 
+        /* Responsive Adjustments */
+        @media (max-width: 992px) {
+            body { flex-direction: column; }
+            .sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--border-color); padding: 16px; align-items: flex-start; }
+            .logo { margin-bottom: 16px; padding: 0; }
+            .user-profile { margin-bottom: 16px; padding: 0; display: none; }
+            .nav-menu { display: flex; width: 100%; overflow-x: auto; gap: 8px; padding-bottom: 8px; flex-direction: row; }
+            .nav-item { margin-bottom: 0; padding: 10px 16px; white-space: nowrap; }
+            .main-content { max-width: 100%; padding: 20px; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .header { flex-direction: column; align-items: flex-start; gap: 16px; }
+            .header-actions { width: 100%; justify-content: space-between; }
+        }
+        @media (max-width: 576px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .table-responsive { overflow-x: auto; display: block; width: 100%; }
+            th, td { white-space: nowrap; }
+        }
     </style>
 </head>
 <body>
 
     <aside class="sidebar">
-        <div class="logo">
-            <div class="logo-icon">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/000000/svg">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 14c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z" fill="white"/>
-                </svg>
-            </div>
-            <span>RestoBook Admin</span>
-        </div>
+        <a href="{{ route('admin.dashboard') }}" class="logo" style="text-decoration: none;">
+            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1; font-size: 28px; color: var(--primary-orange);">restaurant</span>
+            <span style="font-weight: 800; font-size: 20px; color: #a63b0a; letter-spacing: -0.5px;">Resto<span style="color: var(--primary-orange);">Book</span> <span style="font-weight: 600; color: #271f1d; font-size: 16px; margin-left: 4px;">Admin</span></span>
+        </a>
 
         <div class="user-profile">
-            <img src="https://i.pravatar.cc/150?img=11" alt="Admin Sistem">
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--border-color); display: flex; align-items: center; justify-content: center; color: var(--text-gray);">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            </div>
             <div class="user-info">
                 <h4>Admin Sistem</h4>
             </div>
@@ -629,7 +645,7 @@
                 <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
                 Kelola User
             </a>
-            <a href="#" class="nav-item">
+            <a href="{{ route('admin.settings') }}" class="nav-item">
                 <svg viewBox="0 0 24 24"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.06-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.73,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.06,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.43-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.49-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/></svg>
                 Pengaturan
             </a>
@@ -668,10 +684,10 @@
                 </div>
                 <div class="stat-content">
                     <div class="stat-title">Total Restoran</div>
-                    <div class="stat-value">248</div>
+                    <div class="stat-value">{{ number_format($totalRestaurants) }}</div>
                     <div class="stat-trend positive">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
-                        +12 pendaftar bulan ini
+                        +{{ $newRestaurantsThisMonth }} bulan ini
                     </div>
                 </div>
             </div>
@@ -682,10 +698,10 @@
                 </div>
                 <div class="stat-content">
                     <div class="stat-title">Total User</div>
-                    <div class="stat-value">12,450</div>
+                    <div class="stat-value">{{ number_format($totalUsers) }}</div>
                     <div class="stat-trend positive">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
-                        +840 pengguna baru bulan ini
+                        +{{ $newUsersThisMonth }} pengguna baru bulan ini
                     </div>
                 </div>
             </div>
@@ -696,10 +712,10 @@
                 </div>
                 <div class="stat-content">
                     <div class="stat-title">Reservasi Aktif</div>
-                    <div class="stat-value">892</div>
+                    <div class="stat-value">{{ number_format($activeReservations) }}</div>
                     <div class="stat-trend neutral">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                        15 masuk hari ini
+                        {{ $reservationsToday }} masuk hari ini
                     </div>
                 </div>
             </div>
@@ -710,10 +726,10 @@
                 </div>
                 <div class="stat-content">
                     <div class="stat-title">Pendapatan Platform</div>
-                    <div class="stat-value">Rp 42.5M</div>
+                    <div class="stat-value">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</div>
                     <div class="stat-trend positive">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
-                        +5.2% dibanding bulan lalu
+                        Dari reservasi selesai
                     </div>
                 </div>
             </div>
@@ -730,52 +746,45 @@
                         <p>Review dan verifikasi pendaftaran mitra baru</p>
                     </div>
                 </div>
-                <div class="badge-pending">3 Pending</div>
+                <div class="badge-pending">{{ $pendingRestaurants->count() }} Pending</div>
             </div>
 
             <div class="approval-list">
+                @forelse($pendingRestaurants as $pending)
                 <div class="approval-item">
                     <div class="restaurant-info">
-                        <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=100&h=100&fit=crop" alt="Sate Taichan" class="restaurant-img">
+                        @if($pending->image)
+                            <img src="{{ Storage::url($pending->image) }}" alt="{{ $pending->name }}" class="restaurant-img">
+                        @else
+                            <div class="restaurant-img">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                            </div>
+                        @endif
                         <div class="restaurant-details">
-                            <h3>Sate Taichan Bang Ocit</h3>
+                            <h3>{{ $pending->name }}</h3>
                             <div class="restaurant-location">
                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                                Tanjung Karang Pusat
+                                {{ $pending->city ?? 'Bandar Lampung' }}
                             </div>
                             <div class="tags">
-                                <span class="tag">UMKM Mikro</span>
-                                <span class="tag">Halal</span>
+                                <span class="tag">{{ $pending->user->name }}</span>
                             </div>
                         </div>
                     </div>
                     <div class="action-buttons">
-                        <button class="btn-outline">Tolak</button>
-                        <button class="btn-filled">Setujui</button>
+                        <form action="{{ route('admin.restaurants.reject', $pending->id) }}" method="POST" style="display:inline;">
+                            @csrf @method('PATCH')
+                            <button class="btn-outline">Tolak</button>
+                        </form>
+                        <form action="{{ route('admin.restaurants.approve', $pending->id) }}" method="POST" style="display:inline;">
+                            @csrf @method('PATCH')
+                            <button class="btn-filled">Setujui</button>
+                        </form>
                     </div>
                 </div>
-
-                <div class="approval-item">
-                    <div class="restaurant-info">
-                        <div class="restaurant-img">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
-                        </div>
-                        <div class="restaurant-details">
-                            <h3>Kopi Kenangan</h3>
-                            <div class="restaurant-location">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                                Kedaton
-                            </div>
-                            <div class="tags">
-                                <span class="tag">Cafe</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="action-buttons">
-                        <button class="btn-outline">Tolak</button>
-                        <button class="btn-filled">Setujui</button>
-                    </div>
-                </div>
+                @empty
+                <div style="padding: 20px; text-align: center; color: var(--text-gray);">Tidak ada restoran yang menunggu persetujuan.</div>
+                @endforelse
             </div>
         </section>
 

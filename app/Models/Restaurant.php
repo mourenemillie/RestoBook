@@ -15,4 +15,23 @@ class Restaurant extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function menus()
+    {
+        return $this->hasMany(Menu::class);
+    }
+
+    /**
+     * Relasi Aman ke Model Meja (Satu restoran memiliki banyak meja)
+     */
+    public function tables()
+    {
+        // Fitur Deteksi Otomatis Nama Model Meja agar tidak memicu Class Not Found
+        if (class_exists(\App\Models\Table::class)) {
+            return $this->hasMany(\App\Models\Table::class);
+        }
+        
+        // Jika di proyekmu nama modelnya diganti menjadi RestoTable, Laravel otomatis membaca yang ini
+        return $this->hasMany(\App\Models\RestoTable::class);
+    }
 }
