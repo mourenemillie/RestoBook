@@ -49,17 +49,17 @@
 
             <!-- Menu Navigasi Tengah -->
             <div class="hidden md:flex space-x-10 font-medium text-slate-500 text-sm">
-                <a href="{{ url('/') }}" class="{{ request()->is('/') ? 'text-primary font-bold' : 'hover:text-primary transition' }}">Jelajahi</a>
+                <a href="{{ url('/') }}" class="{{ request()->is('/') ? 'text-primary font-bold border-b-[1.5px] border-primary pb-1' : 'hover:text-primary transition border-b-[1.5px] border-transparent pb-1' }}">Jelajahi</a>
                 
                 @auth
                     @if(auth()->user()->role === 'customer')
-                        <a href="{{ route('customer.reservations') }}" class="{{ request()->routeIs('customer.reservations') ? 'text-primary font-bold' : 'hover:text-primary transition' }}">Riwayat Reservasi</a>
+                        <a href="{{ route('customer.reservations') }}" class="{{ request()->routeIs('customer.reservations') ? 'text-primary font-bold border-b-[1.5px] border-primary pb-1' : 'hover:text-primary transition border-b-[1.5px] border-transparent pb-1' }}">Riwayat Reservasi</a>
                     @endif
                 @else
-                    <a href="{{ url('/#reservasi') }}" class="hover:text-primary transition">Reservasi</a>
+                    <a href="{{ url('/#reservasi') }}" class="hover:text-primary transition border-b-[1.5px] border-transparent pb-1">Reservasi</a>
                 @endauth
                 
-                <a href="{{ url('/#tentang-resto') }}" class="hover:text-primary transition">Tentang Kami</a>
+                <a href="{{ url('/#tentang-resto') }}" class="hover:text-primary transition border-b-[1.5px] border-transparent pb-1">Tentang Kami</a>
             </div>
 
             <!-- Bagian Kanan (Login/Profil) -->
@@ -112,18 +112,18 @@
                     <span class="text-primary text-2xl font-bold material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">restaurant</span>
                     <span class="text-2xl font-extrabold text-[#963700] tracking-tight">Resto<span class="text-primary">Book</span></span>
                 </a>
-                <p class="text-slate-500 leading-relaxed max-w-sm text-sm">Empowering local MSME culinary businesses in Bandar Lampung with instant and seamless reservations.</p>
+                <p class="text-slate-500 leading-relaxed max-w-sm text-sm">Memberdayakan UMKM kuliner di Bandar Lampung dengan sistem reservasi instan dan mudah bagi semua kalangan.</p>
             </div>
             <div>
-                <h3 class="text-sm font-extrabold mb-6 text-slate-800 uppercase tracking-wider">Explore</h3>
+                <h3 class="text-sm font-extrabold mb-6 text-slate-800 uppercase tracking-wider">Jelajahi</h3>
                 <ul class="text-slate-500 space-y-4 text-sm font-medium">
-                    <li><a href="#" class="hover:text-primary transition">About Us</a></li>
-                    <li><a href="#" class="hover:text-primary transition">Partner with Us</a></li>
-                    <li><a href="#" class="hover:text-primary transition">Help Center</a></li>
+                    <li><a href="#" class="hover:text-primary transition">Tentang Kami</a></li>
+                    <li><a href="{{ route('register') }}?role=owner" class="hover:text-primary transition">Gabung Jadi Mitra</a></li>
+                    <li><a href="#" class="hover:text-primary transition">Pusat Bantuan</a></li>
                 </ul>
             </div>
             <div>
-                <h3 class="text-sm font-extrabold mb-6 text-slate-800 uppercase tracking-wider">Contact</h3>
+                <h3 class="text-sm font-extrabold mb-6 text-slate-800 uppercase tracking-wider">Kontak</h3>
                 <p class="text-slate-500 mb-4 text-sm font-medium">Jl. Raden Intan No. 45<br>Bandar Lampung</p>
                 <div class="flex space-x-4 mt-6">
                     <span class="w-10 h-10 bg-orange-50 text-primary rounded-full flex items-center justify-center cursor-pointer hover:bg-primary hover:text-white transition text-xs font-bold">IG</span>
@@ -133,10 +133,10 @@
         </div>
         
         <div class="max-w-7xl mx-auto px-8 mt-16 pt-8 border-t border-gray-100 flex flex-col md:flex-row justify-between items-center text-slate-400 text-xs font-bold">
-            <p>© {{ date('Y') }} RestoBook Lampung. All rights reserved.</p>
+            <p>© {{ date('Y') }} RestoBook Lampung. Hak cipta dilindungi.</p>
             <div class="flex gap-6 mt-4 md:mt-0">
-                <a href="#" class="hover:text-primary transition">Privacy Policy</a>
-                <a href="#" class="hover:text-primary transition">Terms of Service</a>
+                <a href="#" class="hover:text-primary transition">Kebijakan Privasi</a>
+                <a href="#" class="hover:text-primary transition">Syarat Ketentuan</a>
             </div>
         </div>
     </footer>

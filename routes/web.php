@@ -58,6 +58,7 @@ Route::post('/email/verification-notification', function (\Illuminate\Http\Reque
 // admin routes
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminDashboard::class, 'index'])->name('admin.dashboard');
+    Route::get('/export', [AdminDashboard::class, 'export'])->name('admin.export');
     Route::get('/users', [AdminUserController::class, 'index'])->name('admin.users');
     Route::put('/users/{id}', [AdminUserController::class, 'update'])->name('admin.users.update');
     Route::delete('/users/{id}', [AdminUserController::class, 'destroy'])->name('admin.users.destroy');
@@ -74,6 +75,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
 
 // owner routes
 Route::middleware(['auth', 'role:owner'])->prefix('owner')->group(function () {
+    Route::get('/pending', function () { return view('owner.pending'); })->name('owner.pending');
+    Route::post('/submit-verification', [OwnerDashboard::class, 'submitVerification'])->name('owner.submit-verification');
     Route::get('/dashboard', [OwnerDashboard::class, 'index'])->name('owner.dashboard');
     Route::get('/reservasi', [OwnerReservationController::class, 'index'])->name('owner.reservasi');
     Route::get('/reservasi/{id}', [OwnerReservationController::class, 'show'])->name('owner.reservasi.show');

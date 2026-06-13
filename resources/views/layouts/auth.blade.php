@@ -13,7 +13,7 @@
         .brand-logo { width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center; border-radius: 12px; background: #fee5d5; color: #c9460b; font-size: 18px; }
         h1 { font-size: 32px; font-weight: 800; color: #2c2f2e; margin-top: 14px; margin-bottom: 10px; }
         .sub { color: #5d5f5d; font-size: 15px; margin-bottom: 28px; }
-        .field-label, .section-title { font-size: 14px; font-weight: 600; color: #2c2f2e; }
+        .field-label, .section-title { font-size: 14px; font-weight: 600; color: #2c2f2e; margin-bottom: 12px; display: block; }
         .password-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
         .forgot-link { color: #c9460b; font-size: 13px; font-weight: 700; text-decoration: none; }
         .forgot-link:hover { text-decoration: underline; }
@@ -29,6 +29,15 @@
         .field-group.full-width { grid-column: 1 / -1; }
         input { width: 100%; padding: 14px 16px; border: 1.5px solid #e7e1db; border-radius: 14px; font-size: 15px; color: #2c2f2e; background: #fffaf7; outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
         input:focus { border-color: #ea580c; box-shadow: 0 0 0 4px rgba(234, 88, 12, 0.12); }
+        input::placeholder { color: #6b7280; font-weight: 500; }
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover, 
+        input:-webkit-autofill:focus, 
+        input:-webkit-autofill:active {
+            -webkit-box-shadow: 0 0 0 30px #fffaf7 inset !important;
+            -webkit-text-fill-color: #2c2f2e !important;
+            transition: background-color 5000s ease-in-out 0s;
+        }
         .password-input-wrapper { position: relative; display: flex; align-items: center; width: 100%; }
         .password-input-wrapper input { padding-right: 44px; }
         .password-toggle-btn { position: absolute; right: 12px; background: none; border: none; cursor: pointer; color: #9ca3af; display: flex; align-items: center; justify-content: center; padding: 4px; }

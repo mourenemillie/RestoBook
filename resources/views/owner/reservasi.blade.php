@@ -219,21 +219,48 @@
         .time-badge {
             background-color: var(--time-bg);
             color: #2b160d;
-            font-size: 22px;
+            font-size: 16px;
             font-weight: 700;
-            padding: 12px 16px;
-            border-radius: 24px;
-            min-width: 110px;
+            padding: 8px 12px;
+            border-radius: 12px;
+            min-width: 80px;
             text-align: center;
             letter-spacing: -0.5px;
         }
 
-        .guest-info h2 {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 10px;
-            color: #1a110e;
+        .guest-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
+
+        .guest-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .guest-info h2 {
+            font-size: 24px;
+            font-weight: 800;
+            color: #1a110e;
+            margin: 0;
+        }
+
+        .status-badge {
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-badge.pending { background-color: #fef08a; color: #854d0e; }
+        .status-badge.approved { background-color: #bfdbfe; color: #1e40af; }
+        .status-badge.completed { background-color: #bbf7d0; color: #166534; }
+        .status-badge.cancelled { background-color: #e5e7eb; color: #374151; }
+        .status-badge.rejected { background-color: #fecaca; color: #991b1b; }
 
         .tags {
             display: flex;
@@ -260,37 +287,64 @@
             color: var(--tag-guest-text);
         }
 
-        .tag svg {
-            width: 14px;
-            height: 14px;
-        }
-
         .card-actions {
             display: flex;
-            gap: 16px;
+            gap: 12px;
+            align-items: center;
         }
 
         .btn-outline {
             background: transparent;
             border: 2px solid var(--primary-dark);
             color: var(--primary-dark);
-            padding: 14px 28px;
+            padding: 10px 24px;
             border-radius: 30px;
             font-size: 14px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
+            transition: all 0.2s;
         }
 
         .btn-filled {
             background: var(--primary-dark);
             border: 2px solid var(--primary-dark);
             color: white;
-            padding: 14px 32px;
+            padding: 10px 24px;
             border-radius: 30px;
             font-size: 14px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
         }
+
+        .btn-success {
+            background: #16a34a;
+            border: 2px solid #16a34a;
+            color: white;
+            padding: 10px 24px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-success:hover { background: #15803d; border-color: #15803d; }
+
+        .btn-danger {
+            background: transparent;
+            border: 2px solid #dc2626;
+            color: #dc2626;
+            padding: 10px 24px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-danger:hover { background: #fee2e2; }
 
         /* Responsive Adjustments */
         @media (max-width: 992px) {
@@ -389,38 +443,15 @@
                 <h1>Kedatangan</h1>
                 <p>Kelola reservasi dan kedatangan tamu hari ini.</p>
             </div>
-            <div class="filter-pills">
-
-    <a href="{{ route('owner.reservasi') }}"
-       class="filter-btn {{ request('status') == null ? 'active' : '' }}">
-        Semua
+<div class="filter-pills" style="padding: 6px; background: var(--border-light); border-radius: 14px; display: inline-flex;">
+    <a href="{{ route('owner.reservasi', ['tab' => 'persetujuan']) }}"
+       class="filter-btn {{ $tab == 'persetujuan' ? 'active' : '' }}" style="border-radius: 10px; padding: 12px 32px;">
+        Persetujuan
     </a>
-
-    <a href="{{ route('owner.reservasi', ['status' => 'pending']) }}"
-       class="filter-btn {{ request('status') == 'pending' ? 'active' : '' }}">
-        Menunggu
+    <a href="{{ route('owner.reservasi', ['tab' => 'kedatangan']) }}"
+       class="filter-btn {{ $tab == 'kedatangan' ? 'active' : '' }}" style="border-radius: 10px; padding: 12px 32px;">
+        Kedatangan
     </a>
-
-    <a href="{{ route('owner.reservasi', ['status' => 'approved']) }}"
-       class="filter-btn {{ request('status') == 'approved' ? 'active' : '' }}">
-        Diterima
-    </a>
-
-    <a href="{{ route('owner.reservasi', ['status' => 'completed']) }}"
-       class="filter-btn {{ request('status') == 'completed' ? 'active' : '' }}">
-        Hadir
-    </a>
-
-    <a href="{{ route('owner.reservasi', ['status' => 'cancelled']) }}"
-       class="filter-btn {{ request('status') == 'cancelled' ? 'active' : '' }}">
-        Tidak Hadir
-    </a>
-
-    <a href="{{ route('owner.reservasi', ['status' => 'rejected']) }}"
-       class="filter-btn {{ request('status') == 'rejected' ? 'active' : '' }}">
-        Ditolak
-    </a>
-
 </div>
         </header>
 
@@ -436,97 +467,54 @@
             </div>
 
             <div class="guest-info">
-
-                <h2>
-                    {{ \App\Models\User::find($reservation->user_id)?->name }}
-                </h2>
+                <div class="guest-header">
+                    <h2>{{ \App\Models\User::find($reservation->user_id)?->name }}</h2>
+                    <span class="status-badge {{ $reservation->status }}">
+                        @if($reservation->status == 'pending') Menunggu
+                        @elseif($reservation->status == 'approved') Terkonfirmasi
+                        @elseif($reservation->status == 'completed') Hadir
+                        @elseif($reservation->status == 'cancelled') Tidak Hadir
+                        @elseif($reservation->status == 'rejected') Ditolak
+                        @else {{ $reservation->status }}
+                        @endif
+                    </span>
+                </div>
 
                 <div class="tags">
-
                     <span class="tag table">
                         Meja {{ $reservation->table_id }}
                     </span>
-
                     <span class="tag guest">
                         {{ $reservation->num_guests }} Tamu
                     </span>
-
                 </div>
-
             </div>
         </div>
 
         <div class="card-actions">
-
     @if($reservation->status == 'pending')
-
-        <form action="{{ route('owner.reservasi.reject', $reservation->id) }}"
-              method="POST">
-            @csrf
-            @method('PATCH')
-
-            <button type="submit" class="btn-outline">
-                Tolak
-            </button>
+        <form action="{{ route('owner.reservasi.reject', $reservation->id) }}" method="POST">
+            @csrf @method('PATCH')
+            <button type="submit" class="btn-danger">Tolak</button>
         </form>
-
-        <form action="{{ route('owner.reservasi.approve', $reservation->id) }}"
-              method="POST">
-            @csrf
-            @method('PATCH')
-
-            <button type="submit" class="btn-filled">
-                Terima
-            </button>
+        <form action="{{ route('owner.reservasi.approve', $reservation->id) }}" method="POST">
+            @csrf @method('PATCH')
+            <button type="submit" class="btn-success">Terima</button>
         </form>
-
     @elseif($reservation->status == 'approved')
-
-        <form action="{{ route('owner.reservasi.tidak-hadir', $reservation->id) }}"
-              method="POST">
-            @csrf
-            @method('PATCH')
-
-            <button type="submit" class="btn-outline">
-                Tidak Hadir
-            </button>
+        <form action="{{ route('owner.reservasi.tidak-hadir', $reservation->id) }}" method="POST">
+            @csrf @method('PATCH')
+            <button type="submit" class="btn-danger">Tidak Hadir</button>
         </form>
-
-        <form action="{{ route('owner.reservasi.hadir', $reservation->id) }}"
-              method="POST">
-            @csrf
-            @method('PATCH')
-
-            <button type="submit" class="btn-filled">
-                Hadir
-            </button>
+        <form action="{{ route('owner.reservasi.hadir', $reservation->id) }}" method="POST">
+            @csrf @method('PATCH')
+            <button type="submit" class="btn-success">Hadir</button>
         </form>
-
-    @elseif($reservation->status == 'completed')
-
-        <button class="btn-filled" disabled style="opacity: 0.6; cursor: default;">
-            Hadir
-        </button>
-
-    @elseif($reservation->status == 'cancelled')
-
-        <button class="btn-outline" disabled style="opacity: 0.6; cursor: default;">
-            Tidak Hadir
-        </button>
-
-    @elseif($reservation->status == 'rejected')
-
-        <button class="btn-outline" disabled style="border-color: var(--danger-color); color: var(--danger-color); opacity: 0.6; cursor: default;">
-            Ditolak
-        </button>
-
     @endif
 
-    <a href="{{ route('owner.reservasi.show', $reservation->id) }}"
-       class="btn-filled">
+    <a href="{{ route('owner.reservasi.show', $reservation->id) }}" class="btn-outline">
         Detail
     </a>
-
 </div>
     </div>
 

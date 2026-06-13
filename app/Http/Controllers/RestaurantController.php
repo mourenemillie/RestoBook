@@ -16,7 +16,8 @@ class RestaurantController extends Controller
             };
         }
 
-        return view('restaurant.index');
+        $restaurants = \App\Models\Restaurant::where('status', 'active')->take(6)->get();
+        return view('restaurant.index', compact('restaurants'));
     }
 
     public function show($id)

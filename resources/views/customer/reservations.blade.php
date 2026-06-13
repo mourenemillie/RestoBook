@@ -29,24 +29,31 @@
                 </thead>
                 <tbody>
                     @foreach($reservations as $reservation)
-                            <td style="padding:16px 24px; border-bottom:1px solid #eef2f7;">{{ $reservation['restaurant'] }}</td>
-                            <td style="padding:16px 24px; border-bottom:1px solid #eef2f7;">{{ $reservation['date'] }}</td>
-                            <td style="padding:16px 24px; border-bottom:1px solid #eef2f7;">{{ $reservation['time'] }}</td>
-                            <td style="padding:16px 24px; border-bottom:1px solid #eef2f7;">{{ $reservation['guests'] }} orang</td>
+                        <tr>
+                            <td style="padding:16px 24px; border-bottom:1px solid #eef2f7;">{{ $reservation->restaurant->name ?? 'Restoran Dihapus' }}</td>
+                            <td style="padding:16px 24px; border-bottom:1px solid #eef2f7;">{{ \Carbon\Carbon::parse($reservation->reservation_date)->format('d M Y') }}</td>
+                            <td style="padding:16px 24px; border-bottom:1px solid #eef2f7;">{{ \Carbon\Carbon::parse($reservation->reservation_time)->format('H:i') }}</td>
+                            <td style="padding:16px 24px; border-bottom:1px solid #eef2f7;">{{ $reservation->num_guests }} orang</td>
                             <td style="padding:16px 24px; border-bottom:1px solid #eef2f7;">
                                 @php
-                                    $statusId = $reservation['status'];
-                                    if ($statusId === 'Confirmed') $statusId = 'Dikonfirmasi';
-                                    elseif ($statusId === 'Pending') $statusId = 'Menunggu';
-                                    elseif ($statusId === 'Cancelled') $statusId = 'Dibatalkan';
+                                    $rawStatus = strtolower($reservation->status);
+                                    $statusMap = [
+                                        'pending' => ['label' => 'Menunggu', 'bg' => '#fef3c7', 'text' => '#92400e'],
+                                        'paid' => ['label' => 'Dibayar', 'bg' => '#dbeafe', 'text' => '#1e40af'],
+                                        'approved' => ['label' => 'Dikonfirmasi', 'bg' => '#d1fae5', 'text' => '#166534'],
+                                        'completed' => ['label' => 'Selesai', 'bg' => '#d1fae5', 'text' => '#166534'],
+                                        'cancelled' => ['label' => 'Dibatalkan', 'bg' => '#fee2e2', 'text' => '#991b1b'],
+                                        'rejected' => ['label' => 'Ditolak', 'bg' => '#fee2e2', 'text' => '#991b1b'],
+                                    ];
+                                    $statusData = $statusMap[$rawStatus] ?? ['label' => ucfirst($rawStatus), 'bg' => '#f3f4f6', 'text' => '#374151'];
                                 @endphp
-                                <span style="display:inline-flex; padding:6px 14px; border-radius:9999px; font-size: 13px; font-weight:700; background:{{ $reservation['status'] === 'Confirmed' ? '#d1fae5' : ($reservation['status'] === 'Pending' ? '#fef3c7' : '#fee2e2') }}; color:{{ $reservation['status'] === 'Confirmed' ? '#166534' : ($reservation['status'] === 'Pending' ? '#92400e' : '#991b1b') }};">
-                                    {{ $statusId }}
+                                <span style="display:inline-flex; padding:6px 14px; border-radius:9999px; font-size: 13px; font-weight:700; background:{{ $statusData['bg'] }}; color:{{ $statusData['text'] }};">
+                                    {{ $statusData['label'] }}
                                 </span>
                             </td>
                             <td style="padding:16px 24px; border-bottom:1px solid #eef2f7;">
-                                @if($statusId === 'Dikonfirmasi')
-                                    <button onclick="openReviewModal('{{ $reservation['restaurant'] }}')" style="background: transparent; border: 1px solid #e95a1e; color: #e95a1e; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 12px; transition: 0.2s;">Beri Ulasan</button>
+                                @if(in_array($rawStatus, ['completed', 'approved']))
+                                    <button onclick="openReviewModal('{{ $reservation->restaurant->name ?? 'Restoran' }}')" style="background: transparent; border: 1px solid #e95a1e; color: #e95a1e; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 12px; transition: 0.2s;">Beri Ulasan</button>
                                 @endif
                             </td>
                         </tr>

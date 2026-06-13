@@ -8,33 +8,39 @@ use Illuminate\Support\Facades\Auth;
 
 class ReservationController extends Controller
 {
-   public function index(Request $request)
-{
-    $restaurant = \App\Models\Restaurant::where('user_id', Auth::id())->first();
-    
-    if (!$restaurant) {
-        return redirect()->route('owner.dashboard')->with('error', 'Restoran tidak ditemukan.');
+    public function index(Request $request)
+    {
+        $restaurant = \App\Models\Restaurant::where('user_id', Auth::id())->first();
+        
+        if (!$restaurant) {
+            return redirect()->route('owner.dashboard')->with('error', 'Restoran tidak ditemukan.');
+        }
+
+        $query = \App\Models\Reservation::where('restaurant_id', $restaurant->id)->latest();
+
+        $tab = $request->get('tab', 'persetujuan');
+
+        if ($tab == 'kedatangan') {
+            $query->whereIn('status', ['approved', 'completed', 'cancelled']);
+        } else {
+            $query->whereIn('status', ['pending', 'rejected']);
+        }
+
+        $reservations = $query->get();
+
+        return view('owner.reservasi', compact('reservations', 'tab'));
     }
-
-    $query = \App\Models\Reservation::where('restaurant_id', $restaurant->id)->latest();
-
-    if ($request->status) {
-        $query->where('status', $request->status);
-    }
-
-    $reservations = $query->get();
-
-    return view('owner.reservasi', compact('reservations'));
-}
 public function show($id)
 {
-    $reservation = \App\Models\Reservation::with('user')->findOrFail($id);
+    $restaurant = \App\Models\Restaurant::where('user_id', Auth::id())->first();
+    $reservation = \App\Models\Reservation::with('user')->where('restaurant_id', $restaurant->id)->findOrFail($id);
 
     return view('owner.detail-reservasi', compact('reservation'));
 }
 public function hadir($id)
 {
-    $reservation = \App\Models\Reservation::findOrFail($id);
+    $restaurant = \App\Models\Restaurant::where('user_id', Auth::id())->first();
+    $reservation = \App\Models\Reservation::where('restaurant_id', $restaurant->id)->findOrFail($id);
 
     $reservation->update([
         'status' => 'completed'
@@ -45,7 +51,8 @@ public function hadir($id)
 
 public function tidakHadir($id)
 {
-    $reservation = \App\Models\Reservation::findOrFail($id);
+    $restaurant = \App\Models\Restaurant::where('user_id', Auth::id())->first();
+    $reservation = \App\Models\Reservation::where('restaurant_id', $restaurant->id)->findOrFail($id);
 
     $reservation->update([
         'status' => 'cancelled'
@@ -56,14 +63,16 @@ public function tidakHadir($id)
 
 public function approve($id)
 {
-    $reservation = \App\Models\Reservation::findOrFail($id);
+    $restaurant = \App\Models\Restaurant::where('user_id', Auth::id())->first();
+    $reservation = \App\Models\Reservation::where('restaurant_id', $restaurant->id)->findOrFail($id);
     $reservation->update(['status' => 'approved']);
     return back()->with('success', 'Reservasi diterima!');
 }
 
 public function reject($id)
 {
-    $reservation = \App\Models\Reservation::findOrFail($id);
+    $restaurant = \App\Models\Restaurant::where('user_id', Auth::id())->first();
+    $reservation = \App\Models\Reservation::where('restaurant_id', $restaurant->id)->findOrFail($id);
     $reservation->update(['status' => 'rejected']);
     return back()->with('success', 'Reservasi ditolak!');
 }

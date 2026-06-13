@@ -68,26 +68,26 @@
                                 <span class="text-orange-600 text-xs font-bold uppercase cursor-pointer hover:underline">Lihat Denah Lokasi</span>
                             </div>
                             
-                            <input type="hidden" name="table_area" id="selected_table_area" value="{{ old('table_area', 'Area Jendela (Meja 01)') }}">
+                            <input type="hidden" name="table_area" id="selected_table_area" value="{{ old('table_area', $restaurant->tables->first()?->table_number ?? 'Tanpa Meja') }}">
 
-                            <div class="relative rounded-[2rem] overflow-hidden h-64 bg-slate-200 border border-gray-100">
-                                <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=800" class="w-full h-full object-cover opacity-60" alt="Layout Restoran">
-                                <div class="absolute inset-0 flex items-center justify-center gap-4 px-6">
+                            <div class="relative rounded-[2rem] overflow-hidden h-64 bg-slate-200 border border-gray-100 overflow-x-auto">
+                                <img src="{{ $restaurant->image && filter_var($restaurant->image, FILTER_VALIDATE_URL) ? $restaurant->image : ($restaurant->image ? Storage::url($restaurant->image) : 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=800') }}" class="absolute w-full h-full object-cover opacity-60" alt="Layout Restoran">
+                                <div class="absolute inset-0 flex items-center gap-4 px-6 overflow-x-auto whitespace-nowrap" style="padding-bottom: 10px;">
                                     
-                                    <button type="button" class="area-btn bg-orange-600 text-white p-4 rounded-2xl shadow-xl flex flex-col items-center min-w-[90px] border-2 border-white transform scale-110 transition-all duration-300" data-area="Area Jendela (Meja 01)">
-                                        <span class="text-[10px] font-bold uppercase">Jendela</span>
-                                        <span class="font-black text-lg">01</span>
-                                    </button>
-                                    
-                                    <button type="button" class="area-btn bg-white/90 backdrop-blur text-slate-600 p-4 rounded-2xl flex flex-col items-center min-w-[90px] shadow-sm border-2 border-transparent transition-all duration-300 transform scale-100" data-area="Area Tengah (Meja 04)">
-                                        <span class="text-[10px] font-bold uppercase">Tengah</span>
-                                        <span class="font-black text-lg">04</span>
-                                    </button>
-                                    
-                                    <button type="button" class="area-btn bg-white/90 backdrop-blur text-slate-600 p-4 rounded-2xl flex flex-col items-center min-w-[90px] shadow-sm border-2 border-transparent transition-all duration-300 transform scale-100" data-area="Area Lantai 2 (Meja 12)">
-                                        <span class="text-[10px] font-bold uppercase">Lantai 2</span>
-                                        <span class="font-black text-lg">12</span>
-                                    </button>
+                                    @forelse($restaurant->tables ?? [] as $index => $table)
+                                        @php
+                                            $isActive = old('table_area', $restaurant->tables->first()?->table_number ?? '') == $table->table_number;
+                                        @endphp
+                                        <button type="button" class="area-btn {{ $isActive ? 'bg-orange-600 text-white shadow-xl border-white transform scale-110' : 'bg-white/90 backdrop-blur text-slate-600 shadow-sm border-transparent transform scale-100' }} p-4 rounded-2xl flex flex-col items-center min-w-[100px] border-2 transition-all duration-300" data-area="{{ $table->table_number }}">
+                                            <span class="text-[10px] font-bold uppercase">Meja</span>
+                                            <span class="font-black text-lg">{{ $table->table_number }}</span>
+                                            <span class="text-[9px] mt-1 text-inherit opacity-80">{{ $table->capacity }} Orang</span>
+                                        </button>
+                                    @empty
+                                        <div class="bg-white/90 backdrop-blur text-slate-600 p-4 rounded-2xl font-bold text-sm mx-auto">
+                                            Belum ada meja tersedia
+                                        </div>
+                                    @endforelse
                                     
                                 </div>
                             </div>

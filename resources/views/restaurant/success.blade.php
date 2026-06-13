@@ -18,8 +18,8 @@
         </p>
 
         {{-- KARTU DETAIL KODE BOOKING --}}
-        <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100 text-left mb-10 relative overflow-hidden">
-            <div class="absolute top-0 right-0 w-32 h-32 bg-orange-500/5 rounded-full blur-2xl"></div>
+        <div id="printable-ticket" class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100 text-left mb-10 relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-orange-500/5 rounded-full blur-2xl print:hidden"></div>
             
             <div class="flex justify-between items-center pb-6 border-b border-gray-50 mb-6">
                 <div>
@@ -50,22 +50,44 @@
                 </div>
             </div>
 
-            <div class="mt-6 pt-6 border-t border-gray-50 flex justify-between items-center bg-gray-50 -mx-8 -mb-8 px-8 py-4 rounded-b-[2.5rem]">
-                <span class="text-xs font-bold text-slate-500 uppercase">Total Dana Ditransfer</span>
+            <div class="mt-6 pt-6 border-t border-gray-50 flex justify-between items-center bg-gray-50 -mx-8 -mb-8 px-8 py-4 rounded-b-[2.5rem] print:bg-transparent print:border-t-2 print:border-black">
+                <span class="text-xs font-bold text-slate-500 uppercase print:text-black">Total Dana Ditransfer</span>
                 <span class="text-lg font-black text-slate-800">Rp {{ number_format($booking->total_price, 0, ',', '.') }}</span>
             </div>
         </div>
 
         {{-- NAVIGASI BALIK --}}
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <div class="flex flex-col sm:flex-row gap-4 justify-center print:hidden">
             <a href="{{ url('/') }}" class="bg-orange-600 text-white px-8 py-4 rounded-2xl font-bold hover:bg-orange-700 transition-all shadow-lg shadow-orange-100 flex items-center justify-center gap-2">
                 Kembali ke Beranda
             </a>
-            <button onclick="window.print()" class="bg-white text-slate-700 border border-gray-200 px-8 py-4 rounded-2xl font-bold hover:bg-gray-50 transition-all flex items-center justify-center gap-2">
+            <button type="button" onclick="setTimeout(function(){ window.print(); }, 100);" class="bg-white text-slate-700 border border-gray-200 px-8 py-4 rounded-2xl font-bold hover:bg-gray-50 transition-all flex items-center justify-center gap-2" style="cursor: pointer; position: relative; z-index: 9999;">
                 🖨️ Cetak Nota Tiket
             </button>
         </div>
 
     </div>
 </div>
+
+<style>
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    #printable-ticket, #printable-ticket * {
+        visibility: visible;
+    }
+    #printable-ticket {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        margin: 0;
+        padding: 20px;
+        box-shadow: none !important;
+        border: 2px solid #000 !important;
+        border-radius: 12px !important;
+    }
+}
+</style>
 @endsection

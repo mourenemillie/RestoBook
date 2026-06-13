@@ -1,22 +1,29 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="bg-white">
+<div class="bg-white relative overflow-hidden">
+    <!-- Tekstur Grain -->
+    <div class="absolute inset-0 z-0 pointer-events-none opacity-[0.03]" style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E');"></div>
+
     {{-- HERO SECTION --}}
-    <section class="container mx-auto px-6 py-12 md:py-20 flex flex-col md:flex-row items-center gap-12">
-        <div class="md:w-1/2">
-            <div class="inline-flex items-center gap-2 px-4 py-1.5 bg-orange-100 rounded-full text-orange-600 text-[10px] font-extrabold mb-6 tracking-widest uppercase">
-                <span class="material-symbols-outlined text-sm">storefront</span> MSME EMPOWERMENT
+    <section class="container mx-auto px-6 py-12 md:py-20 flex flex-col md:flex-row items-center gap-12 relative z-10">
+        <!-- Latar belakang abstrak -->
+        <div class="absolute top-0 left-0 w-[500px] h-[500px] bg-orange-500 rounded-full mix-blend-multiply filter blur-[120px] opacity-[0.08] -z-10 transform -translate-x-1/2 -translate-y-1/2"></div>
+        <div class="absolute bottom-0 left-1/4 w-72 h-72 bg-emerald-50 rounded-full mix-blend-multiply filter blur-3xl opacity-50 -z-10 transform -translate-x-1/2 translate-y-1/4"></div>
+
+        <div class="md:w-1/2 relative z-10">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 bg-emerald-50 rounded-full text-emerald-600 border border-emerald-100 text-[10px] font-extrabold mb-6 tracking-widest uppercase">
+                <span class="material-symbols-outlined text-sm">storefront</span> Pemberdayaan UMKM
             </div>
             <h1 class="text-5xl md:text-[64px] font-extrabold leading-[1.1] text-[#2D2320] tracking-tight">
-                Booking Meja Kini <br><span class="text-orange-600">Lebih Mudah</span>
+                Booking Meja Kini <br><span class="text-orange-600 italic">Lebih Mudah</span>
             </h1>
             <p class="text-slate-500 mt-6 text-base max-w-md leading-relaxed font-medium">
                 Temukan dan pesan meja di restoran favoritmu di Bandar Lampung. Dukung UMKM lokal dengan pengalaman bersantap yang lebih baik.
             </p>
             
             {{-- FORM PENCARIAN --}}
-            <form action="#" method="GET" class="mt-10 bg-white p-3 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] flex flex-col md:flex-row gap-3 border border-gray-100 max-w-xl">
+            <form action="#" method="GET" class="mt-10 bg-white p-3 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.08)] drop-shadow-xl flex flex-col md:flex-row gap-3 border border-gray-100 max-w-xl transition-all hover:shadow-[0_25px_60px_rgba(242,104,34,0.15)] hover:-translate-y-1 duration-300 relative z-20">
                 <div class="flex flex-1 items-center px-4 gap-3">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -38,8 +45,8 @@
                         <span class="material-symbols-outlined text-xl">check_circle</span>
                     </div>
                     <div>
-                        <p class="text-[#2D2320] font-extrabold text-sm">500+ UMKM</p>
-                        <p class="text-xs text-slate-500 font-medium mt-0.5">Bergabung Bersama Kami</p>
+                        <p class="text-[#2D2320] font-extrabold text-sm md:text-base">500+ UMKM</p>
+                        <p class="text-[13px] text-slate-600 font-bold mt-0.5">Bergabung Bersama Kami</p>
                     </div>
                 </div>
             </div>
@@ -59,52 +66,23 @@
         </div>
 
         <div class="grid md:grid-cols-3 gap-10">
-            @php
-                $dummyResto = [
-                    [
-                        'name' => 'Bakso Son Haji Sony',
-                        'loc' => 'Jl. Wolter Monginsidi',
-                        'img' => 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?q=80&w=600',
-                        'tag' => 'Favorit Lokal',
-                        'price' => 'Rp 35.000',
-                        'rating' => '4.8'
-                    ],
-                    [
-                        'name' => 'Pindang Riu',
-                        'loc' => 'Way Halim, Lampung',
-                        'img' => 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=600',
-                        'tag' => 'Khas Lampung',
-                        'price' => 'Rp 50.000',
-                        'rating' => '4.7'
-                    ],
-                    [
-                        'name' => 'Wood Stairs',
-                        'loc' => 'Antasari, Lampung',
-                        'img' => 'https://images.pexels.com/photos/941861/pexels-photo-941861.jpeg?auto=compress&cs=tinysrgb&w=600',
-                        'tag' => 'Premium',
-                        'price' => 'Rp 150.000',
-                        'rating' => '4.9'
-                    ],
-                ];
-            @endphp
-
-            @foreach($dummyResto as $resto)
+            @forelse($restaurants as $resto)
             <div class="bg-white rounded-[2rem] overflow-hidden shadow-sm hover:shadow-[0_30px_60px_rgba(232,80,10,0.08)] transition-all duration-500 group flex flex-col h-full border border-gray-100 p-3 relative">
                 <div class="relative overflow-hidden h-64 rounded-3xl">
-                    <img src="{{ $resto['img'] }}" alt="{{ $resto['name'] }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-700">
+                    <img src="{{ $resto->image ? asset('storage/'.$resto->image) : 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&h=400&fit=crop' }}" alt="{{ $resto->name }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-700">
                     <div class="absolute top-4 right-4 bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-bold text-slate-800 shadow-sm flex items-center gap-1">
-                        <span class="text-yellow-400 text-sm">★</span> {{ $resto['rating'] }}
+                        <span class="text-yellow-400 text-sm">★</span> {{ number_format(rand(45, 49) / 10, 1) }}
                     </div>
                 </div>
                 <div class="px-5 py-6 flex flex-col flex-1">
                     <div class="flex gap-2 mb-4">
                         <span class="bg-orange-50 text-orange-600 px-3 py-1 rounded-full text-[10px] font-extrabold tracking-widest uppercase">
-                            {{ $resto['tag'] }}
+                            {{ $resto->city ?? 'Pilihan Favorit' }}
                         </span>
                     </div>
-                    <h3 class="text-xl font-extrabold text-[#2D2320] group-hover:text-orange-600 transition mb-2">{{ $resto['name'] }}</h3>
-                    <p class="text-slate-500 flex items-center gap-2 text-sm font-medium mb-6">
-                        <span class="material-symbols-outlined text-lg">location_on</span> {{ $resto['loc'] }}
+                    <h3 class="text-xl font-extrabold text-[#2D2320] group-hover:text-orange-600 transition mb-2">{{ $resto->name }}</h3>
+                    <p class="text-slate-500 flex items-center gap-2 text-sm font-medium mb-6 line-clamp-2">
+                        <span class="material-symbols-outlined text-lg">location_on</span> {{ $resto->address }}
                     </p>
                     <div class="flex justify-between items-center mt-auto pt-6 border-t border-gray-50">
                         <div class="text-orange-400 flex gap-1">★★★★★</div>
@@ -114,7 +92,11 @@
                     </div>
                 </div>
             </div>
-            @endforeach
+            @empty
+            <div class="col-span-full text-center py-10">
+                <p class="text-gray-500 font-medium">Belum ada restoran yang tersedia saat ini.</p>
+            </div>
+            @endforelse
         </div>
     </section>
 

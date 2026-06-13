@@ -53,69 +53,72 @@ class BookingController extends Controller
         
         $totalPrice = $subtotal + $serviceFee;
 
-        $bookingCode = 'BKS-' . strtoupper(Str::random(5));
         $restaurantId = $request->input('restaurant_id', 1);
-        $tableId = 1;
-        
-        if (!\App\Models\Restaurant::find($restaurantId)) {
-            \App\Models\Restaurant::updateOrCreate(['id' => $restaurantId], [
-                'user_id' => auth()->id() ?? \App\Models\User::first()->id ?? \App\Models\User::factory()->create()->id,
-                'name' => $request->input('restaurant_name', 'Bakso Son Haji Sony'),
-                'address' => 'Jl. Wolter Monginsidi',
-                'city' => 'Bandar Lampung',
-                'phone' => '081234567890',
-                'status' => 'active'
-            ]);
-        }
-        
-        if (!\App\Models\Table::find($tableId)) {
-            \App\Models\Table::updateOrCreate(['id' => $tableId], [
-                'restaurant_id' => $restaurantId,
-                'table_number' => 'M1',
-                'capacity' => 4,
-                'status' => 'available'
-            ]);
-        }
 
-        $reservationId = DB::table('reservations')->insertGetId([
-            'booking_code'     => $bookingCode,
-            'user_id'          => auth()->id() ?? 1,
-            'restaurant_id'    => $restaurantId,
-            'table_id'         => $tableId,
-            'reservation_date' => $request->booking_date,
-            'reservation_time' => $request->booking_time,
-            'num_guests'       => $guestCount,
-            'notes'            => 'Area: ' . $request->table_area . ' - ' . $request->restaurant_name,
-            'total_price'      => $totalPrice,
-            'status'           => 'pending',
-            'created_at'       => now(),
-            'updated_at'       => now(),
-        ]);
+        try {
+            $reservationId = DB::transaction(function () use ($request, $restaurantId, $guestCount, $totalPrice, $subtotal, &$bookingCode) {
+                // Cari meja yang tersedia dan muat, lalu kunci baris tersebut (Pessimistic Locking)
+                $table = \App\Models\Table::where('restaurant_id', $restaurantId)
+                    ->where('capacity', '>=', $guestCount)
+                    ->whereDoesntHave('reservations', function($query) use ($request) {
+                        $query->where('reservation_date', $request->booking_date)
+                              ->where('reservation_time', $request->booking_time)
+                              ->whereIn('status', ['pending', 'confirmed']);
+                    })
+                    ->lockForUpdate()
+                    ->first();
 
-        if ($request->has('menu_ids') && is_array($request->menu_ids) && count($request->menu_ids) > 0) {
-            $orderId = DB::table('orders')->insertGetId([
-                'reservation_id' => $reservationId,
-                'user_id'        => auth()->id() ?? 1,
-                'total_price'    => $subtotal,
-                'status'         => 'pending',
-                'created_at'     => now(),
-                'updated_at'     => now(),
-            ]);
-
-            foreach ($request->menu_ids as $menuId) {
-                $menu = \App\Models\Menu::find($menuId);
-                if ($menu) {
-                    $qty = $request->menu_qty[$menuId] ?? 1;
-                    DB::table('order_items')->insert([
-                        'order_id'   => $orderId,
-                        'menu_id'    => $menu->id,
-                        'quantity'   => $qty,
-                        'price'      => $menu->price,
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ]);
+                if (!$table) {
+                    abort(400, 'Maaf, semua meja penuh pada waktu tersebut. Terjadi double-booking atau kapasitas tidak mencukupi.');
                 }
-            }
+
+                $bookingCode = 'BKS-' . strtoupper(Str::random(5));
+
+                $reservationId = DB::table('reservations')->insertGetId([
+                    'booking_code'     => $bookingCode,
+                    'user_id'          => auth()->id() ?? 1,
+                    'restaurant_id'    => $restaurantId,
+                    'table_id'         => $table->id,
+                    'reservation_date' => $request->booking_date,
+                    'reservation_time' => $request->booking_time,
+                    'num_guests'       => $guestCount,
+                    'notes'            => 'Area: ' . $request->table_area . ' - ' . $request->restaurant_name,
+                    'total_price'      => $totalPrice,
+                    'status'           => 'pending',
+                    'created_at'       => now(),
+                    'updated_at'       => now(),
+                ]);
+
+                if ($request->has('menu_ids') && is_array($request->menu_ids) && count($request->menu_ids) > 0) {
+                    $orderId = DB::table('orders')->insertGetId([
+                        'reservation_id' => $reservationId,
+                        'user_id'        => auth()->id() ?? 1,
+                        'total_price'    => $subtotal,
+                        'status'         => 'pending',
+                        'created_at'     => now(),
+                        'updated_at'     => now(),
+                    ]);
+
+                    foreach ($request->menu_ids as $menuId) {
+                        $menu = \App\Models\Menu::find($menuId);
+                        if ($menu) {
+                            $qty = $request->menu_qty[$menuId] ?? 1;
+                            DB::table('order_items')->insert([
+                                'order_id'   => $orderId,
+                                'menu_id'    => $menu->id,
+                                'quantity'   => $qty,
+                                'price'      => $menu->price,
+                                'created_at' => now(),
+                                'updated_at' => now(),
+                            ]);
+                        }
+                    }
+                }
+
+                return $reservationId;
+            });
+        } catch (\Exception $e) {
+            return back()->with('error', $e->getMessage());
         }
 
         return redirect()->route('booking.checkout', $bookingCode);
@@ -160,12 +163,8 @@ class BookingController extends Controller
 
                 $booking->snap_token = $snapToken;
             } catch (\Exception $e) {
-<<<<<<< HEAD
                 \Log::error('Midtrans Snap Error: ' . $e->getMessage());
                 session()->flash('midtrans_error', 'Error dari Midtrans: ' . $e->getMessage() . ' (Pastikan API Key sudah benar dan teraktivasi)');
-=======
-                return redirect()->route('restaurant.show', ['id' => $booking->restaurant_id])->withErrors('Gagal memproses pembayaran: Pastikan MIDTRANS_SERVER_KEY sudah disetting dengan benar di server. Detail Error: ' . $e->getMessage());
->>>>>>> e1c8c9739d67725cd7a2f57842bd096d6f043eb2
             }
         }
 

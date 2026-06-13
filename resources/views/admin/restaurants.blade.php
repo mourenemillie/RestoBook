@@ -608,6 +608,19 @@
                         </td>
                         <td>
                             <div class="actions" style="display: flex; gap: 12px; align-items: center;">
+                                @if($r->status === 'pending')
+                                <form action="{{ route('admin.restaurants.approve', $r->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Setujui restoran ini?')">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit" style="color: #10b981; background: #d1fae5; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; border: none; cursor: pointer; transition: 0.2s;">Terima</button>
+                                </form>
+                                <form action="{{ route('admin.restaurants.reject', $r->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Tolak restoran ini?')">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit" style="color: #ef4444; background: #fee2e2; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; border: none; cursor: pointer; transition: 0.2s;">Tolak</button>
+                                </form>
+                                @endif
+
                                 <!-- Edit Button -->
                                 <svg onclick="openEditModal({{ $r->id }}, '{{ addslashes($r->name) }}', '{{ addslashes($r->address) }}', '{{ addslashes($r->phone) }}', '{{ $r->status }}')" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="cursor: pointer; width: 18px; height: 18px; color: #94a3b8;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                                 
