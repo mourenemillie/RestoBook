@@ -15,24 +15,27 @@ use App\Http\Controllers\Owner\TableController as OwnerTableController;
 use App\Http\Controllers\Owner\MenuController;
 use App\Http\Controllers\BookingController;
 
-// Route Landing Page
+// ==========================================
+// 1. PUBLIC ROUTES (GUEST / SEBELUM LOGIN)
+// ==========================================
 Route::get('/', [RestaurantController::class, 'index'])->name('landing');
+
+// Menampilkan halaman detail restoran publik
+Route::get('/restaurant/{id}/detail', [RestaurantController::class, 'show'])->name('restaurant.show');
+
+// PENCARIAN GUEST: Diproses di RestaurantController.
+Route::get('/search', [RestaurantController::class, 'search'])->name('public.search');
 
 Route::get('/force-seed-db', function () {
     \Illuminate\Support\Facades\Artisan::call('migrate:fresh', ['--seed' => true]);
     return "Database has been freshly migrated and seeded! You can now login.";
 });
 
-// Route Detail Restoran
-Route::get('/restaurant/{id}/detail', [RestaurantController::class, 'show'])->name('restaurant.show');
-
-// --- FITUR BOOKING & PEMBAYARAN ---
-Route::post('/restaurant/booking', [BookingController::class, 'store'])->name('restaurant.booking');
-Route::get('/booking/checkout/{booking_code}', [BookingController::class, 'checkout'])->name('booking.checkout');
 Route::post('/api/midtrans/notification', [BookingController::class, 'handleNotification'])->name('midtrans.notification');
-Route::get('/booking/success/{booking_code}', [BookingController::class, 'success'])->name('booking.success');
 
-// --- AUTH ROUTES ---
+// ==========================================
+// 2. AUTHENTICATION & SOCIALITE ROUTES
+// ==========================================
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
@@ -42,12 +45,10 @@ Route::middleware('guest')->group(function () {
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
-//SOCIALITE (GOOGLE LOGIN)
 Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name('auth.google');
 Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
 
-
-// --- EMAIL VERIFICATION ---
+// Email Verification
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
 })->middleware('auth')->name('verification.notice');
@@ -62,11 +63,65 @@ Route::post('/email/verification-notification', function (\Illuminate\Http\Reque
     return back()->with('message', 'Link verifikasi telah dikirim ulang!');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
-// --- ADMIN ROUTES ---
+// ==========================================
+// 3. CUSTOMER SECURE ROUTES (SETELAH LOGIN)
+// ==========================================
+Route::middleware(['auth', 'role:customer'])->group(function () {
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
+    
+    // DETAIL RESTORAN CUSTOMER: Untuk menampilkan halaman detail profil restoran setelah login
+    Route::get('/customer/restaurant/{id}', [HomeController::class, 'showRestaurant'])->name('customer.restaurant.show');
+    
+    // PENCARIAN INTERNAL CUSTOMER: Form pencarian di halaman home.blade.php
+    Route::get('/customer-search', [HomeController::class, 'search'])->name('customer.search');
+    
+    // Fitur Reservasi Utama (Menggunakan parameter {restaurant_id} secara konsisten)
+    Route::get('/reservasi/create/{restaurant_id}', [CustomerReservationController::class, 'create'])->name('customer.reservations.create');
+    Route::post('/reservasi/store', [CustomerReservationController::class, 'store'])->name('customer.reservations.store');
+    
+    Route::get('/reservations', [CustomerReservationController::class, 'index'])->name('customer.reservations');
+    Route::post('/restaurant/booking', [BookingController::class, 'store'])->name('restaurant.booking');
+    Route::get('/booking/checkout/{booking_code}', [BookingController::class, 'checkout'])->name('booking.checkout');
+    Route::get('/booking/success/{booking_code}', [BookingController::class, 'success'])->name('booking.success');
+});
+
+// ==========================================
+// 4. OWNER ROUTES
+// ==========================================
+Route::middleware(['auth', 'role:owner'])->prefix('owner')->group(function () {
+    Route::get('/dashboard', [OwnerDashboard::class, 'index'])->name('owner.dashboard');
+    Route::get('/reservasi', [OwnerReservationController::class, 'index'])->name('owner.reservasi');
+    Route::get('/reservasi/{id}', [OwnerReservationController::class, 'show'])->name('owner.reservasi.show');
+    Route::patch('/reservasi/{id}/hadir', [OwnerReservationController::class, 'hadir'])->name('owner.reservasi.hadir');
+    Route::patch('/reservasi/{id}/tidak-hadir', [OwnerReservationController::class, 'tidakHadir'])->name('owner.reservasi.tidak-hadir');
+    Route::patch('/reservasi/{id}/approve', [OwnerReservationController::class, 'approve'])->name('owner.reservasi.approve');
+    Route::patch('/reservasi/{id}/reject', [OwnerReservationController::class, 'reject'])->name('owner.reservasi.reject');
+    
+    Route::get('/kelola-meja', [OwnerTableController::class, 'index'])->name('owner.kelola-meja');
+    Route::post('/kelola-meja', [OwnerTableController::class, 'store'])->name('owner.kelola-meja.store');
+    Route::get('/kelola-meja/create', [OwnerTableController::class, 'create'])->name('owner.kelola-meja.create');
+    Route::get('/kelola-meja/{id}/edit', [OwnerTableController::class, 'edit'])->name('owner.kelola-meja.edit');
+    Route::put('/kelola-meja/{id}', [OwnerTableController::class, 'update'])->name('owner.kelola-meja.update');
+    
+    Route::get('/settings', [OwnerSettingController::class, 'index'])->name('owner.settings');
+    Route::post('/settings/update', [OwnerSettingController::class, 'update'])->name('owner.settings.update');
+    
+    Route::get('/menu/create', [MenuController::class, 'create'])->name('owner.menu.create');
+    Route::post('/menu', [MenuController::class, 'store'])->name('owner.menu.store');
+    Route::get('/menu/{id}/edit', [MenuController::class, 'edit'])->name('owner.menu.edit');
+    Route::put('/menu/{id}', [MenuController::class, 'update'])->name('owner.menu.update');
+    Route::delete('/menu/{id}', [MenuController::class, 'destroy'])->name('owner.menu.destroy');
+});
+
+// ==========================================
+// 5. ADMIN ROUTES
+// ==========================================
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminDashboard::class, 'index'])->name('admin.dashboard');
     Route::get('/users', [AdminUserController::class, 'index'])->name('admin.users');
     Route::put('/users/{id}', [AdminUserController::class, 'update'])->name('admin.users.update');
+    
+    // BERHASIL DIPERBAIKI: Menghapus variabel $id yang nyempil membuat eror route:clear
     Route::delete('/users/{id}', [AdminUserController::class, 'destroy'])->name('admin.users.destroy');
     
     Route::patch('/restaurants/{id}/approve', [AdminRestaurantController::class, 'approve'])->name('admin.restaurants.approve');
@@ -79,37 +134,10 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::post('/settings/update', [\App\Http\Controllers\Admin\SettingController::class, 'update'])->name('admin.settings.update');
 });
 
-// --- OWNER ROUTES ---
-Route::middleware(['auth', 'role:owner'])->prefix('owner')->group(function () {
-    Route::get('/dashboard', [OwnerDashboard::class, 'index'])->name('owner.dashboard');
-    Route::get('/reservasi', [OwnerReservationController::class, 'index'])->name('owner.reservasi');
-    Route::get('/reservasi/{id}', [OwnerReservationController::class, 'show'])->name('owner.reservasi.show');
-    Route::patch('/reservasi/{id}/hadir', [OwnerReservationController::class, 'hadir'])->name('owner.reservasi.hadir');
-    Route::patch('/reservasi/{id}/tidak-hadir', [OwnerReservationController::class, 'tidakHadir'])->name('owner.reservasi.tidak-hadir');
-    Route::patch('/reservasi/{id}/approve', [OwnerReservationController::class, 'approve'])->name('owner.reservasi.approve');
-    Route::patch('/reservasi/{id}/reject', [OwnerReservationController::class, 'reject'])->name('owner.reservasi.reject');
-    Route::get('/kelola-meja', [OwnerTableController::class, 'index'])->name('owner.kelola-meja');
-    Route::post('/kelola-meja', [OwnerTableController::class, 'store'])->name('owner.kelola-meja.store');
-    Route::get('/kelola-meja/create', [OwnerTableController::class, 'create'])->name('owner.kelola-meja.create');
-    Route::get('/kelola-meja/{id}/edit', [OwnerTableController::class, 'edit'])->name('owner.kelola-meja.edit');
-    Route::put('/kelola-meja/{id}', [OwnerTableController::class, 'update'])->name('owner.kelola-meja.update');
-    Route::get('/settings', [OwnerSettingController::class, 'index'])->name('owner.settings');
-    Route::post('/settings/update', [OwnerSettingController::class, 'update'])->name('owner.settings.update');
-    Route::get('/tambah-menu', [MenuController::class, 'create'])->name('owner.tambah-menu');
-    Route::post('/tambah-menu', [MenuController::class, 'store'])->name('owner.tambah-menu.store');
-});
-
-// Menu routes
-Route::get('/owner/menu/create',       [MenuController::class, 'create'])->name('owner.menu.create');
-Route::post('/owner/menu',             [MenuController::class, 'store'])->name('owner.menu.store');
-Route::get('/owner/menu/{id}/edit',    [MenuController::class, 'edit'])->name('owner.menu.edit');
-Route::put('/owner/menu/{id}',         [MenuController::class, 'update'])->name('owner.menu.update');
-Route::delete('/owner/menu/{id}',      [MenuController::class, 'destroy'])->name('owner.menu.destroy');
-
-// --- CUSTOMER ROUTES ---
-Route::middleware(['auth', 'role:customer'])->group(function () {
-    Route::get('/home', [HomeController::class, 'index'])->name('home');
-    Route::get('/reservations', [CustomerReservationController::class, 'index'])->name('customer.reservations');
-    Route::get('/reservasi/create/{restaurant}', [CustomerReservationController::class, 'create'])->name('customer.reservations.create');
-    Route::post('/reservasi/store', [CustomerReservationController::class, 'store'])->name('customer.reservations.store');
+// ==========================================
+// 6. PRODUCTION TOOLS (PENGAMAN DEPLOYMENT)
+// ==========================================
+Route::get('/clear-app-cache', function() {
+    \Illuminate\Support\Facades\Artisan::call('optimize:clear');
+    return "Mantap! Cache rute dan aplikasi di server hosting berhasil disinkronkan total.";
 });

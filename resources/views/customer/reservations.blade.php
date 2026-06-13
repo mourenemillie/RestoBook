@@ -1,86 +1,233 @@
 @extends('layouts.app')
 
-@section('title', 'Reservasi Saya - RestoBook Lampung')
-
 @section('content')
-<section style="padding: 96px 48px; max-width: 1120px; margin: 0 auto;">
-    <div style="display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:40px;">
-        <div>
-            <h1 style="font-size:38px; font-weight:800; margin-bottom:12px;">Reservasi Saya</h1>
-            <p style="color:#595c5a;">Kelola reservasi kamu di RestoBook Lampung.</p>
-        </div>
-    </div>
-
-    <div style="background:#fff; border-radius:24px; padding:24px; box-shadow:0 4px 20px rgba(0,0,0,0.03);">
-        @if(count($reservations) === 0)
-            <p style="color:#52525b; font-size:16px;">Belum ada reservasi. Jelajahi restoran dan buat reservasi sekarang.</p>
-        @else
-            <table style="width:100%; border-collapse:collapse;">
-                <thead>
-                    <tr style="background:#f7f5f1; text-align:left; color:#2c2f2e;">
-                        <th style="padding:16px 24px; border-bottom:1px solid #e5e7eb;">Restoran</th>
-                        <th style="padding:16px 24px; border-bottom:1px solid #e5e7eb;">Tanggal</th>
-                        <th style="padding:16px 24px; border-bottom:1px solid #e5e7eb;">Waktu</th>
-                        <th style="padding:16px 24px; border-bottom:1px solid #e5e7eb;">Jumlah Orang</th>
-                        <th style="padding:16px 24px; border-bottom:1px solid #e5e7eb;">Status</th>
-                        <th style="padding:16px 24px; border-bottom:1px solid #e5e7eb;">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($reservations as $reservation)
-                            <td style="padding:16px 24px; border-bottom:1px solid #eef2f7;">{{ $reservation['restaurant'] }}</td>
-                            <td style="padding:16px 24px; border-bottom:1px solid #eef2f7;">{{ $reservation['date'] }}</td>
-                            <td style="padding:16px 24px; border-bottom:1px solid #eef2f7;">{{ $reservation['time'] }}</td>
-                            <td style="padding:16px 24px; border-bottom:1px solid #eef2f7;">{{ $reservation['guests'] }} orang</td>
-                            <td style="padding:16px 24px; border-bottom:1px solid #eef2f7;">
-                                @php
-                                    $statusId = $reservation['status'];
-                                    if ($statusId === 'Confirmed') $statusId = 'Dikonfirmasi';
-                                    elseif ($statusId === 'Pending') $statusId = 'Menunggu';
-                                    elseif ($statusId === 'Cancelled') $statusId = 'Dibatalkan';
-                                @endphp
-                                <span style="display:inline-flex; padding:6px 14px; border-radius:9999px; font-size: 13px; font-weight:700; background:{{ $reservation['status'] === 'Confirmed' ? '#d1fae5' : ($reservation['status'] === 'Pending' ? '#fef3c7' : '#fee2e2') }}; color:{{ $reservation['status'] === 'Confirmed' ? '#166534' : ($reservation['status'] === 'Pending' ? '#92400e' : '#991b1b') }};">
-                                    {{ $statusId }}
-                                </span>
-                            </td>
-                            <td style="padding:16px 24px; border-bottom:1px solid #eef2f7;">
-                                @if($statusId === 'Dikonfirmasi')
-                                    <button onclick="openReviewModal('{{ $reservation['restaurant'] }}')" style="background: transparent; border: 1px solid #e95a1e; color: #e95a1e; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 12px; transition: 0.2s;">Beri Ulasan</button>
-                                @endif
-                            </td>
-                        </tr>
+<div class="bg-[#fafafa] min-h-screen py-12 font-['Plus_Jakarta_Sans',sans-serif]">
+    <div class="container mx-auto px-6 max-w-6xl">
+        
+        {{-- Penanganan Error Validasi dari Controller --}}
+        @if ($errors->any())
+            <div class="mb-6 p-4 bg-red-50 border border-red-200 text-red-800 rounded-3xl text-sm font-medium shadow-sm">
+                <ul class="list-disc list-inside">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
                     @endforeach
-                </tbody>
-            </table>
-        @endif
-    </div>
-
-    <!-- Review Modal -->
-    <div id="reviewModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 50; align-items: center; justify-content: center; padding: 20px;">
-        <div style="background: white; border-radius: 24px; width: 100%; max-width: 500px; position: relative; padding: 32px; box-shadow: 0 10px 40px rgba(0,0,0,0.1);">
-            <button onclick="closeReviewModal()" style="position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 24px; cursor: pointer; color: #64748b; line-height: 1;">&times;</button>
-            <h2 style="font-size: 20px; font-weight: 800; margin-bottom: 8px;">Berikan Ulasan</h2>
-            <p style="color: #64748b; font-size: 14px; margin-bottom: 24px;">Bagaimana pengalaman Anda di <strong id="modalRestoName">Restoran</strong>?</p>
-            
-            <div style="display: flex; gap: 8px; margin-bottom: 24px; font-size: 28px; color: #d1d5db; cursor: pointer;">
-                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                </ul>
             </div>
+        @endif
+
+        {{-- FORM ACTION: Diarahkan ke rute store milik Anda --}}
+        <form action="{{ route('customer.reservations.store') }}" method="POST">
+            @csrf
             
-            <textarea placeholder="Tuliskan pengalaman Anda..." style="width: 100%; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; min-height: 120px; font-size: 14px; outline: none; margin-bottom: 24px; resize: none; font-family: inherit;"></textarea>
-            
-            <button style="width: 100%; background: #e95a1e; color: white; border: none; padding: 14px; border-radius: 999px; font-weight: 700; font-size: 14px; cursor: pointer;">Kirim Ulasan</button>
-        </div>
+            {{-- DATA HIDDEN: Mengirimkan ID restoran untuk relasi database --}}
+            <input type="hidden" name="restaurant_id" value="{{ $restaurant->id }}">
+
+            <div class="flex flex-col lg:flex-row gap-8 bag-isi">
+                
+                {{-- KIRI: FORM RESERVASI --}}
+                <div class="lg:w-2/3">
+                    <span class="text-orange-600 font-bold uppercase tracking-widest text-xs">Detail Reservasi</span>
+                    <h1 class="text-4xl font-black text-slate-900 mt-2 mb-4">Amankan Meja Anda di {{ $restaurant->name }}</h1>
+                    <p class="text-gray-500 mb-8 text-sm">Silakan tentukan waktu kedatangan, meja pilihan, dan pre-order menu hidangan favorit Anda.</p>
+
+                    <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100/80 mb-8">
+                        <h3 class="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
+                            <span>📅</span> Informasi Jadwal & Kapasitas
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Tanggal Kunjungan</label>
+                                {{-- DISESUAIKAN: Name diubah ke reservation_date & set minimal hari ini --}}
+                                <input type="date" name="reservation_date" required min="{{ date('Y-m-d') }}" class="w-full bg-slate-50 border border-slate-100 rounded-2xl px-4 py-3.5 text-sm font-medium focus:outline-none focus:border-orange-500 focus:bg-white transition-all text-slate-700">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Jam Kedatangan</label>
+                                {{-- DISESUAIKAN: Name diubah ke reservation_time --}}
+                                <input type="time" name="reservation_time" required class="w-full bg-slate-50 border border-slate-100 rounded-2xl px-4 py-3.5 text-sm font-medium focus:outline-none focus:border-orange-500 focus:bg-white transition-all text-slate-700">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Jumlah Orang (Tamu)</label>
+                                {{-- DISESUAIKAN: Name diubah ke num_guests sesuai struktur database --}}
+                                <input type="number" name="num_guests" required min="1" placeholder="Contoh: 4" class="w-full bg-slate-50 border border-slate-100 rounded-2xl px-4 py-3.5 text-sm font-medium focus:outline-none focus:border-orange-500 focus:bg-white transition-all text-slate-700">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100/80 mb-8">
+                        <h3 class="text-lg font-bold text-slate-800 mb-2 flex items-center gap-2">
+                            <span>🪑</span> Pilih Meja Tersedia
+                        </h3>
+                        <p class="text-xs text-gray-400 mb-6">Pilih meja yang siap digunakan di restoran ini.</p>
+                        
+                        {{-- DISESUAIKAN: Mengganti pilihan radio string area menjadi pilihan table_id asli dari database --}}
+                        <div class="grid grid-cols-1 gap-4">
+                            <select name="table_id" required class="w-full bg-slate-50 border border-slate-100 rounded-2xl px-4 py-3.5 text-sm font-medium focus:outline-none focus:border-orange-500 focus:bg-white transition-all text-slate-700">
+                                <option value="" disabled selected>-- Pilih Nomor Meja --</option>
+                                @forelse($restaurant->tables->where('status', 'available') as $table)
+                                    <option value="{{ $table->id }}">Meja No. {{ $table->table_number }} (Kapasitas: {{ $table->capacity }} Orang)</option>
+                                @empty
+                                    <option value="" disabled>Maaf, tidak ada meja yang tersedia untuk saat ini</option>
+                                @endforelse
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100/80 mb-8">
+                        <h3 class="text-lg font-bold text-slate-800 mb-2 flex items-center gap-2">
+                            <span>📝</span> Catatan Tambahan (Opsional)
+                        </h3>
+                        <textarea name="notes" rows="3" placeholder="Contoh: Minta kursi bayi, area dekat jendela, atau makanan tidak pedas..." class="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 text-sm font-medium focus:outline-none focus:border-orange-500 focus:bg-white transition-all text-slate-700"></textarea>
+                    </div>
+
+                    <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100/80">
+                        <h3 class="text-lg font-bold text-slate-800 mb-2 flex items-center gap-2">
+                            <span>🍲</span> Pre-Order Menu Kuliner
+                        </h3>
+                        <p class="text-xs text-gray-400 mb-6">Pesan makanan sekaligus untuk disajikan langsung saat Anda tiba di lokasi.</p>
+
+                        <div class="space-y-4 max-h-[400px] overflow-y-auto pr-2">
+                            @forelse($restaurant->menus as $menu)
+                            <div class="flex items-center justify-between p-4 bg-slate-50/60 rounded-3xl border border-slate-100/70 menu-item-row">
+                                <div class="flex items-center gap-4">
+                                    {{-- DISESUAIKAN: Name array menu diselaraskan --}}
+                                    <input type="checkbox" name="menus[{{ $menu->id }}][id]" value="{{ $menu->id }}" class="menu-checkbox accent-orange-600 w-5 h-5 rounded-lg cursor-pointer">
+                                    
+                                    @if($menu->image)
+                                        <img src="{{ asset('storage/' . $menu->image) }}" class="w-14 h-14 object-cover rounded-xl" alt="{{ $menu->name }}">
+                                    @else
+                                        <div class="w-14 h-14 bg-orange-50 text-orange-600 rounded-xl flex items-center justify-center font-bold text-lg">🍽️</div>
+                                    @endif
+                                    
+                                    <div>
+                                        <span class="block font-bold text-sm text-slate-800 menu-name">{{ $menu->name }}</span>
+                                        <span class="text-xs text-orange-600 font-extrabold menu-price-raw" data-price="{{ $menu->price }}">
+                                            Rp {{ number_format($menu->price, 0, ',', '.') }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-[10px] font-bold text-gray-400 uppercase">Qty</span>
+                                    {{-- DISESUAIKAN: Name array quantity diselaraskan --}}
+                                    <input type="number" name="menus[{{ $menu->id }}][quantity]" value="1" min="1" disabled class="menu-qty w-14 text-center bg-gray-50 text-gray-500 font-bold text-sm px-2 py-1.5 border border-slate-200 rounded-xl focus:outline-none focus:border-orange-500 disabled:opacity-50">
+                                </div>
+                            </div>
+                            @empty
+                            <p class="text-sm text-gray-400 italic text-center py-6">Belum ada daftar menu makanan di restoran ini.</p>
+                            @endforelse
+                        </div>
+                    </div>
+                </div>
+
+                {{-- KANAN: RINGKASAN PEMBAYARAN (STICKY BOX) --}}
+                <div class="lg:w-1/3">
+                    <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100/80 sticky top-12">
+                        <h3 class="text-lg font-black text-slate-900 mb-6 pb-4 border-b border-gray-50 flex items-center gap-2">
+                            <span>🧾</span> Ringkasan Pesanan
+                        </h3>
+
+                        <div class="space-y-4 mb-6 max-h-[220px] overflow-y-auto pr-1" id="selected-menus-list">
+                            {{-- Diisi secara otomatis oleh JavaScript --}}
+                        </div>
+
+                        <div class="space-y-3 pt-4 border-t border-dashed border-gray-100 text-sm">
+                            <div class="flex justify-between text-gray-500">
+                                <span>Subtotal Hidangan</span>
+                                <span id="summary-subtotal" class="font-bold text-slate-700">Rp 0</span>
+                            </div>
+                            <div class="flex justify-between text-gray-500">
+                                <span>Biaya Layanan Aplikasi</span>
+                                <span id="summary-tax" class="font-bold text-slate-700">Rp 2.000</span>
+                            </div>
+                            <div class="flex justify-between items-center pt-2 text-base">
+                                <span class="font-black text-slate-900">Total Estimasi</span>
+                                <span id="summary-total" class="font-black text-orange-600 text-xl">Rp 2.000</span>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full bg-orange-600 text-white font-black py-4 rounded-2xl mt-8 shadow-xl shadow-orange-100 hover:bg-orange-700 transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-wider">
+                            Lanjut Ke Pembayaran ➔
+                        </button>
+                        
+                        <p class="text-[10px] text-gray-400 text-center mt-4">
+                            🔒 Pembayaran diproses aman via payment gateway Midtrans.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </form>
     </div>
-</section>
+</div>
 
 <script>
-    function openReviewModal(restoName) {
-        document.getElementById('modalRestoName').innerText = restoName;
-        document.getElementById('reviewModal').style.display = 'flex';
+    const checkboxes = document.querySelectorAll('.menu-checkbox');
+    const selectedMenusList = document.getElementById('selected-menus-list');
+    const summarySubtotal = document.getElementById('summary-subtotal');
+    const summaryTax = document.getElementById('summary-tax');
+    const summaryTotal = document.getElementById('summary-total');
+
+    function formatRupiah(number) {
+        return 'Rp ' + number.toLocaleString('id-ID');
     }
-    
-    function closeReviewModal() {
-        document.getElementById('reviewModal').style.display = 'none';
+
+    function calculateTotal() {
+        let subtotal = 0;
+        let html = '';
+        let hasSelection = false;
+
+        document.querySelectorAll('.menu-item-row').forEach(row => {
+            const cb = row.querySelector('.menu-checkbox');
+            const qtyInput = row.querySelector('.menu-qty');
+            
+            if (cb && cb.checked) {
+                hasSelection = true;
+                qtyInput.disabled = false;
+                qtyInput.classList.remove('bg-gray-50', 'text-gray-500');
+                qtyInput.classList.add('bg-white', 'text-slate-800');
+
+                const name = row.querySelector('.menu-name').innerText;
+                const price = parseInt(row.querySelector('.menu-price-raw').getAttribute('data-price')) || 0;
+                const qty = parseInt(qtyInput.value) || 1;
+
+                const totalItemPrice = price * qty;
+                subtotal += totalItemPrice;
+
+                html += `
+                <div class="flex justify-between text-sm gap-2">
+                    <div class="max-w-[70%]">
+                        <p class="font-bold text-slate-700 truncate">${name}</p>
+                        <p class="text-[10px] text-gray-400">Pilihan Anda • <span>${qty}</span>x</p>
+                    </div>
+                    <span class="font-bold text-slate-800 whitespace-nowrap">${formatRupiah(totalItemPrice)}</span>
+                </div>
+                `;
+            } else if (qtyInput) {
+                qtyInput.disabled = true;
+                qtyInput.classList.add('bg-gray-50', 'text-gray-500');
+                qtyInput.classList.remove('bg-white', 'text-slate-800');
+            }
+        });
+
+        if (!hasSelection) {
+            html = '<div class="text-xs text-gray-400 italic text-center py-2">Belum ada menu yang dipilih</div>';
+        }
+
+        selectedMenusList.innerHTML = html;
+        const appServiceFee = 2000; 
+        summarySubtotal.innerText = formatRupiah(subtotal);
+        summaryTax.innerText = formatRupiah(appServiceFee);
+        summaryTotal.innerText = formatRupiah(subtotal + appServiceFee);
     }
+
+    checkboxes.forEach(cb => {
+        cb.addEventListener('change', calculateTotal);
+    });
+
+    document.querySelectorAll('.menu-qty').forEach(qty => {
+        qty.addEventListener('input', calculateTotal);
+        qty.addEventListener('change', calculateTotal);
+    });
+
+    calculateTotal();
 </script>
 @endsection

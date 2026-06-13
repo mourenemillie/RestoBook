@@ -12,9 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('reservations', function (Blueprint $table) {
-            $table->string('booking_code')->nullable()->after('id');
-            $table->decimal('total_price', 10, 2)->nullable()->after('num_guests');
-            $table->string('payment_proof')->nullable()->after('total_price');
+            // Menambahkan kolom snap_token dengan sifat nullable (boleh kosong) setelah kolom status
+            $table->string('snap_token')->nullable()->after('status');
         });
     }
 
@@ -24,7 +23,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('reservations', function (Blueprint $table) {
-            $table->dropColumn(['booking_code', 'total_price', 'payment_proof']);
+            // Menghapus kolom jika migrasi di-rollback
+            $table->dropColumn('snap_token');
         });
     }
 };

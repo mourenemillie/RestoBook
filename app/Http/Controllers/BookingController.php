@@ -3,152 +3,126 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
+use App\Models\Reservation;
+use Illuminate\Support\Str; 
 use Midtrans\Config;
 use Midtrans\Snap;
+use Exception;
 
 class BookingController extends Controller
 {
-    public function index()
+    /**
+     * Inisialisasi Konfigurasi SDK Midtrans secara terpusat
+     */
+    public function __construct()
     {
-        return view('restaurant.index'); 
+        // Menggunakan trim() dan fallback ganda (config midtrans atau services) agar terjamin terbaca
+        Config::$serverKey = trim(config('midtrans.server_key') ?? config('services.midtrans.server_key'));
+        Config::$isProduction = (bool) (config('midtrans.is_production') ?? config('services.midtrans.is_production') ?? false);
+        Config::$isSanitized = (bool) (config('midtrans.is_sanitized') ?? config('services.midtrans.is_sanitized') ?? true);
+        Config::$is3ds = (bool) (config('midtrans.is_3ds') ?? config('services.midtrans.is_3ds') ?? true);
+
+        // 🛠️ PERBAIKAN UTAMA: Mematikan pengecekan SSL Peer khusus di Localhost agar terbebas dari cURL Error 60
+        Config::$curlOptions = [
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => false,
+        ];
     }
 
-    public function create()
-    {
-        return view('restaurant.show'); 
-    }
-
-    public function store(Request $request)
-    {
-        $request->validate([
-            'restaurant_name'  => 'required|string',
-            'booking_date'     => 'required|date',
-            'number_of_people' => 'required|string',
-            'booking_time'     => 'required|string',
-            'table_area'       => 'required|string',
-        ]);
-
-        $guestCount = (int) filter_var($request->number_of_people, FILTER_SANITIZE_NUMBER_INT);
-        if ($guestCount <= 0) { 
-            $guestCount = 2; 
-        } 
-
-        $baksoPrice = 25000;
-        $esJerukPrice = 8000;
-        $serviceFee = 2000;
-        
-        $totalPrice = (($baksoPrice + $esJerukPrice) * $guestCount) + $serviceFee;
-
-        $bookingCode = 'BKS-' . strtoupper(Str::random(5));
-        $restaurantId = 1;
-        $tableId = 1;
-        
-        if (!\App\Models\Restaurant::find($restaurantId)) {
-            \App\Models\Restaurant::updateOrCreate(['id' => $restaurantId], [
-                'user_id' => auth()->id() ?? \App\Models\User::first()->id ?? \App\Models\User::factory()->create()->id,
-                'name' => 'Bakso Son Haji Sony',
-                'address' => 'Jl. Wolter Monginsidi',
-                'city' => 'Bandar Lampung',
-                'phone' => '081234567890',
-                'status' => 'active'
-            ]);
-        }
-        
-        if (!\App\Models\Table::find($tableId)) {
-            \App\Models\Table::updateOrCreate(['id' => $tableId], [
-                'restaurant_id' => $restaurantId,
-                'table_number' => 'M1',
-                'capacity' => 4,
-                'status' => 'available'
-            ]);
-        }
-
-        DB::table('reservations')->insert([
-            'booking_code'     => $bookingCode,
-            'user_id'          => auth()->id() ?? 1,
-            'restaurant_id'    => $restaurantId,
-            'table_id'         => $tableId,
-            'reservation_date' => $request->booking_date,
-            'reservation_time' => $request->booking_time,
-            'num_guests'       => $guestCount,
-            'notes'            => 'Area: ' . $request->table_area . ' - ' . $request->restaurant_name,
-            'total_price'      => $totalPrice,
-            'status'           => 'pending',
-            'created_at'       => now(),
-            'updated_at'       => now(),
-        ]);
-
-        return redirect()->route('booking.checkout', $bookingCode);
-    }
-
+    /**
+     * Memproses Invoice Checkout Midtrans Berdasarkan Kode Booking Real.
+     */
     public function checkout($booking_code)
     {
-        $booking = DB::table('reservations')->where('booking_code', $booking_code)->first();
+        // SINKRONISASI RELASI: Wajib me-load 'table' agar tidak crash saat render nomor meja di view
+        $booking = Reservation::with(['restaurant', 'user', 'table'])
+            ->where('booking_code', $booking_code)
+            ->firstOrFail();
 
-        if (!$booking) {
-            abort(404, 'Reservasi tidak valid atau tidak ditemukan.');
-        }
+        try {
+            $snapToken = $booking->snap_token;
 
-        Config::$serverKey = env('MIDTRANS_SERVER_KEY');
-        Config::$isProduction = env('MIDTRANS_IS_PRODUCTION', false);
-        Config::$isSanitized = true;
-        Config::$is3ds = true;
+            // Jika token kosong atau tidak valid, buat baru ke Midtrans
+            if (!$snapToken || Str::contains(strtolower($snapToken), ['error', 'unauthorized']) || strlen($snapToken) < 10) {
+                $user = $booking->user;
 
-        $snapToken = $booking->snap_token;
+                $params = [
+                    'transaction_details' => [
+                        'order_id' => $booking->booking_code . '-' . time(), 
+                        'gross_amount' => (int) $booking->total_price,
+                    ],
+                    'customer_details' => [
+                        'first_name' => $user ? $user->name : 'Customer RestoBook',
+                        'email' => $user ? $user->email : 'customer@restobook.com',
+                        'phone' => $user ? $user->phone ?? '08123456789' : '08123456789',
+                    ],
+                    'item_details' => [
+                        [
+                            'id' => 'RESV-' . $booking->restaurant_id,
+                            'price' => (int) $booking->total_price,
+                            'quantity' => 1,
+                            'name' => 'Reservasi Meja di ' . Str::limit($booking->restaurant->name, 20),
+                        ]
+                    ]
+                ];
 
-        if (!$snapToken) {
-            $user = auth()->user();
-            $params = [
-                'transaction_details' => [
-                    'order_id' => $booking->booking_code,
-                    'gross_amount' => $booking->total_price,
-                ],
-                'customer_details' => [
-                    'first_name' => $user ? $user->name : 'Guest',
-                    'email' => $user ? $user->email : 'guest@example.com',
-                    'phone' => $user ? $user->phone : '0800000000',
-                ],
-            ];
-
-            try {
                 $snapToken = Snap::getSnapToken($params);
                 
-                DB::table('reservations')->where('booking_code', $booking_code)->update([
+                $booking->update([
                     'snap_token' => $snapToken
                 ]);
-
-                $booking->snap_token = $snapToken;
-            } catch (\Exception $e) {
-                return redirect()->route('restaurant.show', ['id' => $booking->restaurant_id])->withErrors('Gagal memproses pembayaran: Pastikan MIDTRANS_SERVER_KEY sudah disetting dengan benar di server. Detail Error: ' . $e->getMessage());
             }
-        }
 
-        return view('restaurant.payment', compact('booking'));
+            // Mengirimkan variabel $booking dan $snapToken asli ke halaman payment
+            return view('customer.payment', compact('booking', 'snapToken'));
+
+        } catch (Exception $e) {
+            // Jika terjadi error koneksi gateway, bersihkan token agar user bisa refresh halaman untuk mencoba lagi
+            $booking->update(['snap_token' => null]);
+            return redirect()->route('home')->with('error', 'Gagal memproses pembayaran: ' . $e->getMessage());
+        }
     }
 
+    /**
+     * Webhook Notification Gateway Midtrans (Asinkronus IPN)
+     */
     public function handleNotification(Request $request)
     {
-        $serverKey = env('MIDTRANS_SERVER_KEY');
-        $hashed = hash("sha512", $request->order_id.$request->status_code.$request->gross_amount.$serverKey);
-        if($hashed == $request->signature_key){
-            if($request->transaction_status == 'capture' || $request->transaction_status == 'settlement'){
-                DB::table('reservations')->where('booking_code', $request->order_id)->update(['status' => 'paid', 'updated_at' => now()]);
-            } elseif ($request->transaction_status == 'cancel' || $request->transaction_status == 'deny' || $request->transaction_status == 'expire'){
-                DB::table('reservations')->where('booking_code', $request->order_id)->update(['status' => 'cancelled', 'updated_at' => now()]);
-            }
-        }
-        return response()->json(['status' => 'success']);
-    }
+        $serverKey = trim(config('midtrans.server_key') ?? config('services.midtrans.server_key'));
+        $baseOrderId = explode('-', $request->order_id)[0];
+        $hashed = hash("sha512", $request->order_id . $request->status_code . $request->gross_amount . $serverKey);
+        
+        if ($hashed == $request->signature_key) {
+            $transaction = $request->transaction_status;
 
-    public function success($booking_code)
-    {
-        $booking = DB::table('reservations')->where('booking_code', $booking_code)->first();
-        if (!$booking) { 
-            abort(404); 
+            if ($transaction == 'capture' || $transaction == 'settlement') {
+                Reservation::where('booking_code', $baseOrderId)->update([
+                    'status' => 'confirmed', 
+                    'updated_at' => now()
+                ]);
+            } elseif (in_array($transaction, ['cancel', 'deny', 'expire'])) {
+                Reservation::where('booking_code', $baseOrderId)->update([
+                    'status' => 'cancelled', 
+                    'updated_at' => now()
+                ]);
+            }
+            
+            return response()->json(['status' => 'success', 'message' => 'Notification handled successfully']);
         }
         
-        return view('restaurant.success', compact('booking')); 
+        return response()->json(['status' => 'error', 'message' => 'Invalid Signature Key'], 403);
+    }
+
+    /**
+     * Halaman Pembayaran Sukses
+     */
+    public function success($booking_code)
+    {
+        // SINKRONISASI RELASI: Tambahkan 'table' juga di halaman sukses agar cetak nota struk tidak error
+        $booking = Reservation::with(['restaurant', 'table'])
+            ->where('booking_code', $booking_code)
+            ->firstOrFail();
+            
+        return view('customer.success', compact('booking')); 
     }
 }
