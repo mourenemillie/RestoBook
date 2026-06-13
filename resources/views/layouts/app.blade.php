@@ -38,18 +38,23 @@
 </head>
 <body class="bg-surface-warm text-slate-900 flex flex-col min-h-screen antialiased">
     
-    <nav class="bg-white sticky top-0 z-50 py-4 px-8 shadow-sm">
+    <!-- Navbar dengan efek Glassmorphism (Transparan & Sticky) -->
+    <nav class="bg-white/80 backdrop-blur-md sticky top-0 z-50 py-4 px-8 shadow-sm border-b border-gray-100/50">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <!-- Logo Aplikasi -->
             <a href="{{ url('/') }}" class="flex items-center gap-2">
                 <span class="text-primary text-2xl font-bold material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">restaurant</span>
                 <span class="text-2xl font-extrabold text-[#963700] tracking-tight">Resto<span class="text-primary">Book</span></span>
             </a>
 
+            <!-- Menu Navigasi Tengah -->
             <div class="hidden md:flex space-x-10 font-medium text-slate-500 text-sm">
                 <a href="{{ url('/') }}" class="{{ request()->is('/') ? 'text-primary font-bold' : 'hover:text-primary transition' }}">Jelajahi</a>
                 
                 @auth
-                    <a href="{{ url('/#reservasi') }}" class="hover:text-primary transition">Reservasi</a>
+                    @if(auth()->user()->role === 'customer')
+                        <a href="{{ route('customer.reservations') }}" class="{{ request()->routeIs('customer.reservations') ? 'text-primary font-bold' : 'hover:text-primary transition' }}">Riwayat Reservasi</a>
+                    @endif
                 @else
                     <a href="{{ url('/#reservasi') }}" class="hover:text-primary transition">Reservasi</a>
                 @endauth
@@ -57,6 +62,7 @@
                 <a href="{{ url('/#tentang-resto') }}" class="hover:text-primary transition">Tentang Kami</a>
             </div>
 
+            <!-- Bagian Kanan (Login/Profil) -->
             <div class="flex gap-6 items-center text-sm">
                 @guest
                     <a href="{{ route('register') }}" class="font-bold text-primary hover:text-[#C44005] transition">Daftar</a>
@@ -64,21 +70,28 @@
                 @endguest
 
                 @auth
-                        <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-4">
+                        <!-- Link Dashboard khusus Admin/Owner -->
                         @if(auth()->user()->role === 'admin')
-                            <a href="{{ route('admin.dashboard') }}" class="font-bold text-primary hover:text-[#C44005] transition">Dashboard</a>
+                            <a href="{{ route('admin.dashboard') }}" class="font-bold text-primary hover:text-[#C44005] transition bg-orange-50 px-4 py-2 rounded-full">Dashboard Admin</a>
                         @elseif(auth()->user()->role === 'owner')
-                            <a href="{{ route('owner.dashboard') ?? '#' }}" class="font-bold text-primary hover:text-[#C44005] transition">Dashboard</a>
+                            <a href="{{ route('owner.dashboard') }}" class="font-bold text-primary hover:text-[#C44005] transition bg-orange-50 px-4 py-2 rounded-full">Kelola Restoran</a>
                         @endif
 
-                        <div class="flex items-center gap-3 bg-orange-50 px-5 py-2 rounded-full border border-orange-100">
-                            <span class="font-bold text-primary">
+                        <!-- Profil Pengguna -->
+                        <div class="flex items-center gap-3 bg-white px-3 py-1.5 rounded-full border border-gray-200 shadow-sm hover:shadow-md transition">
+                            <!-- Foto Profil (Menampilkan default jika tidak ada, atau yang diupload/dari google) -->
+                            <img src="{{ auth()->user()->avatar ? (Str::startsWith(auth()->user()->avatar, 'http') ? auth()->user()->avatar : asset('storage/' . auth()->user()->avatar)) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name) . '&background=E8500A&color=fff' }}" alt="Profile" class="w-8 h-8 rounded-full object-cover border border-gray-100">
+                            
+                            <span class="font-bold text-slate-800 pr-2">
                                 {{ auth()->user()->name }}
                             </span>
-                            <form action="{{ route('logout') }}" method="POST" class="inline">
+                            
+                            <!-- Tombol Logout -->
+                            <form action="{{ route('logout') }}" method="POST" class="inline border-l border-gray-200 pl-3 pr-2">
                                 @csrf
-                                <button type="submit" class="text-xs font-bold text-slate-500 hover:text-red-600 transition">
-                                    Keluar
+                                <button type="submit" class="text-xs font-bold text-red-500 hover:text-red-700 transition flex items-center gap-1">
+                                    <span class="material-symbols-outlined" style="font-size: 16px;">logout</span>
                                 </button>
                             </form>
                         </div>

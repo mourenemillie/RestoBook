@@ -183,14 +183,14 @@
                 <h2 class="section-title">Restoran Terpopuler</h2>
                 <p class="section-sub">Pilihan terbaik untuk pengalaman kuliner autentik di kota.</p>
             </div>
-            <a href="#" class="see-all">Lihat Semua →</a>
+            <a href="{{ route('customer.restaurants.index') }}" class="see-all">Lihat Semua →</a>
         </div>
         <div class="restaurant-grid">
     @forelse($restaurants as $resto)
         <div class="resto-card">
             <div class="resto-img-wrap" onclick="window.location='{{ route('restaurant.show', $resto->id) }}'" style="cursor: pointer;">
-                <img src="{{ $resto->image ? asset('storage/'.$resto->image) : 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400' }}"
-                     alt="{{ $resto->name }}">
+                <img src="{{ $resto->image ? (Str::startsWith($resto->image, 'http') ? $resto->image : asset('storage/'.$resto->image)) : 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400' }}"
+     alt="{{ $resto->name }}">                
                 <div class="rating-badge">4.8</div>
             </div>
 
@@ -228,35 +228,11 @@
 
     @empty
 
-        @foreach([
-            ['name' => 'Sate Padang Begadang', 'address' => 'Jl. Diponegoro, Bandar Lampung', 'img' => 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400', 'rating' => '4.9', 'status' => 'available'],
-            ['name' => 'Bakso Son Haji Sony', 'address' => 'Jl. Wolter Monginsidi, Lampung', 'img' => 'https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=400', 'rating' => '4.7', 'status' => 'full'],
-            ['name' => 'Kopi Lampung Hub', 'address' => 'Way Halim, Bandar Lampung', 'img' => 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=400', 'rating' => '4.8', 'status' => 'available'],
-        ] as $dummy)
-
-            <div class="resto-card">
-                <div class="resto-img-wrap" onclick="window.location='{{ route('restaurant.show', 1) }}'" style="cursor: pointer;">
-                    <img src="{{ $dummy['img'] }}" alt="{{ $dummy['name'] }}">
-                    <div class="rating-badge">{{ $dummy['rating'] }}</div>
-                </div>
-
-                <div class="resto-body">
-                    <div class="resto-name" onclick="window.location='{{ route('restaurant.show', 1) }}'" style="cursor: pointer; hover:text-orange-600;">{{ $dummy['name'] }}</div>
-                    <div class="resto-location">{{ $dummy['address'] }}</div>
-
-                    <div class="resto-footer">
-                        @if($dummy['status'] === 'available')
-                            <span class="badge-available">TERSEDIA</span>
-                            <a href="{{ route('customer.reservations.create', 1) }}" class="btn-booking">Pesan</a>
-                        @else
-                            <span class="badge-full">PENUH</span>
-                            <a href="#" class="btn-booking" style="background:#e0e0e0;color:#999;pointer-events:none">Penuh</a>
-                        @endif
-                    </div>
-                </div>
-            </div>
-
-        @endforeach
+        <div class="table-card" style="grid-column: span 3; text-align: center; padding: 40px; background: rgba(255,255,255,0.8); border-radius: 32px;">
+            <div style="font-size: 40px; margin-bottom: 16px;">🏪</div>
+            <h3 style="font-size: 20px; font-weight: 700; color: #2c2f2e; margin-bottom: 8px;">Belum ada restoran</h3>
+            <p style="color: #595c5a; font-size: 15px;">Belum ada restoran yang terdaftar atau aktif saat ini. Silakan kembali lagi nanti.</p>
+        </div>
 
     @endforelse
 </div>
@@ -271,35 +247,37 @@
             <div class="max-w-xl">
                 <p class="umkm-label">TENTANG RESTO</p>
                 <h2 class="umkm-title">Tentang<br><span>RestoBook</span></h2>
-                <p class="umkm-desc">Kami mendedikasikan platform ini untuk memudahkan reservasi restoran dan mendukung UMKM kuliner.</p>
+                <p class="umkm-desc">Kami mendedikasikan platform ini untuk memudahkan reservasi restoran dan mendukung UMKM kuliner. Booking tempat nongkrong jadi lebih gampang, sambil bareng-bareng majuin kuliner lokal. </p>
                 <div class="umkm-feature">
                     <div class="umkm-feature-icon">💰</div>
                     <div>
-                        <h4>Fee Transaksi 0%</h4>
-                        <p>Keuntungan sepenuhnya milik pedagang UMKM.</p>
+                        <h4>Pesan Meja Sat-Set</h4>
+                        <p>Nggak perlu takut kehabisan tempat, amankan mejamu kapan aja tanpa ribet.</p>
                     </div>
                 </div>
                 <div class="umkm-feature">
                     <div class="umkm-feature-icon">📣</div>
                     <div>
-                        <h4>Promosi Prioritas</h4>
-                        <p>Kedai kecil mendapatkan eksposur lebih luas di aplikasi kami.</p>
+                        <h4>Support Hidden Gem Sekitar</h4>
+                        <p>Dari resto hits sampai warung tenda jagoan warga, temukan dan bantu usaha mereka di sini.</p>
                     </div>
                 </div>
             </div>
-            <div class="umkm-cards">
-                <div class="umkm-card">
-                    <img class="umkm-card-img" src="https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=400" alt="Martabak">
-                    <h5>Martabak Bangka Sari</h5>
-                    <p>Kemiling • Cemilan</p>
-                    <a href="#" class="btn-kunjungi">Kunjungi</a>
-                </div>
-                <div class="umkm-card">
-                    <img class="umkm-card-img" src="https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400" alt="Mie Ayam">
-                    <h5>Mie Ayam Pak Jo</h5>
-                    <p>Sukabumi • Mie</p>
-                    <a href="#" class="btn-kunjungi">Kunjungi</a>
-                </div>
+        </div>
+
+        {{-- KANAN: Cards --}}
+        <div class="umkm-cards">
+            <div class="umkm-card">
+                <img class="umkm-card-img" src="https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=400" alt="Martabak">
+                <h5>Martabak Bangka Sari</h5>
+                <p>Kemiling • Cemilan</p>
+                <a href="#" class="btn-kunjungi">Kunjungi</a>
+            </div>
+            <div class="umkm-card">
+                <img class="umkm-card-img" src="https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400" alt="Mie Ayam">
+                <h5>Mie Ayam Pak Jo</h5>
+                <p>Sukabumi • Mie</p>
+                <a href="#" class="btn-kunjungi">Kunjungi</a>
             </div>
         </div>
     </div>
@@ -314,7 +292,5 @@ setTimeout(function() {
     }
 }, 3000);
 </script>
-
-
 
 @endsection

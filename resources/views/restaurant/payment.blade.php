@@ -6,12 +6,15 @@
         <span class="text-orange-600 font-bold uppercase tracking-widest text-xs">Checkout Aman</span>
         <h1 class="text-4xl font-black text-slate-900 mt-2 mb-10 text-center">Selesaikan Reservasi Anda</h1>
 
-        @if ($errors->any())
+        @if ($errors->any() || session('midtrans_error'))
             <div class="mb-6 p-4 bg-red-50 border border-red-200 text-red-800 rounded-2xl text-sm font-medium">
                 <ul class="list-disc list-inside">
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
                     @endforeach
+                    @if(session('midtrans_error'))
+                        <li>{{ session('midtrans_error') }}</li>
+                    @endif
                 </ul>
             </div>
         @endif
@@ -66,9 +69,14 @@
     </div>
 </div>
 
-<script src="{{ env('MIDTRANS_IS_PRODUCTION') ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js' }}" data-client-key="{{ env('MIDTRANS_CLIENT_KEY') }}"></script>
+<script src="{{ config('services.midtrans.is_production') ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js' }}" data-client-key="{{ config('services.midtrans.client_key') }}"></script>
 <script>
     document.getElementById('pay-button').onclick = function(){
+        @if(session('midtrans_error'))
+            alert("Maaf, pembayaran tidak bisa dilanjutkan karena ada error pada koneksi Midtrans. Silakan periksa pesan error di atas.");
+            return;
+        @endif
+        
         snap.pay('{{ $booking->snap_token }}', {
             onSuccess: function(result){
                 window.location.href = "{{ route('booking.success', $booking->booking_code) }}";

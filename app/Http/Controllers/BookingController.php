@@ -35,20 +35,32 @@ class BookingController extends Controller
             $guestCount = 2; 
         } 
 
-        $baksoPrice = 25000;
-        $esJerukPrice = 8000;
-        $serviceFee = 2000;
+        $subtotal = 0;
+        if ($request->has('menu_ids')) {
+            foreach ($request->menu_ids as $menuId) {
+                $menu = \App\Models\Menu::find($menuId);
+                if ($menu) {
+                    $qty = $request->menu_qty[$menuId] ?? 1;
+                    $subtotal += $menu->price * $qty;
+                }
+            }
+        }
         
-        $totalPrice = (($baksoPrice + $esJerukPrice) * $guestCount) + $serviceFee;
+        $serviceFee = round($subtotal * 0.1);
+        if ($serviceFee < 2000) {
+            $serviceFee = 2000; // minimum service/booking fee
+        }
+        
+        $totalPrice = $subtotal + $serviceFee;
 
         $bookingCode = 'BKS-' . strtoupper(Str::random(5));
-        $restaurantId = 1;
+        $restaurantId = $request->input('restaurant_id', 1);
         $tableId = 1;
         
         if (!\App\Models\Restaurant::find($restaurantId)) {
             \App\Models\Restaurant::updateOrCreate(['id' => $restaurantId], [
                 'user_id' => auth()->id() ?? \App\Models\User::first()->id ?? \App\Models\User::factory()->create()->id,
-                'name' => 'Bakso Son Haji Sony',
+                'name' => $request->input('restaurant_name', 'Bakso Son Haji Sony'),
                 'address' => 'Jl. Wolter Monginsidi',
                 'city' => 'Bandar Lampung',
                 'phone' => '081234567890',
@@ -65,7 +77,7 @@ class BookingController extends Controller
             ]);
         }
 
-        DB::table('reservations')->insert([
+        $reservationId = DB::table('reservations')->insertGetId([
             'booking_code'     => $bookingCode,
             'user_id'          => auth()->id() ?? 1,
             'restaurant_id'    => $restaurantId,
@@ -80,6 +92,32 @@ class BookingController extends Controller
             'updated_at'       => now(),
         ]);
 
+        if ($request->has('menu_ids') && is_array($request->menu_ids) && count($request->menu_ids) > 0) {
+            $orderId = DB::table('orders')->insertGetId([
+                'reservation_id' => $reservationId,
+                'user_id'        => auth()->id() ?? 1,
+                'total_price'    => $subtotal,
+                'status'         => 'pending',
+                'created_at'     => now(),
+                'updated_at'     => now(),
+            ]);
+
+            foreach ($request->menu_ids as $menuId) {
+                $menu = \App\Models\Menu::find($menuId);
+                if ($menu) {
+                    $qty = $request->menu_qty[$menuId] ?? 1;
+                    DB::table('order_items')->insert([
+                        'order_id'   => $orderId,
+                        'menu_id'    => $menu->id,
+                        'quantity'   => $qty,
+                        'price'      => $menu->price,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                }
+            }
+        }
+
         return redirect()->route('booking.checkout', $bookingCode);
     }
 
@@ -91,8 +129,9 @@ class BookingController extends Controller
             abort(404, 'Reservasi tidak valid atau tidak ditemukan.');
         }
 
-        Config::$serverKey = env('MIDTRANS_SERVER_KEY');
-        Config::$isProduction = env('MIDTRANS_IS_PRODUCTION', false);
+        // Menggunakan kunci dari .env/config
+        Config::$serverKey = config('services.midtrans.server_key');
+        Config::$isProduction = config('services.midtrans.is_production');
         Config::$isSanitized = true;
         Config::$is3ds = true;
 
@@ -121,7 +160,8 @@ class BookingController extends Controller
 
                 $booking->snap_token = $snapToken;
             } catch (\Exception $e) {
-                return redirect()->route('restaurant.show', ['id' => $booking->restaurant_id])->withErrors('Gagal memproses pembayaran: Pastikan MIDTRANS_SERVER_KEY sudah disetting dengan benar di server. Detail Error: ' . $e->getMessage());
+                \Log::error('Midtrans Snap Error: ' . $e->getMessage());
+                session()->flash('midtrans_error', 'Error dari Midtrans: ' . $e->getMessage() . ' (Pastikan API Key sudah benar dan teraktivasi)');
             }
         }
 
@@ -130,7 +170,7 @@ class BookingController extends Controller
 
     public function handleNotification(Request $request)
     {
-        $serverKey = env('MIDTRANS_SERVER_KEY');
+        $serverKey = config('services.midtrans.server_key');
         $hashed = hash("sha512", $request->order_id.$request->status_code.$request->gross_amount.$serverKey);
         if($hashed == $request->signature_key){
             if($request->transaction_status == 'capture' || $request->transaction_status == 'settlement'){

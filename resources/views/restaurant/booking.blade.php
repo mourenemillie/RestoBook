@@ -19,6 +19,7 @@
             @csrf
             
             {{-- Menggunakan data dinamis dari backend, fallback ke nama default jika objek kosong --}}
+            <input type="hidden" name="restaurant_id" value="{{ $restaurant->id ?? 1 }}">
             <input type="hidden" name="restaurant_name" value="{{ $restaurant->name ?? 'Bakso Son Haji Sony' }}">
 
             <div class="flex flex-col lg:flex-row gap-8">
@@ -208,9 +209,11 @@
     const guestSelect = document.querySelector('select[name="number_of_people"]');
     if (guestSelect) {
         guestSelect.addEventListener('change', function() {
-            const count = parseInt(this.value) || 2;
-            const baksoPricePerPerson = 25000;
-    // 3. Kalkulasi Menu Dinamis
+            calculateTotal();
+        });
+    }
+
+    // 4. Kalkulasi Menu Dinamis
     const checkboxes = document.querySelectorAll('.menu-checkbox');
     const selectedMenusList = document.getElementById('selected-menus-list');
     const summarySubtotal = document.getElementById('summary-subtotal');

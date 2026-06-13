@@ -9,6 +9,7 @@
             <h1 style="font-size:38px; font-weight:800; margin-bottom:12px;">Reservasi Saya</h1>
             <p style="color:#595c5a;">Kelola reservasi kamu di RestoBook Lampung.</p>
         </div>
+        <a href="{{ url('/') }}" style="background: #e95a1e; color: white; padding: 12px 24px; border-radius: 999px; font-weight: 700; text-decoration: none; transition: background 0.2s; white-space: nowrap;">+ Reservasi Baru</a>
     </div>
 
     <div style="background:#fff; border-radius:24px; padding:24px; box-shadow:0 4px 20px rgba(0,0,0,0.03);">

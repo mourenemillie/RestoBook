@@ -18,21 +18,15 @@ use App\Http\Controllers\BookingController;
 // Route Landing Page
 Route::get('/', [RestaurantController::class, 'index'])->name('landing');
 
-Route::get('/force-seed-db', function () {
-    \Illuminate\Support\Facades\Artisan::call('migrate:fresh', ['--seed' => true]);
-    return "Database has been freshly migrated and seeded! You can now login.";
-});
-
 // Route Detail Restoran
 Route::get('/restaurant/{id}/detail', [RestaurantController::class, 'show'])->name('restaurant.show');
 
-// --- FITUR BOOKING & PEMBAYARAN ---
+// booking dan pembayaran
 Route::post('/restaurant/booking', [BookingController::class, 'store'])->name('restaurant.booking');
 Route::get('/booking/checkout/{booking_code}', [BookingController::class, 'checkout'])->name('booking.checkout');
-Route::post('/api/midtrans/notification', [BookingController::class, 'handleNotification'])->name('midtrans.notification');
 Route::get('/booking/success/{booking_code}', [BookingController::class, 'success'])->name('booking.success');
 
-// --- AUTH ROUTES ---
+// auth routes
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
@@ -42,12 +36,11 @@ Route::middleware('guest')->group(function () {
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
-//SOCIALITE (GOOGLE LOGIN)
+//google login
 Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name('auth.google');
 Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
 
-
-// --- EMAIL VERIFICATION ---
+// email verification
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
 })->middleware('auth')->name('verification.notice');
@@ -62,7 +55,7 @@ Route::post('/email/verification-notification', function (\Illuminate\Http\Reque
     return back()->with('message', 'Link verifikasi telah dikirim ulang!');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
-// --- ADMIN ROUTES ---
+// admin routes
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminDashboard::class, 'index'])->name('admin.dashboard');
     Route::get('/users', [AdminUserController::class, 'index'])->name('admin.users');
@@ -79,7 +72,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::post('/settings/update', [\App\Http\Controllers\Admin\SettingController::class, 'update'])->name('admin.settings.update');
 });
 
-// --- OWNER ROUTES ---
+// owner routes
 Route::middleware(['auth', 'role:owner'])->prefix('owner')->group(function () {
     Route::get('/dashboard', [OwnerDashboard::class, 'index'])->name('owner.dashboard');
     Route::get('/reservasi', [OwnerReservationController::class, 'index'])->name('owner.reservasi');
@@ -97,18 +90,19 @@ Route::middleware(['auth', 'role:owner'])->prefix('owner')->group(function () {
     Route::post('/settings/update', [OwnerSettingController::class, 'update'])->name('owner.settings.update');
     Route::get('/tambah-menu', [MenuController::class, 'create'])->name('owner.tambah-menu');
     Route::post('/tambah-menu', [MenuController::class, 'store'])->name('owner.tambah-menu.store');
+
+    // Menu routes
+    Route::get('/menu/create',       [MenuController::class, 'create'])->name('owner.menu.create');
+    Route::post('/menu',             [MenuController::class, 'store'])->name('owner.menu.store');
+    Route::get('/menu/{id}/edit',    [MenuController::class, 'edit'])->name('owner.menu.edit');
+    Route::put('/menu/{id}',         [MenuController::class, 'update'])->name('owner.menu.update');
+    Route::delete('/menu/{id}',      [MenuController::class, 'destroy'])->name('owner.menu.destroy');
 });
 
-// Menu routes
-Route::get('/owner/menu/create',       [MenuController::class, 'create'])->name('owner.menu.create');
-Route::post('/owner/menu',             [MenuController::class, 'store'])->name('owner.menu.store');
-Route::get('/owner/menu/{id}/edit',    [MenuController::class, 'edit'])->name('owner.menu.edit');
-Route::put('/owner/menu/{id}',         [MenuController::class, 'update'])->name('owner.menu.update');
-Route::delete('/owner/menu/{id}',      [MenuController::class, 'destroy'])->name('owner.menu.destroy');
-
-// --- CUSTOMER ROUTES ---
+// cutomer routes
 Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
+    Route::get('/restaurants/all', [\App\Http\Controllers\Customer\RestaurantListController::class, 'index'])->name('customer.restaurants.index');
     Route::get('/reservations', [CustomerReservationController::class, 'index'])->name('customer.reservations');
     Route::get('/reservasi/create/{restaurant}', [CustomerReservationController::class, 'create'])->name('customer.reservations.create');
     Route::post('/reservasi/store', [CustomerReservationController::class, 'store'])->name('customer.reservations.store');

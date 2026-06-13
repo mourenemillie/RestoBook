@@ -67,13 +67,34 @@ class AuthController extends Controller
         ]);
 
         if ($request->role === 'owner') {
-            Restaurant::create([
+            // Langsung setujui restoran baru agar tidak perlu menunggu persetujuan admin
+            $restaurant = Restaurant::create([
                 'user_id' => $user->id,
                 'name' => $request->restaurant_name ?? 'Restoran Baru',
                 'address' => $request->location ?? 'Belum diisi',
                 'phone' => $request->phone,
-                'status' => 'pending',
+                'status' => 'active', 
                 'city' => 'Bandar Lampung',
+                'open_time' => '09:00:00',
+                'close_time' => '22:00:00',
+                'image' => 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&h=300&fit=crop', // Foto default
+            ]);
+
+            // Tambahkan menu default agar profil tidak kosong
+            \App\Models\Menu::create([
+                'restaurant_id' => $restaurant->id,
+                'name' => 'Menu Spesial',
+                'price' => 25000,
+                'category' => 'Makanan',
+                'is_available' => true
+            ]);
+
+            // Tambahkan meja default
+            \App\Models\Table::create([
+                'restaurant_id' => $restaurant->id,
+                'table_number' => 'Meja 1',
+                'capacity' => 4,
+                'status' => 'available'
             ]);
         }
 

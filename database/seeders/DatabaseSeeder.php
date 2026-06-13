@@ -106,6 +106,7 @@ class DatabaseSeeder extends Seeder
                 'role' => 'owner'
             ]);
 
+            // Membuat profil restoran untuk owner tersebut
             $restaurant = Restaurant::create([
                 'user_id' => $owner->id,
                 'name' => $r['name'],
@@ -113,7 +114,9 @@ class DatabaseSeeder extends Seeder
                 'city' => $r['city'],
                 'phone' => '081234567890',
                 'image' => $r['image'],
-                'status' => 'active' // Approve them so they show up
+                'open_time' => '09:00:00', // Jam buka default
+                'close_time' => '22:00:00', // Jam tutup default
+                'status' => 'active' // Langsung disetujui (active) agar tampil di pelanggan
             ]);
 
             foreach ($r['menus'] as $m) {

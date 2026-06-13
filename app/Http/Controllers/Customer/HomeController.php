@@ -8,8 +8,9 @@ use Illuminate\Http\Request;
 class HomeController extends Controller
 {
     public function index()
-{
-    $restaurants = \App\Models\Restaurant::take(3)->get();
-    return view('customer.home', compact('restaurants'));
-}
+    {
+        // Hanya mengambil 3 restoran yang sudah aktif (disetujui) dari database
+        $restaurants = \App\Models\Restaurant::where('status', 'active')->take(3)->get();
+        return view('customer.home', compact('restaurants'));
+    }
 }

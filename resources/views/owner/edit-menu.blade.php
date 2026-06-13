@@ -319,7 +319,7 @@
     </div>
 
     <div class="user-profile">
-        <img src="https://i.pravatar.cc/150?img=11" alt="Resto Owner">
+        <img src="{{ auth()->user()->avatar ? asset('storage/' . auth()->user()->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name) . '&background=E8500A&color=fff' }}" alt="Resto Owner">
         <div class="user-info">
             <h4>Resto Owner</h4>
             <p>Manage your resto</p>
