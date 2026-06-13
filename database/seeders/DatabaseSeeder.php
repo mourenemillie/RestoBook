@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
         User::create([
             'name' => 'Admin',
             'email' => 'admin.sistem@gmail.com',
-            'password' => 'admin123',
+            'password' => bcrypt('admin123'),
             'role' => 'admin'
         ]);
 
@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
         User::create([
             'name' => 'Ahmad Fauzi',
             'email' => 'ahmad@gmail.com',
-            'password' => 'password',
+            'password' => bcrypt('password'),
             'role' => 'customer'
         ]);
 
@@ -106,7 +106,6 @@ class DatabaseSeeder extends Seeder
                 'role' => 'owner'
             ]);
 
-            // Membuat profil restoran untuk owner tersebut
             $restaurant = Restaurant::create([
                 'user_id' => $owner->id,
                 'name' => $r['name'],
@@ -138,5 +137,3 @@ class DatabaseSeeder extends Seeder
                 ]);
             }
         }
-    }
-}
