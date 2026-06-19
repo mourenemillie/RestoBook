@@ -50,8 +50,10 @@ class TableController extends Controller
 
     public function store(Request $request)
     {
+        $restaurant = \App\Models\Restaurant::where('user_id', auth()->id())->first();
+
         Table::create([
-            'restaurant_id' => 1,
+            'restaurant_id' => $restaurant->id,
             'table_number'  => $request->table_number,
             'capacity'      => $request->capacity,
             'status'        => $request->status,
@@ -68,14 +70,16 @@ class TableController extends Controller
 
     public function edit($id)
     {
-        $table = Table::findOrFail($id);
+        $restaurant = \App\Models\Restaurant::where('user_id', auth()->id())->first();
+        $table = Table::where('restaurant_id', $restaurant->id)->findOrFail($id);
 
         return view('owner.edit-meja', compact('table'));
     }
 
     public function update(Request $request, $id)
     {
-        $table = Table::findOrFail($id);
+        $restaurant = \App\Models\Restaurant::where('user_id', auth()->id())->first();
+        $table = Table::where('restaurant_id', $restaurant->id)->findOrFail($id);
 
         $table->update([
             'table_number' => $request->table_number,

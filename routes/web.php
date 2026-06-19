@@ -90,9 +90,6 @@ Route::middleware(['auth', 'role:owner'])->prefix('owner')->group(function () {
     Route::put('/kelola-meja/{id}', [OwnerTableController::class, 'update'])->name('owner.kelola-meja.update');
     Route::get('/settings', [OwnerSettingController::class, 'index'])->name('owner.settings');
     Route::post('/settings/update', [OwnerSettingController::class, 'update'])->name('owner.settings.update');
-    Route::get('/tambah-menu', [MenuController::class, 'create'])->name('owner.tambah-menu');
-    Route::post('/tambah-menu', [MenuController::class, 'store'])->name('owner.tambah-menu.store');
-
     // Menu routes
     Route::get('/menu/create',       [MenuController::class, 'create'])->name('owner.menu.create');
     Route::post('/menu',             [MenuController::class, 'store'])->name('owner.menu.store');

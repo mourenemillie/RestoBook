@@ -14,11 +14,12 @@ class MenuController extends Controller
         return view('owner.tambah-menu');
     }
     public function edit($id)
-{
-    $menu = Menu::findOrFail($id);
+    {
+        $restaurant = \App\Models\Restaurant::where('user_id', Auth::id())->first();
+        $menu = Menu::where('restaurant_id', $restaurant->id)->findOrFail($id);
 
-    return view('owner.edit-menu', compact('menu'));
-}
+        return view('owner.edit-menu', compact('menu'));
+    }
 
     public function store(Request $request)
     {
@@ -53,25 +54,38 @@ class MenuController extends Controller
             ->with('success', 'Menu berhasil ditambahkan');
     }
     public function update(Request $request, $id)
-{
-    $menu = Menu::findOrFail($id);
+    {
+        $restaurant = \App\Models\Restaurant::where('user_id', Auth::id())->first();
+        $menu = Menu::where('restaurant_id', $restaurant->id)->findOrFail($id);
 
-    $data = [
-        'name' => $request->name,
-        'category' => $request->category,
-        'description' => $request->description,
-        'price' => $request->price,
-        'is_available' => $request->is_available,
-    ];
+        $data = [
+            'name' => $request->name,
+            'category' => $request->category,
+            'description' => $request->description,
+            'price' => $request->price,
+            'is_available' => $request->boolean('is_available', true),
+        ];
 
-    if ($request->hasFile('image')) {
-        $data['image'] = $request->file('image')->store('menus', 'public');
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('menus', 'public');
+        }
+
+        $menu->update($data);
+
+        return redirect()
+            ->route('owner.kelola-meja')
+            ->with('success', 'Menu berhasil diperbarui');
     }
 
-    $menu->update($data);
+    public function destroy($id)
+    {
+        $restaurant = \App\Models\Restaurant::where('user_id', Auth::id())->first();
+        $menu = Menu::where('restaurant_id', $restaurant->id)->findOrFail($id);
 
-    return redirect()
-        ->route('owner.kelola-meja')
-        ->with('success', 'Menu berhasil diperbarui');
-}
+        $menu->delete();
+
+        return redirect()
+            ->route('owner.kelola-meja')
+            ->with('success', 'Menu berhasil dihapus');
+    }
 }

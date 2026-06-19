@@ -381,7 +381,14 @@
     @endif
 
     @if($errors->any())
-        <div class="flash error">Periksa kembali isian form.</div>
+        <div class="flash error">
+            Periksa kembali isian form:
+            <ul style="margin-top:4px; margin-left: 16px; font-weight: 500; font-size: 12px;">
+                @foreach($errors->all() as $err)
+                    <li>{{ $err }}</li>
+                @endforeach
+            </ul>
+        </div>
     @endif
 
     <!-- Breadcrumb -->
