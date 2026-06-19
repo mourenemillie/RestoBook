@@ -612,7 +612,7 @@
                         5%
                     </div>
                 </div>
-               <div class="stat-title">Menunggu Konfirmasi</div>
+               <div class="stat-title">Pesanan Aktif</div>
 <div class="stat-value">{{ $reservasiAktif }}</div>
             </div>
 
@@ -694,7 +694,7 @@
 
     <td>
         <span class="status-badge status-waiting">
-            {{ ucfirst($reservation->status) }}
+            {{ $reservation->status == 'paid' ? 'Terkonfirmasi' : ucfirst($reservation->status) }}
         </span>
     </td>
 

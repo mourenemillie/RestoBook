@@ -443,16 +443,7 @@
                 <h1>Kedatangan</h1>
                 <p>Kelola reservasi dan kedatangan tamu hari ini.</p>
             </div>
-<div class="filter-pills" style="padding: 6px; background: var(--border-light); border-radius: 14px; display: inline-flex;">
-    <a href="{{ route('owner.reservasi', ['tab' => 'persetujuan']) }}"
-       class="filter-btn {{ $tab == 'persetujuan' ? 'active' : '' }}" style="border-radius: 10px; padding: 12px 32px;">
-        Persetujuan
-    </a>
-    <a href="{{ route('owner.reservasi', ['tab' => 'kedatangan']) }}"
-       class="filter-btn {{ $tab == 'kedatangan' ? 'active' : '' }}" style="border-radius: 10px; padding: 12px 32px;">
-        Kedatangan
-    </a>
-</div>
+
         </header>
 
         <div class="reservation-list">
@@ -470,11 +461,11 @@
                 <div class="guest-header">
                     <h2>{{ \App\Models\User::find($reservation->user_id)?->name }}</h2>
                     <span class="status-badge {{ $reservation->status }}">
-                        @if($reservation->status == 'pending') Menunggu
-                        @elseif($reservation->status == 'approved') Terkonfirmasi
+                        @if($reservation->status == 'pending') Menunggu Pembayaran
+                        @elseif($reservation->status == 'paid' || $reservation->status == 'approved') Terkonfirmasi
                         @elseif($reservation->status == 'completed') Hadir
                         @elseif($reservation->status == 'cancelled') Tidak Hadir
-                        @elseif($reservation->status == 'rejected') Ditolak
+                        @elseif($reservation->status == 'rejected') Dibatalkan/Ditolak
                         @else {{ $reservation->status }}
                         @endif
                     </span>
@@ -492,16 +483,7 @@
         </div>
 
         <div class="card-actions">
-    @if($reservation->status == 'pending')
-        <form action="{{ route('owner.reservasi.reject', $reservation->id) }}" method="POST">
-            @csrf @method('PATCH')
-            <button type="submit" class="btn-danger">Tolak</button>
-        </form>
-        <form action="{{ route('owner.reservasi.approve', $reservation->id) }}" method="POST">
-            @csrf @method('PATCH')
-            <button type="submit" class="btn-success">Terima</button>
-        </form>
-    @elseif($reservation->status == 'approved')
+    @if($reservation->status == 'paid' || $reservation->status == 'approved')
         <form action="{{ route('owner.reservasi.tidak-hadir', $reservation->id) }}" method="POST">
             @csrf @method('PATCH')
             <button type="submit" class="btn-danger">Tidak Hadir</button>

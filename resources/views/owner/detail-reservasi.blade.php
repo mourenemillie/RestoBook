@@ -143,25 +143,32 @@
         <div class="label">Status</div>
         <div class="value">
             <span class="status">
-                {{ ucfirst($reservation->status) }}
+                @if($reservation->status == 'pending') Menunggu Pembayaran
+                @elseif($reservation->status == 'paid' || $reservation->status == 'approved') Terkonfirmasi
+                @elseif($reservation->status == 'completed') Hadir
+                @elseif($reservation->status == 'cancelled') Tidak Hadir
+                @elseif($reservation->status == 'rejected') Dibatalkan/Ditolak
+                @else {{ ucfirst($reservation->status) }}
+                @endif
             </span>
         </div>
     </div>
 
     <div class="actions">
-        @if(request('from') == 'dashboard')
-    <a href="{{ route('owner.dashboard') }}">
-        ← Kembali
-    </a>
-@else
-    <a href="{{ route('owner.reservasi') }}">
-        ← Kembali
-    </a>
-@endif
-
-        <a href="{{ url('/owner/reservasi') }}" class="btn btn-primary">
-            Selesai
+        <a href="{{ request('from') == 'dashboard' ? route('owner.dashboard') : route('owner.reservasi') }}" class="btn btn-back" style="text-decoration:none; padding:10px 20px;">
+            ← Kembali
         </a>
+
+        @if($reservation->status == 'paid' || $reservation->status == 'approved')
+            <form action="{{ route('owner.reservasi.tidak-hadir', $reservation->id) }}" method="POST" style="display:inline;">
+                @csrf @method('PATCH')
+                <button type="submit" class="btn" style="background:#dc2626; color:white;">Tidak Hadir</button>
+            </form>
+            <form action="{{ route('owner.reservasi.hadir', $reservation->id) }}" method="POST" style="display:inline;">
+                @csrf @method('PATCH')
+                <button type="submit" class="btn" style="background:#16a34a; color:white;">Hadir</button>
+            </form>
+        @endif
     </div>
 
 </div>

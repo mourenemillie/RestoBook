@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class ReservationController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
         $restaurant = \App\Models\Restaurant::where('user_id', Auth::id())->first();
         
@@ -16,19 +16,11 @@ class ReservationController extends Controller
             return redirect()->route('owner.dashboard')->with('error', 'Restoran tidak ditemukan.');
         }
 
-        $query = \App\Models\Reservation::where('restaurant_id', $restaurant->id)->latest();
+        $reservations = \App\Models\Reservation::where('restaurant_id', $restaurant->id)
+            ->latest()
+            ->get();
 
-        $tab = $request->get('tab', 'persetujuan');
-
-        if ($tab == 'kedatangan') {
-            $query->whereIn('status', ['approved', 'completed', 'cancelled']);
-        } else {
-            $query->whereIn('status', ['pending', 'rejected']);
-        }
-
-        $reservations = $query->get();
-
-        return view('owner.reservasi', compact('reservations', 'tab'));
+        return view('owner.reservasi', compact('reservations'));
     }
 public function show($id)
 {
@@ -61,19 +53,4 @@ public function tidakHadir($id)
     return back()->with('success', 'Reservasi dibatalkan.');
 }
 
-public function approve($id)
-{
-    $restaurant = \App\Models\Restaurant::where('user_id', Auth::id())->first();
-    $reservation = \App\Models\Reservation::where('restaurant_id', $restaurant->id)->findOrFail($id);
-    $reservation->update(['status' => 'approved']);
-    return back()->with('success', 'Reservasi diterima!');
-}
-
-public function reject($id)
-{
-    $restaurant = \App\Models\Restaurant::where('user_id', Auth::id())->first();
-    $reservation = \App\Models\Reservation::where('restaurant_id', $restaurant->id)->findOrFail($id);
-    $reservation->update(['status' => 'rejected']);
-    return back()->with('success', 'Reservasi ditolak!');
-}
 }

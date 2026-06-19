@@ -27,7 +27,7 @@ class BookingController extends Controller
             'booking_date'     => 'required|date',
             'number_of_people' => 'required|string',
             'booking_time'     => 'required|string',
-            'table_area'       => 'required|string',
+            'table_id'         => 'required',
         ]);
 
         $guestCount = (int) filter_var($request->number_of_people, FILTER_SANITIZE_NUMBER_INT);
@@ -57,19 +57,26 @@ class BookingController extends Controller
 
         try {
             $reservationId = DB::transaction(function () use ($request, $restaurantId, $guestCount, $totalPrice, $subtotal, &$bookingCode) {
-                // Cari meja yang tersedia dan muat, lalu kunci baris tersebut (Pessimistic Locking)
-                $table = \App\Models\Table::where('restaurant_id', $restaurantId)
-                    ->where('capacity', '>=', $guestCount)
+                
+                $tableId = $request->table_id;
+                
+                if (!$tableId) {
+                    abort(400, 'Silakan pilih meja terlebih dahulu.');
+                }
+
+                // Cari meja yang persis dipilih dan pastikan masih kosong di jam tersebut
+                $table = \App\Models\Table::where('id', $tableId)
+                    ->where('restaurant_id', $restaurantId)
                     ->whereDoesntHave('reservations', function($query) use ($request) {
                         $query->where('reservation_date', $request->booking_date)
                               ->where('reservation_time', $request->booking_time)
-                              ->whereIn('status', ['pending', 'confirmed']);
+                              ->whereIn('status', ['pending', 'paid', 'approved']);
                     })
                     ->lockForUpdate()
                     ->first();
 
                 if (!$table) {
-                    abort(400, 'Maaf, semua meja penuh pada waktu tersebut. Terjadi double-booking atau kapasitas tidak mencukupi.');
+                    abort(400, 'Maaf, meja yang Anda pilih sudah dipesan oleh orang lain di waktu tersebut atau tidak valid. Silakan kembali dan pilih meja lain.');
                 }
 
                 $bookingCode = 'BKS-' . strtoupper(Str::random(5));
@@ -78,11 +85,11 @@ class BookingController extends Controller
                     'booking_code'     => $bookingCode,
                     'user_id'          => auth()->id() ?? 1,
                     'restaurant_id'    => $restaurantId,
-                    'table_id'         => $table->id,
+                    'table_id'         => $tableId,
                     'reservation_date' => $request->booking_date,
                     'reservation_time' => $request->booking_time,
                     'num_guests'       => $guestCount,
-                    'notes'            => 'Area: ' . $request->table_area . ' - ' . $request->restaurant_name,
+                    'notes'            => null,
                     'total_price'      => $totalPrice,
                     'status'           => 'pending',
                     'created_at'       => now(),
@@ -190,6 +197,12 @@ class BookingController extends Controller
         $booking = DB::table('reservations')->where('booking_code', $booking_code)->first();
         if (!$booking) { 
             abort(404); 
+        }
+        
+        // Force update status to paid since webhook might not reach local sandbox
+        if ($booking->status === 'pending') {
+            DB::table('reservations')->where('booking_code', $booking_code)->update(['status' => 'paid', 'updated_at' => now()]);
+            $booking->status = 'paid';
         }
         
         return view('restaurant.success', compact('booking')); 

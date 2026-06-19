@@ -11,8 +11,39 @@ class TableController extends Controller
 {
     public function index()
     {
-        $tables = Table::all();
-        $menus  = Menu::all();
+        $restaurant = \App\Models\Restaurant::where('user_id', auth()->id())->first();
+
+        if (!$restaurant) {
+            return redirect()->route('owner.settings')->with('error', 'Restoran belum disetting.');
+        }
+
+        $tables = Table::where('restaurant_id', $restaurant->id)->get();
+        $menus  = Menu::where('restaurant_id', $restaurant->id)->get();
+
+        // Calculate dynamic table status for today
+        $reservationsToday = \App\Models\Reservation::where('restaurant_id', $restaurant->id)
+            ->where('reservation_date', now()->toDateString())
+            ->whereIn('status', ['paid', 'approved'])
+            ->get();
+
+        foreach ($tables as $table) {
+            $status = 'available';
+            
+            foreach ($reservationsToday as $res) {
+                if ($res->table_id == $table->id) {
+                    $resTime = \Carbon\Carbon::parse($res->reservation_time);
+                    $now = now();
+                    
+                    if ($now->between($resTime, $resTime->copy()->addHours(2))) {
+                        $status = 'occupied';
+                        break; // currently occupied, highest priority
+                    } elseif ($resTime->isFuture()) {
+                        $status = 'reserved'; // reserved for later
+                    }
+                }
+            }
+            $table->dynamic_status = $status;
+        }
 
         return view('owner.kelola-meja', compact('tables', 'menus'));
     }

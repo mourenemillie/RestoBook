@@ -82,8 +82,7 @@ Route::middleware(['auth', 'role:owner'])->prefix('owner')->group(function () {
     Route::get('/reservasi/{id}', [OwnerReservationController::class, 'show'])->name('owner.reservasi.show');
     Route::patch('/reservasi/{id}/hadir', [OwnerReservationController::class, 'hadir'])->name('owner.reservasi.hadir');
     Route::patch('/reservasi/{id}/tidak-hadir', [OwnerReservationController::class, 'tidakHadir'])->name('owner.reservasi.tidak-hadir');
-    Route::patch('/reservasi/{id}/approve', [OwnerReservationController::class, 'approve'])->name('owner.reservasi.approve');
-    Route::patch('/reservasi/{id}/reject', [OwnerReservationController::class, 'reject'])->name('owner.reservasi.reject');
+
     Route::get('/kelola-meja', [OwnerTableController::class, 'index'])->name('owner.kelola-meja');
     Route::post('/kelola-meja', [OwnerTableController::class, 'store'])->name('owner.kelola-meja.store');
     Route::get('/kelola-meja/create', [OwnerTableController::class, 'create'])->name('owner.kelola-meja.create');
@@ -109,4 +108,5 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::get('/reservations', [CustomerReservationController::class, 'index'])->name('customer.reservations');
     Route::get('/reservasi/create/{restaurant}', [CustomerReservationController::class, 'create'])->name('customer.reservations.create');
     Route::post('/reservasi/store', [CustomerReservationController::class, 'store'])->name('customer.reservations.store');
+    Route::get('/api/available-tables', [CustomerReservationController::class, 'getAvailableTables'])->name('customer.api.tables');
 });

@@ -607,7 +607,7 @@
             </div>
             <div class="stat-card">
                 <div class="stat-label">Tersedia</div>
-                <div class="stat-value" style="color:var(--green);">{{ $tables->where('status','available')->count() }}</div>
+                <div class="stat-value" style="color:var(--green);">{{ $tables->where('dynamic_status','available')->count() }}</div>
                 <div class="stat-icon" style="background:#DCFCE7;">
                     <svg viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="20 6 9 17 4 12"></polyline>
@@ -616,7 +616,7 @@
             </div>
             <div class="stat-card">
                 <div class="stat-label">Terisi</div>
-                <div class="stat-value" style="color:var(--red);">{{ $tables->where('status','occupied')->count() }}</div>
+                <div class="stat-value" style="color:var(--red);">{{ $tables->where('dynamic_status','occupied')->count() }}</div>
                 <div class="stat-icon" style="background:#FEE2E2;">
                     <svg viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
@@ -626,7 +626,7 @@
             </div>
             <div class="stat-card">
                 <div class="stat-label">Direservasi</div>
-                <div class="stat-value" style="color:var(--yellow);">{{ $tables->where('status','reserved')->count() }}</div>
+                <div class="stat-value" style="color:var(--yellow);">{{ $tables->where('dynamic_status','reserved')->count() }}</div>
                 <div class="stat-icon" style="background:#FEF3C7;">
                     <svg viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="12" cy="12" r="10"></circle>
@@ -650,13 +650,13 @@
             <div class="table-grid">
                 @forelse($tables as $table)
                 <div class="meja-card
-                    {{ $table->status == 'available' ? 'tersedia'    : '' }}
-                    {{ $table->status == 'occupied'  ? 'terisi'      : '' }}
-                    {{ $table->status == 'reserved'  ? 'direservasi' : '' }}">
+                    {{ $table->dynamic_status == 'available' ? 'tersedia'    : '' }}
+                    {{ $table->dynamic_status == 'occupied'  ? 'terisi'      : '' }}
+                    {{ $table->dynamic_status == 'reserved'  ? 'direservasi' : '' }}">
                     <span class="meja-id">{{ str_pad($table->table_number, 2, '0', STR_PAD_LEFT) }}</span>
-                    @if($table->status == 'available')
+                    @if($table->dynamic_status == 'available')
                         <div class="status-pill pill-tersedia">Tersedia</div>
-                    @elseif($table->status == 'occupied')
+                    @elseif($table->dynamic_status == 'occupied')
                         <div class="status-pill pill-terisi">Terisi</div>
                     @else
                         <div class="status-pill pill-direservasi">Direservasi</div>

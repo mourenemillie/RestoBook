@@ -68,27 +68,15 @@
                                 <span class="text-orange-600 text-xs font-bold uppercase cursor-pointer hover:underline">Lihat Denah Lokasi</span>
                             </div>
                             
-                            <input type="hidden" name="table_area" id="selected_table_area" value="{{ old('table_area', $restaurant->tables->first()?->table_number ?? 'Tanpa Meja') }}">
+                            <input type="hidden" name="table_id" id="selected_table_id" value="{{ old('table_id') }}">
 
                             <div class="relative rounded-[2rem] overflow-hidden h-64 bg-slate-200 border border-gray-100 overflow-x-auto">
-                                <img src="{{ $restaurant->image && filter_var($restaurant->image, FILTER_VALIDATE_URL) ? $restaurant->image : ($restaurant->image ? Storage::url($restaurant->image) : 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=800') }}" class="absolute w-full h-full object-cover opacity-60" alt="Layout Restoran">
-                                <div class="absolute inset-0 flex items-center gap-4 px-6 overflow-x-auto whitespace-nowrap" style="padding-bottom: 10px;">
-                                    
-                                    @forelse($restaurant->tables ?? [] as $index => $table)
-                                        @php
-                                            $isActive = old('table_area', $restaurant->tables->first()?->table_number ?? '') == $table->table_number;
-                                        @endphp
-                                        <button type="button" class="area-btn {{ $isActive ? 'bg-orange-600 text-white shadow-xl border-white transform scale-110' : 'bg-white/90 backdrop-blur text-slate-600 shadow-sm border-transparent transform scale-100' }} p-4 rounded-2xl flex flex-col items-center min-w-[100px] border-2 transition-all duration-300" data-area="{{ $table->table_number }}">
-                                            <span class="text-[10px] font-bold uppercase">Meja</span>
-                                            <span class="font-black text-lg">{{ $table->table_number }}</span>
-                                            <span class="text-[9px] mt-1 text-inherit opacity-80">{{ $table->capacity }} Orang</span>
-                                        </button>
-                                    @empty
-                                        <div class="bg-white/90 backdrop-blur text-slate-600 p-4 rounded-2xl font-bold text-sm mx-auto">
-                                            Belum ada meja tersedia
-                                        </div>
-                                    @endforelse
-                                    
+                                <img src="{{ $restaurant->image && filter_var($restaurant->image, FILTER_VALIDATE_URL) ? $restaurant->image : ($restaurant->image ? Storage::url($restaurant->image) : 'https://placehold.co/800x400?text=RestoBook') }}" class="absolute w-full h-full object-cover opacity-60" alt="Layout Restoran">
+                                <div class="absolute inset-0 flex items-center gap-4 px-6 overflow-x-auto whitespace-nowrap" style="padding-bottom: 10px;" id="tables-container">
+                                    <!-- Dynamic tables will be loaded here -->
+                                    <div class="bg-white/90 backdrop-blur text-slate-600 p-4 rounded-2xl font-bold text-sm mx-auto">
+                                        Memuat ketersediaan meja...
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -160,7 +148,7 @@
                             <span class="font-black text-orange-600 text-2xl" id="summary-total">Rp 0</span>
                         </div>
 
-                        <button type="submit" class="w-full bg-orange-600 text-white py-5 rounded-3xl font-black text-lg shadow-xl shadow-orange-100 hover:bg-orange-700 transition-all flex items-center justify-center gap-3 transform hover:-translate-y-1">
+                        <button type="submit" id="submit-btn" class="w-full bg-orange-600 text-white py-5 rounded-3xl font-black text-lg shadow-xl shadow-orange-100 hover:bg-orange-700 transition-all flex items-center justify-center gap-3 transform hover:-translate-y-1">
                             Lanjut ke Pembayaran 
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3" />
@@ -191,6 +179,10 @@
             });
             this.className = "time-btn px-6 py-3 rounded-2xl font-bold transition-all border-2 bg-orange-50 text-orange-600 border-orange-600";
             document.getElementById('selected_booking_time').value = this.getAttribute('data-time');
+            
+            if (typeof fetchTables === 'function') {
+                fetchTables();
+            }
         });
     });
 
@@ -205,81 +197,85 @@
         });
     });
 
-    // 3. Logika Update Harga Dinamis Berdasarkan Jumlah Tamu
+    const restaurantId = document.querySelector('input[name="restaurant_id"]').value;
+    const dateInput = document.querySelector('input[name="booking_date"]');
     const guestSelect = document.querySelector('select[name="number_of_people"]');
-    if (guestSelect) {
-        guestSelect.addEventListener('change', function() {
-            calculateTotal();
-        });
-    }
+    const tablesContainer = document.getElementById('tables-container');
+    const selectedTableIdInput = document.getElementById('selected_table_id');
 
-    // 4. Kalkulasi Menu Dinamis
-    const checkboxes = document.querySelectorAll('.menu-checkbox');
-    const selectedMenusList = document.getElementById('selected-menus-list');
-    const summarySubtotal = document.getElementById('summary-subtotal');
-    const summaryTax = document.getElementById('summary-tax');
-    const summaryTotal = document.getElementById('summary-total');
+    function fetchTables() {
+        const date = dateInput.value;
+        const time = document.getElementById('selected_booking_time').value;
+        const capacity = guestSelect.value;
 
-    function formatRupiah(number) {
-        return 'Rp ' + number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    }
+        tablesContainer.innerHTML = `<div class="bg-white/90 backdrop-blur text-slate-600 p-4 rounded-2xl font-bold text-sm mx-auto">Memuat ketersediaan meja...</div>`;
 
-    function calculateTotal() {
-        let subtotal = 0;
-        let html = '';
-        let hasSelection = false;
-
-        checkboxes.forEach(cb => {
-            const qtyInput = cb.closest('.border').querySelector('.menu-qty');
-            if (cb.checked) {
-                hasSelection = true;
-                qtyInput.disabled = false;
-                qtyInput.classList.remove('bg-gray-50', 'text-gray-500');
-                qtyInput.classList.add('bg-white', 'text-slate-800');
+        fetch(`/api/available-tables?restaurant_id=${restaurantId}&date=${date}&time=${time}&capacity=${capacity}`)
+            .then(res => res.json())
+            .then(data => {
+                let html = '';
+                const submitBtn = document.getElementById('submit-btn');
                 
-                const price = parseInt(cb.getAttribute('data-price'));
-                const qty = parseInt(qtyInput.value) || 1;
-                const name = cb.getAttribute('data-name');
-                const totalItemPrice = price * qty;
-                subtotal += totalItemPrice;
-
-                html += `
-                <div class="flex justify-between text-sm">
-                    <div>
-                        <p class="font-bold text-slate-700">${name}</p>
-                        <p class="text-[10px] text-gray-400">Pilihan Anda • <span>${qty}</span>x</p>
-                    </div>
-                    <span class="font-bold text-slate-800">${formatRupiah(totalItemPrice)}</span>
-                </div>
-                `;
-            } else {
-                qtyInput.disabled = true;
-                qtyInput.classList.add('bg-gray-50', 'text-gray-500');
-                qtyInput.classList.remove('bg-white', 'text-slate-800');
-            }
-        });
-
-        if (!hasSelection) {
-            html = '<div class="text-xs text-gray-400 italic">Belum ada menu yang dipilih</div>';
-        }
-
-        selectedMenusList.innerHTML = html;
-        const tax = Math.round(subtotal * 0.1); // 10% tax
-        summarySubtotal.innerText = formatRupiah(subtotal);
-        summaryTax.innerText = formatRupiah(tax);
-        summaryTotal.innerText = formatRupiah(subtotal + tax);
+                if (data.tables.length === 0) {
+                    selectedTableIdInput.value = '';
+                    submitBtn.disabled = true;
+                    submitBtn.classList.replace('bg-orange-600', 'bg-gray-400');
+                    submitBtn.classList.replace('hover:bg-orange-700', 'hover:bg-gray-400');
+                    submitBtn.classList.replace('shadow-orange-100', 'shadow-gray-100');
+                    submitBtn.innerHTML = 'Meja Penuh';
+                    html = `
+                        <div class="bg-white/90 backdrop-blur text-slate-600 p-4 rounded-2xl flex flex-col items-center mx-auto text-center border border-red-200">
+                            <span class="font-bold text-red-500 mb-2">Meja Tidak Tersedia</span>
+                            <span class="text-xs">Tidak ada meja untuk kapasitas ini di jam tersebut. Silakan pilih jam/tanggal lain.</span>
+                        </div>
+                    `;
+                } else {
+                    submitBtn.disabled = false;
+                    submitBtn.classList.replace('bg-gray-400', 'bg-orange-600');
+                    submitBtn.classList.replace('hover:bg-gray-400', 'hover:bg-orange-700');
+                    submitBtn.classList.replace('shadow-gray-100', 'shadow-orange-100');
+                    submitBtn.innerHTML = `
+                            Lanjut ke Pembayaran 
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            </svg>
+                    `;
+                    data.tables.forEach((table, index) => {
+                        const isFirst = index === 0;
+                        if (isFirst) selectedTableIdInput.value = table.id;
+                        html += `
+                            <button type="button" class="area-btn ${isFirst ? 'bg-orange-600 text-white shadow-xl border-white transform scale-110' : 'bg-white/90 backdrop-blur text-slate-600 shadow-sm border-transparent transform scale-100'} p-4 rounded-2xl flex flex-col items-center min-w-[100px] border-2 transition-all duration-300" data-area="${table.id}">
+                                <span class="text-[10px] font-bold uppercase">Meja</span>
+                                <span class="font-black text-lg">${table.table_number}</span>
+                                <span class="text-[9px] mt-1 text-inherit opacity-80">${table.capacity} Orang</span>
+                            </button>
+                        `;
+                    });
+                }
+                tablesContainer.innerHTML = html;
+                attachTableListeners();
+            });
     }
 
-    checkboxes.forEach(cb => {
-        cb.addEventListener('change', calculateTotal);
-    });
+    function attachTableListeners() {
+        document.querySelectorAll('.area-btn, .area-btn-none').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.area-btn').forEach(b => {
+                    b.className = "area-btn bg-white/90 backdrop-blur text-slate-600 p-4 rounded-2xl flex flex-col items-center min-w-[100px] shadow-sm border-2 border-transparent transition-all duration-300 transform scale-100";
+                });
+                if (this.classList.contains('area-btn')) {
+                    this.className = "area-btn bg-orange-600 text-white p-4 rounded-2xl shadow-xl flex flex-col items-center min-w-[100px] border-2 border-white transform scale-110 transition-all duration-300";
+                }
+                selectedTableIdInput.value = this.getAttribute('data-area');
+            });
+        });
+    }
 
-    document.querySelectorAll('.menu-qty').forEach(qty => {
-        qty.addEventListener('input', calculateTotal);
-        qty.addEventListener('change', calculateTotal);
-    });
-    
-    // Initial calculate
+    dateInput.addEventListener('change', fetchTables);
+    guestSelect.addEventListener('change', fetchTables);
+
+    // Initial calculate and fetch
     calculateTotal();
+    fetchTables();
 </script>
 @endsection
