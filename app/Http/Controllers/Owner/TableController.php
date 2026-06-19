@@ -50,6 +50,12 @@ class TableController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'table_number' => 'required|string|max:255',
+            'capacity' => 'required|integer|min:1',
+            'status' => 'required|in:available,occupied,reserved',
+        ]);
+
         $restaurant = \App\Models\Restaurant::where('user_id', auth()->id())->first();
 
         Table::create([
@@ -78,6 +84,12 @@ class TableController extends Controller
 
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'table_number' => 'required|string|max:255',
+            'capacity' => 'required|integer|min:1',
+            'status' => 'required|in:available,occupied,reserved',
+        ]);
+
         $restaurant = \App\Models\Restaurant::where('user_id', auth()->id())->first();
         $table = Table::where('restaurant_id', $restaurant->id)->findOrFail($id);
 

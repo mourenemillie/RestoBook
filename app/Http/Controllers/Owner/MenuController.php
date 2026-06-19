@@ -55,6 +55,13 @@ class MenuController extends Controller
     }
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'category' => 'required',
+            'price' => 'required|integer',
+            'image' => 'nullable|image|max:2048',
+        ]);
+
         $restaurant = \App\Models\Restaurant::where('user_id', Auth::id())->first();
         $menu = Menu::where('restaurant_id', $restaurant->id)->findOrFail($id);
 
