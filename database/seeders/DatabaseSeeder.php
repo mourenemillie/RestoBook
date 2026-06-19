@@ -132,8 +132,7 @@ class DatabaseSeeder extends Seeder
                 Table::create([
                     'restaurant_id' => $restaurant->id,
                     'table_number' => 'M' . $i,
-                    'capacity' => 4,
-                    'status' => 'available'
+                    'capacity' => 4
                 ]);
             }
         }
