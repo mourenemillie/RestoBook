@@ -1,15 +1,22 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="bg-white">
+<div class="bg-white relative overflow-hidden">
+    <!-- Tekstur Grain -->
+    <div class="absolute inset-0 z-0 pointer-events-none opacity-[0.03]" style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E');"></div>
+
     {{-- HERO SECTION --}}
-    <section class="container mx-auto px-6 py-12 md:py-20 flex flex-col md:flex-row items-center gap-12">
-        <div class="md:w-1/2">
-            <div class="inline-flex items-center gap-2 px-4 py-1.5 bg-orange-100 rounded-full text-orange-600 text-[10px] font-extrabold mb-6 tracking-widest uppercase">
-                <span class="material-symbols-outlined text-sm">storefront</span> MSME EMPOWERMENT
+    <section class="container mx-auto px-6 py-12 md:py-20 flex flex-col md:flex-row items-center gap-12 relative z-10">
+        <!-- Latar belakang abstrak -->
+        <div class="absolute top-0 left-0 w-[500px] h-[500px] bg-orange-500 rounded-full mix-blend-multiply filter blur-[120px] opacity-[0.08] -z-10 transform -translate-x-1/2 -translate-y-1/2"></div>
+        <div class="absolute bottom-0 left-1/4 w-72 h-72 bg-emerald-50 rounded-full mix-blend-multiply filter blur-3xl opacity-50 -z-10 transform -translate-x-1/2 translate-y-1/4"></div>
+
+        <div class="md:w-1/2 relative z-10">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 bg-emerald-50 rounded-full text-emerald-600 border border-emerald-100 text-[10px] font-extrabold mb-6 tracking-widest uppercase">
+                <span class="material-symbols-outlined text-sm">storefront</span> Pemberdayaan UMKM
             </div>
             <h1 class="text-5xl md:text-[64px] font-extrabold leading-[1.1] text-[#2D2320] tracking-tight">
-                Booking Meja Kini <br><span class="text-orange-600">Lebih Mudah</span>
+                Booking Meja Kini <br><span class="text-orange-600 italic">Lebih Mudah</span>
             </h1>
             <p class="text-slate-500 mt-6 text-base max-w-md leading-relaxed font-medium">
                 Temukan dan pesan meja di restoran favoritmu di Bandar Lampung. Dukung UMKM lokal dengan pengalaman bersantap yang lebih baik.
@@ -39,8 +46,8 @@
                         <span class="material-symbols-outlined text-xl">check_circle</span>
                     </div>
                     <div>
-                        <p class="text-[#2D2320] font-extrabold text-sm">500+ UMKM</p>
-                        <p class="text-xs text-slate-500 font-medium mt-0.5">Bergabung Bersama Kami</p>
+                        <p class="text-[#2D2320] font-extrabold text-sm md:text-base">500+ UMKM</p>
+                        <p class="text-[13px] text-slate-600 font-bold mt-0.5">Bergabung Bersama Kami</p>
                     </div>
                 </div>
             </div>

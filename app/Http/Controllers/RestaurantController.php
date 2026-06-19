@@ -21,11 +21,16 @@ class RestaurantController extends Controller
             };
         }
 
+<<<<<<< HEAD
         // 2. Ambil data restoran dari database untuk ditampilkan di landing page umum
         $restaurants = Restaurant::all(); 
 
         // 3. SINKRONISASI VIEW: Diarahkan ke folder 'restaurant' dan file 'landingpage'
         return view('restaurant.landingpage', compact('restaurants'));
+=======
+        $restaurants = \App\Models\Restaurant::where('status', 'active')->take(6)->get();
+        return view('restaurant.index', compact('restaurants'));
+>>>>>>> ac62f328756ae709eeec56ca0e97b1cff3d92f39
     }
 
     /**

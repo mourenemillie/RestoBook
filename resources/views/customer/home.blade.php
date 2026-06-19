@@ -112,8 +112,14 @@
 @endif
 
 {{-- HERO SECTION --}}
-<section style="background: linear-gradient(90deg, #f5f7f4 0%, #f5f7f4 100%);">
-    <div class="hero">
+<section style="background: linear-gradient(90deg, #f5f7f4 0%, #f5f7f4 100%); position: relative; overflow: hidden;">
+    <!-- Grain Texture -->
+    <div style="position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: 0.03; background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E');"></div>
+    
+    <!-- Abstract Blob -->
+    <div style="position: absolute; top: -100px; left: -100px; width: 600px; height: 600px; background: #f97316; border-radius: 50%; mix-blend-mode: multiply; filter: blur(120px); opacity: 0.08; z-index: 0;"></div>
+
+    <div class="hero" style="position: relative; z-index: 10;">
         <div class="hero-grid">
             {{-- KIRI: Text & Form Pencarian --}}
             <div>

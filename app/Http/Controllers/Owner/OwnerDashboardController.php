@@ -14,7 +14,17 @@ class OwnerDashboardController extends Controller
                 'val' => rand(20, 120)
             ]);
 
-        $restaurant = \App\Models\Restaurant::where('user_id', auth()->id())->first();
+        $restaurant = \App\Models\Restaurant::withCount(['menus', 'tables'])->where('user_id', auth()->id())->first();
+
+        $setupProgress = [
+            'has_image' => $restaurant && $restaurant->image && $restaurant->image !== 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&h=300&fit=crop',
+            'has_menus' => $restaurant && $restaurant->menus_count >= 3,
+            'menus_count' => $restaurant ? $restaurant->menus_count : 0,
+            'has_tables' => $restaurant && $restaurant->tables_count >= 1,
+            'tables_count' => $restaurant ? $restaurant->tables_count : 0,
+            'is_submitted' => $restaurant ? $restaurant->is_submitted : false,
+        ];
+        $isSetupComplete = $setupProgress['has_image'] && $setupProgress['has_menus'] && $setupProgress['has_tables'];
 
         return view('dashboard.owner', [
             'totalTamu' => 142,
@@ -47,6 +57,17 @@ class OwnerDashboardController extends Controller
             'tables' => [],
             'chartData' => $chartData->toArray(),
             'restaurant_status' => $restaurant ? $restaurant->status : 'pending',
+            'setupProgress' => $setupProgress,
+            'isSetupComplete' => $isSetupComplete,
         ]);
+    }
+
+    public function submitVerification()
+    {
+        $restaurant = \App\Models\Restaurant::where('user_id', auth()->id())->first();
+        if ($restaurant) {
+            $restaurant->update(['is_submitted' => true]);
+        }
+        return redirect()->route('owner.pending')->with('success', 'Profil restoran berhasil diajukan untuk verifikasi!');
     }
 }

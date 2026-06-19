@@ -12,7 +12,7 @@
             --bg-body: #fffaf8;
             --bg-sidebar: #ffffff;
             --text-main: #271f1d;
-            --text-muted: #807773;
+            --text-muted: #5e5450; /* Gelapkan dari #807773 */
             --border-color: #f2ebe8;
             --card-shadow: 0 4px 24px rgba(0, 0, 0, 0.02);
             
@@ -496,7 +496,7 @@
         </div>
 
         <div class="user-profile">
-            <img src="https://i.pravatar.cc/150?img=11" alt="Resto Owner">
+            <img src="{{ auth()->user()->avatar ? asset('storage/' . auth()->user()->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name) . '&background=E8500A&color=fff' }}" alt="Resto Owner">
             <div class="user-info">
                 <h4>Resto Owner</h4>
                 <p>Manage your resto</p>
@@ -567,13 +567,7 @@
                         <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
                     </svg>
                 </button>
-                <button class="btn-primary">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="12" y1="5" x2="12" y2="19"></line>
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                    </svg>
-                    Reservasi Baru
-                </button>
+
             </div>
         </header>
 
@@ -678,7 +672,7 @@
                         </tr>
                     </thead>
                    <tbody>
-@foreach($reservations as $reservation)
+@forelse($reservations as $reservation)
 <tr>
     <td>
         <div class="customer-cell">
@@ -713,7 +707,20 @@
         </a>
     </td>
 </tr>
-@endforeach
+@empty
+<tr>
+    <td colspan="5" style="text-align: center; padding: 40px 20px; color: var(--text-muted);">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin: 0 auto 12px; color: #d1cbc8; display: block;">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        <p style="font-weight: 600; font-size: 14px; margin-bottom: 4px; color: var(--text-main);">Belum ada reservasi terbaru</p>
+        <p style="font-size: 13px;">Data reservasi pelanggan akan muncul di sini.</p>
+    </td>
+</tr>
+@endforelse
 </tbody>
                 </table>
             </div>
@@ -730,17 +737,22 @@
                     </button>
                 </div>
                 <div style="padding: 10px 0;">
+                    @php
+                        $tersedia = $mejaTersedia;
+                        $terisi = max(0, $totalMeja - $mejaTersedia);
+                        
+                        $pctTersedia = $totalMeja > 0 ? round(($tersedia / $totalMeja) * 100) : 0;
+                        $pctTerisi = $totalMeja > 0 ? round(($terisi / $totalMeja) * 100) : 0;
+                    @endphp
                     <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 13px; font-weight: 600;">
-                        <span style="color: #2e7a51;">Tersedia (50%)</span>
-                        <span style="color: #9f1239;">Terisi (33%)</span>
-                        <span style="color: #b45309;">Dipesan (17%)</span>
+                        <span style="color: #2e7a51;">Tersedia ({{ $pctTersedia }}%)</span>
+                        <span style="color: #9f1239;">Terisi / Dipesan ({{ $pctTerisi }}%)</span>
                     </div>
                     <div style="width: 100%; height: 12px; background: #f2ebe8; border-radius: 6px; display: flex; overflow: hidden; margin-bottom: 20px;">
-                        <div style="width: 50%; background: #85d9a9;" title="12 Meja Tersedia"></div>
-                        <div style="width: 33%; background: #fca5a5;" title="8 Meja Terisi"></div>
-                        <div style="width: 17%; background: #fcd34d;" title="4 Meja Dipesan"></div>
+                        <div style="width: {{ $pctTersedia }}%; background: #85d9a9;" title="{{ $tersedia }} Meja Tersedia"></div>
+                        <div style="width: {{ $pctTerisi }}%; background: #fca5a5;" title="{{ $terisi }} Meja Terisi"></div>
                     </div>
-                    <p style="font-size: 12px; color: var(--text-muted); text-align: center;">Total 24 Meja (12 Tersedia, 8 Terisi, 4 Dipesan)</p>
+                    <p style="font-size: 12px; color: var(--text-muted); text-align: center;">Total {{ $totalMeja }} Meja ({{ $tersedia }} Tersedia, {{ $terisi }} Terisi/Dipesan)</p>
                 </div>
             </div>
         </div>
@@ -748,24 +760,44 @@
         <div class="card">
             <h2 class="card-title" style="margin-bottom: 30px;">Tren Reservasi Mingguan</h2>
             
-            <div class="chart-container">
-                <div class="bar-wrapper"><div class="bar" style="height: 28%; background-color: #f1dfd5;"></div></div>
-                <div class="bar-wrapper"><div class="bar" style="height: 42%; background-color: #dfbfae;"></div></div>
-                <div class="bar-wrapper"><div class="bar" style="height: 35%; background-color: #e5cdbf;"></div></div>
-                <div class="bar-wrapper"><div class="bar" style="height: 55%; background-color: #c19175;"></div></div>
-                <div class="bar-wrapper"><div class="bar" style="height: 85%; background-color: #9e3d09;"></div></div>
-                <div class="bar-wrapper"><div class="bar" style="height: 60%; background-color: #bc774f;"></div></div>
-                <div class="bar-wrapper"><div class="bar" style="height: 48%; background-color: #ceaa94;"></div></div>
-            </div>
-            
-            <div class="chart-labels">
-                <span>Sen</span>
-                <span>Sel</span>
-                <span>Rab</span>
-                <span>Kam</span>
-                <span>Jum</span>
-                <span>Sab</span>
-                <span>Min</span>
+            <div style="position: relative; padding-left: 30px;">
+                <div style="position: absolute; left: 0; top: 0; bottom: 46px; display: flex; flex-direction: column; justify-content: space-between; font-size: 11px; color: var(--text-muted); text-align: right; width: 20px;">
+                    <span>50</span>
+                    <span>40</span>
+                    <span>30</span>
+                    <span>20</span>
+                    <span>10</span>
+                    <span>0</span>
+                </div>
+                
+                <div style="position: absolute; left: 30px; right: 0; top: 6px; bottom: 46px; display: flex; flex-direction: column; justify-content: space-between; pointer-events: none;">
+                    <div style="border-top: 1px dashed #e5e5e5; width: 100%;"></div>
+                    <div style="border-top: 1px dashed #e5e5e5; width: 100%;"></div>
+                    <div style="border-top: 1px dashed #e5e5e5; width: 100%;"></div>
+                    <div style="border-top: 1px dashed #e5e5e5; width: 100%;"></div>
+                    <div style="border-top: 1px dashed #e5e5e5; width: 100%;"></div>
+                    <div style="border-top: 1px solid var(--border-color); width: 100%;"></div>
+                </div>
+                
+                <div class="chart-container" style="border-bottom: none; margin-bottom: 0; position: relative; z-index: 1;">
+                    <div class="bar-wrapper"><div class="bar" style="height: 28%; background-color: #f1dfd5;" title="14 Reservasi"></div></div>
+                    <div class="bar-wrapper"><div class="bar" style="height: 42%; background-color: #dfbfae;" title="21 Reservasi"></div></div>
+                    <div class="bar-wrapper"><div class="bar" style="height: 35%; background-color: #e5cdbf;" title="17 Reservasi"></div></div>
+                    <div class="bar-wrapper"><div class="bar" style="height: 55%; background-color: #c19175;" title="27 Reservasi"></div></div>
+                    <div class="bar-wrapper"><div class="bar" style="height: 85%; background-color: #9e3d09;" title="42 Reservasi"></div></div>
+                    <div class="bar-wrapper"><div class="bar" style="height: 60%; background-color: #bc774f;" title="30 Reservasi"></div></div>
+                    <div class="bar-wrapper"><div class="bar" style="height: 48%; background-color: #ceaa94;" title="24 Reservasi"></div></div>
+                </div>
+                
+                <div class="chart-labels" style="padding-left: 0; margin-top: -16px;">
+                    <span>Sen</span>
+                    <span>Sel</span>
+                    <span>Rab</span>
+                    <span>Kam</span>
+                    <span>Jum</span>
+                    <span>Sab</span>
+                    <span>Min</span>
+                </div>
             </div>
         </div>
     </main>

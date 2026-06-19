@@ -23,6 +23,10 @@
             --table-header-bg: #fdf6f3;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -188,16 +192,7 @@
             color: var(--dark-brown);
         }
 
-        .btn-notification::after {
-            content: '';
-            position: absolute;
-            top: 10px;
-            right: 12px;
-            width: 6px;
-            height: 6px;
-            background-color: #ef4444;
-            border-radius: 50%;
-        }
+
 
         .btn-export {
             background-color: var(--dark-brown);
@@ -216,7 +211,7 @@
         /* Stats Grid */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 20px;
             margin-bottom: 32px;
         }
@@ -278,9 +273,6 @@
         .stat-trend.neutral { color: var(--text-gray); }
 
         .stat-icon {
-            position: absolute;
-            top: 20px;
-            right: 20px;
             width: 36px;
             height: 36px;
             background-color: var(--dark-brown);
@@ -401,8 +393,8 @@
         }
 
         .tag {
-            background-color: #f5e9e6;
-            color: #8c5b49;
+            background-color: #f1f5f9;
+            color: var(--text-gray);
             padding: 2px 8px;
             border-radius: 4px;
             font-size: 11px;
@@ -423,6 +415,21 @@
             font-weight: 600;
             font-size: 13px;
             cursor: pointer;
+        }
+
+        .btn-outline-danger {
+            background: white;
+            border: 1.5px solid #ef4444;
+            color: #ef4444;
+            padding: 8px 24px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-outline-danger:hover {
+            background: #fef2f2;
         }
 
         .btn-filled {
@@ -667,23 +674,28 @@
                 <p>Sistem Manajemen Platform RestoBook</p>
             </div>
             <div class="header-actions">
-                <button class="btn-notification">
+                <a href="#pending-approvals" class="btn-notification" style="text-decoration: none;">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-                </button>
-                <button class="btn-export">
+                    @if($pendingRestaurants->count() > 0)
+                        <span style="position: absolute; top: 10px; right: 12px; width: 8px; height: 8px; background-color: #ef4444; border-radius: 50%;"></span>
+                    @endif
+                </a>
+                <a href="{{ route('admin.export') }}" class="btn-export" style="text-decoration: none;">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                     Export Laporan
-                </button>
+                </a>
             </div>
         </header>
 
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-icon">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-                </div>
                 <div class="stat-content">
-                    <div class="stat-title">Total Restoran</div>
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                        <div class="stat-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                        </div>
+                        <div class="stat-title" style="margin-bottom: 0;">Total Restoran</div>
+                    </div>
                     <div class="stat-value">{{ number_format($totalRestaurants) }}</div>
                     <div class="stat-trend positive">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
@@ -693,11 +705,13 @@
             </div>
             
             <div class="stat-card">
-                <div class="stat-icon light-brown">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                </div>
                 <div class="stat-content">
-                    <div class="stat-title">Total User</div>
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                        <div class="stat-icon light-brown">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                        </div>
+                        <div class="stat-title" style="margin-bottom: 0;">Total User</div>
+                    </div>
                     <div class="stat-value">{{ number_format($totalUsers) }}</div>
                     <div class="stat-trend positive">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
@@ -707,11 +721,13 @@
             </div>
 
             <div class="stat-card">
-                <div class="stat-icon light-brown">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                </div>
                 <div class="stat-content">
-                    <div class="stat-title">Reservasi Aktif</div>
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                        <div class="stat-icon light-brown">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                        </div>
+                        <div class="stat-title" style="margin-bottom: 0;">Reservasi Aktif</div>
+                    </div>
                     <div class="stat-value">{{ number_format($activeReservations) }}</div>
                     <div class="stat-trend neutral">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
@@ -720,22 +736,9 @@
                 </div>
             </div>
 
-            <div class="stat-card">
-                <div class="stat-icon">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"></rect><circle cx="12" cy="12" r="2"></circle><path d="M6 12h.01M18 12h.01"></path></svg>
-                </div>
-                <div class="stat-content">
-                    <div class="stat-title">Pendapatan Platform</div>
-                    <div class="stat-value">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</div>
-                    <div class="stat-trend positive">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
-                        Dari reservasi selesai
-                    </div>
-                </div>
-            </div>
         </div>
 
-        <section class="section-card">
+        <section class="section-card" id="pending-approvals">
             <div class="section-header">
                 <div class="section-title-wrap">
                     <div class="section-icon">
@@ -774,7 +777,7 @@
                     <div class="action-buttons">
                         <form action="{{ route('admin.restaurants.reject', $pending->id) }}" method="POST" style="display:inline;">
                             @csrf @method('PATCH')
-                            <button class="btn-outline">Tolak</button>
+                            <button class="btn-outline-danger">Tolak</button>
                         </form>
                         <form action="{{ route('admin.restaurants.approve', $pending->id) }}" method="POST" style="display:inline;">
                             @csrf @method('PATCH')
@@ -816,48 +819,46 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @forelse($allRestaurants as $r)
                     <tr>
                         <td>
                             <div class="rest-cell">
-                                <div class="rest-avatar">W</div>
+                                <div class="rest-avatar">{{ strtoupper(substr($r->name, 0, 1)) }}</div>
                                 <div class="rest-info-text" style="display: flex; align-items: center; gap: 8px;">
-                                    <h4 style="margin-bottom: 0;">Waroeng Steak & Shake</h4>
-                                    <span style="font-size: 10px; color: var(--text-gray); background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-weight: 600;">ID: RST-001</span>
+                                    <h4 style="margin-bottom: 0;">{{ $r->name }}</h4>
+                                    <span style="font-size: 10px; color: var(--text-gray); background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-weight: 600;">ID: RST-{{ str_pad($r->id, 3, '0', STR_PAD_LEFT) }}</span>
                                 </div>
                             </div>
                         </td>
-                        <td>Way Halim</td>
+                        <td>{{ $r->city ?? 'Bandar Lampung' }}</td>
                         <td>
+                            @if($r->status === 'active')
                             <div class="status">
                                 <div class="dot"></div> Aktif
                             </div>
+                            @elseif($r->status === 'pending')
+                            <div class="status" style="background-color: #fef3c7; color: #d97706;">
+                                <div class="dot" style="background-color: #d97706;"></div> Pending
+                            </div>
+                            @else
+                            <div class="status" style="background-color: #fee2e2; color: #ef4444;">
+                                <div class="dot" style="background-color: #ef4444;"></div> Ditolak
+                            </div>
+                            @endif
                         </td>
-                        <td>145</td>
+                        <td>{{ $r->reservations_count }}</td>
                         <td>
-                            <svg class="action-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                            <a href="{{ route('admin.restaurants') }}" style="color: inherit;">
+                                <svg class="action-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
+                            </a>
+                            <!-- Placeholder for dropdown menu later -->
                         </td>
                     </tr>
+                    @empty
                     <tr>
-                        <td>
-                            <div class="rest-cell">
-                                <div class="rest-avatar">W</div>
-                                <div class="rest-info-text" style="display: flex; align-items: center; gap: 8px;">
-                                    <h4 style="margin-bottom: 0;">Waroeng Djontor Kedaton</h4>
-                                    <span style="font-size: 10px; color: var(--text-gray); background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-weight: 600;">ID: RST-002</span>
-                                </div>
-                            </div>
-                        </td>
-                        <td>Kedaton</td>
-                        <td>
-                            <div class="status">
-                                <div class="dot"></div> Aktif
-                            </div>
-                        </td>
-                        <td>60</td>
-                        <td>
-                            <svg class="action-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                        </td>
+                        <td colspan="5" style="text-align: center; color: var(--text-gray); padding: 20px;">Belum ada restoran terdaftar.</td>
                     </tr>
+                    @endforelse
                 </tbody>
             </table>
             <div class="table-footer">

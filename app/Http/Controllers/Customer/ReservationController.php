@@ -17,9 +17,15 @@ class ReservationController extends Controller
      */
     public function index()
     {
+<<<<<<< HEAD
         $reservations = Reservation::with('restaurant')
             ->where('user_id', Auth::id())
             ->orderBy('reservation_date', 'desc')
+=======
+        $reservations = \App\Models\Reservation::with(['restaurant', 'table'])
+            ->where('user_id', Auth::id())
+            ->latest()
+>>>>>>> ac62f328756ae709eeec56ca0e97b1cff3d92f39
             ->get();
 
         return view('customer.reservations_index', compact('reservations'));

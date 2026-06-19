@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
         User::create([
             'name' => 'Admin',
             'email' => 'admin.sistem@gmail.com',
-            'password' => 'admin123',
+            'password' => bcrypt('admin123'),
             'role' => 'admin'
         ]);
 
@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
         User::create([
             'name' => 'Ahmad Fauzi',
             'email' => 'ahmad@gmail.com',
-            'password' => 'password',
+            'password' => bcrypt('password'),
             'role' => 'customer'
         ]);
 
@@ -113,7 +113,9 @@ class DatabaseSeeder extends Seeder
                 'city' => $r['city'],
                 'phone' => '081234567890',
                 'image' => $r['image'],
-                'status' => 'active' // Approve them so they show up
+                'open_time' => '09:00:00', // Jam buka default
+                'close_time' => '22:00:00', // Jam tutup default
+                'status' => 'active' // Langsung disetujui (active) agar tampil di pelanggan
             ]);
 
             foreach ($r['menus'] as $m) {

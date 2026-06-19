@@ -67,13 +67,17 @@ class AuthController extends Controller
         ]);
 
         if ($request->role === 'owner') {
-            Restaurant::create([
+            $restaurant = Restaurant::create([
                 'user_id' => $user->id,
                 'name' => $request->restaurant_name ?? 'Restoran Baru',
                 'address' => $request->location ?? 'Belum diisi',
                 'phone' => $request->phone,
-                'status' => 'pending',
+                'status' => 'pending', 
+                'is_submitted' => false,
                 'city' => 'Bandar Lampung',
+                'open_time' => '09:00:00',
+                'close_time' => '22:00:00',
+                'image' => 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&h=300&fit=crop', // Foto default
             ]);
         }
 
@@ -90,8 +94,11 @@ class AuthController extends Controller
     }
 
     // Redirect to Google
-    public function redirectToGoogle()
+    public function redirectToGoogle(Request $request)
     {
+        if ($request->has('role')) {
+            session(['google_register_role' => $request->role]);
+        }
         return Socialite::driver('google')->stateless()->redirect();
     }
 
@@ -115,15 +122,34 @@ class AuthController extends Controller
 
                 Auth::login($user);
             } else {
+                $role = session('google_register_role', 'customer');
+                session()->forget('google_register_role');
+
                 $user = User::create([
                     'name' => $googleUser->name,
                     'email' => $googleUser->email,
                     'google_id' => $googleUser->id,
                     'avatar' => $googleUser->avatar,
                     'password' => null,
-                    'role' => 'customer',
+                    'role' => $role,
                 ]);
                 $user->markEmailAsVerified();
+
+                if ($role === 'owner') {
+                    \App\Models\Restaurant::create([
+                        'user_id' => $user->id,
+                        'name' => $googleUser->name . ' Restaurant',
+                        'address' => 'Belum diisi',
+                        'phone' => '000000000000',
+                        'status' => 'pending', 
+                        'is_submitted' => false,
+                        'city' => 'Bandar Lampung',
+                        'open_time' => '09:00:00',
+                        'close_time' => '22:00:00',
+                        'image' => 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&h=300&fit=crop',
+                    ]);
+                }
+
                 Auth::login($user);
             }
 

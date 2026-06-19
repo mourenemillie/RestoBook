@@ -21,6 +21,7 @@ class Restaurant extends Model
         return $this->hasMany(Menu::class);
     }
 
+<<<<<<< HEAD
     /**
      * Relasi Aman ke Model Meja (Satu restoran memiliki banyak meja)
      */
@@ -35,3 +36,15 @@ class Restaurant extends Model
         return $this->hasMany(\App\Models\RestoTable::class);
     }
 }
+=======
+    public function reservations()
+    {
+        return $this->hasMany(Reservation::class);
+    }
+
+    public function tables()
+    {
+        return $this->hasMany(Table::class);
+    }
+}
+>>>>>>> ac62f328756ae709eeec56ca0e97b1cff3d92f39

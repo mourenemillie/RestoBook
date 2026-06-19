@@ -13,6 +13,7 @@ class HomeController extends Controller
      */
     public function index()
     {
+<<<<<<< HEAD
         // Eager loading relasi 'menus' agar query lebih efisien saat menampilkan data
         $restaurants = Restaurant::with('menus')->get();
         return view('customer.home', compact('restaurants'));
@@ -84,3 +85,10 @@ class HomeController extends Controller
         return redirect()->route('home')->with('error', 'Restoran atau kuliner dengan kata kunci "' . $query . '" tidak ditemukan.');
     }
 }
+=======
+        // Hanya mengambil 3 restoran yang sudah aktif (disetujui) dari database
+        $restaurants = \App\Models\Restaurant::where('status', 'active')->take(3)->get();
+        return view('customer.home', compact('restaurants'));
+    }
+}
+>>>>>>> ac62f328756ae709eeec56ca0e97b1cff3d92f39

@@ -118,6 +118,7 @@ Route::middleware(['auth', 'role:owner'])->prefix('owner')->group(function () {
 // ==========================================
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminDashboard::class, 'index'])->name('admin.dashboard');
+    Route::get('/export', [AdminDashboard::class, 'export'])->name('admin.export');
     Route::get('/users', [AdminUserController::class, 'index'])->name('admin.users');
     Route::put('/users/{id}', [AdminUserController::class, 'update'])->name('admin.users.update');
     
